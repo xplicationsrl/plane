@@ -4,7 +4,7 @@
  * See the LICENSE file for details.
  */
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   AtOutline,
   CalendarOutline,
@@ -38,6 +38,7 @@ import {
   getAssigneeFilterConfig,
   getCreatedAtFilterConfig,
   getCreatedByFilterConfig,
+  getCustomPropertyFilterConfig,
   getCycleFilterConfig,
   getFileURL,
   getLabelFilterConfig,
@@ -54,6 +55,10 @@ import {
   isLoaderReady,
 } from "@plane/utils";
 // store hooks
+import { useTranslation } from "@plane/i18n";
+import type { TCustomPropertyFilterOption } from "@plane/utils";
+import { getCustomPropertyTypeIcon } from "@/components/custom-properties/constants";
+import { useCustomProperty } from "@/hooks/store/use-custom-property";
 import { useCycle } from "@/hooks/store/use-cycle";
 import { useLabel } from "@/hooks/store/use-label";
 import { useMember } from "@/hooks/store/use-member";
@@ -98,6 +103,8 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
   const { getModuleById } = useModule();
   const { getStateById } = useProjectState();
   const { getUserDetails } = useMember();
+  const { fetchedProjectIds, getProjectProperties, fetchProjectProperties } = useCustomProperty();
+  const { t } = useTranslation();
   // derived values
   const operatorConfigs = useFiltersOperatorConfigs({ workspaceSlug });
   const filtersToShow = useMemo(() => new Set(allowedFilters), [allowedFilters]);
@@ -131,13 +138,20 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
     [moduleIds, getModuleById]
   );
   const projects = useMemo(
-    () =>
-      projectIds
-        ? (projectIds.map((projectId) => getProjectById(projectId)).filter((project) => project) as IProject[])
-        : [],
+    () => (projectIds ? (projectIds.map((id) => getProjectById(id)).filter((item) => item) as IProject[]) : []),
     [projectIds, getProjectById]
   );
   const areAllConfigsInitialized = useMemo(() => isLoaderReady(projectLoader), [projectLoader]);
+
+  // Custom properties are per project, so only project-level filters offer them
+  useEffect(() => {
+    if (workspaceSlug && projectId && !fetchedProjectIds[projectId])
+      void fetchProjectProperties(workspaceSlug, projectId).catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workspaceSlug, projectId]);
+  const filterableProperties = getProjectProperties(projectId).filter((property) =>
+    ["select", "multi_select", "checkbox", "member"].includes(property.property_type)
+  );
 
   /**
    * Checks if a filter is enabled based on the filters to show.
@@ -356,10 +370,49 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
         isEnabled: isFilterEnabled("project_id") && projects !== undefined,
         filterIcon: ProjectsOutline,
         projects: projects,
-        getOptionIcon: (project) => <Logo logo={project.logo_props} size={12} />,
+        getOptionIcon: (projectItem) => <Logo logo={projectItem.logo_props} size={12} />,
         ...operatorConfigs,
       }),
     [isFilterEnabled, projects, operatorConfigs]
+  );
+
+  const filterablePropertiesKey = filterableProperties
+    .map((property) => `${property.id}:${property.updated_at}`)
+    .join(",");
+  const customPropertyFilterConfigs = useMemo(
+    () =>
+      filterableProperties.map((property) => {
+        const options: TCustomPropertyFilterOption[] =
+          property.property_type === "checkbox"
+            ? [
+                { id: "true", name: t("yes") },
+                { id: "false", name: t("no") },
+              ]
+            : property.property_type === "member"
+              ? (members ?? []).map((member) => ({
+                  id: member.id,
+                  name: member.display_name,
+                  iconData: member.avatar_url,
+                }))
+              : property.options.map((option) => ({ id: option.id, name: option.name, iconData: option.color }));
+        return getCustomPropertyFilterConfig<TWorkItemFilterProperty>(`customproperty_${property.id}`)({
+          isEnabled: true,
+          label: property.name,
+          filterIcon: getCustomPropertyTypeIcon(property.property_type),
+          options,
+          getOptionIcon:
+            property.property_type === "member"
+              ? (avatarUrl) => <Avatar alt="" size="2xs" src={avatarUrl ? getFileURL(avatarUrl) : undefined} />
+              : property.property_type === "checkbox"
+                ? undefined
+                : (color) => (
+                    <span className="flex size-2.5 flex-shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                  ),
+          ...operatorConfigs,
+        });
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filterablePropertiesKey, members, operatorConfigs, t]
   );
 
   return {
@@ -380,6 +433,7 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
       updatedAtFilterConfig,
       createdByFilterConfig,
       subscriberFilterConfig,
+      ...customPropertyFilterConfigs,
     ],
     configMap: {
       project_id: projectFilterConfig,
@@ -397,6 +451,7 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
       target_date: targetDateFilterConfig,
       created_at: createdAtFilterConfig,
       updated_at: updatedAtFilterConfig,
+      ...Object.fromEntries(customPropertyFilterConfigs.map((config) => [config.id, config])),
     },
     isFilterEnabled,
     members: members ?? [],

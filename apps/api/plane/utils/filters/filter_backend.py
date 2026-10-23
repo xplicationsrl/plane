@@ -16,6 +16,12 @@ from rest_framework.exceptions import ValidationError as DRFValidationError
 
 from plane.utils.exception_logger import log_exception
 
+from plane.utils.filters.custom_property import (
+    build_custom_property_q,
+    is_custom_property_key,
+    validate_custom_property_key,
+)
+
 
 class ComplexFilterBackend(filters.BaseFilterBackend):
     """
@@ -112,6 +118,11 @@ class ComplexFilterBackend(filters.BaseFilterBackend):
 
         # Extract field names from the filter data
         fields = self._extract_field_names(filter_data)
+
+        # Custom property conditions are checked on their own (their keys are dynamic)
+        for field in [f for f in fields if is_custom_property_key(f)]:
+            validate_custom_property_key(field)
+        fields = [f for f in fields if not is_custom_property_key(f)]
 
         # Check if all fields are allowed
         for field in fields:
@@ -243,6 +254,14 @@ class ComplexFilterBackend(filters.BaseFilterBackend):
         """
         if not leaf_conditions:
             return Q()
+
+        custom_conditions = {k: v for k, v in leaf_conditions.items() if is_custom_property_key(k)}
+        if custom_conditions:
+            leaf_conditions = {k: v for k, v in leaf_conditions.items() if not is_custom_property_key(k)}
+            custom_q = build_custom_property_q(custom_conditions)
+            if not leaf_conditions:
+                return custom_q
+            return custom_q & self._build_leaf_q(leaf_conditions, view, queryset)
 
         # Get the filterset class from the view
         filterset_class = getattr(view, "filterset_class", None)
