@@ -489,5 +489,19 @@
       "on_days": "{summary} op {days}",
       "until": "{summary} tot {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Ook in",
+    "none": "Toevoegen aan project",
+    "update_error": "Het werkitem kon niet met dat project worden gedeeld. Probeer het opnieuw.",
+    "no_access": "U hebt geen toegang tot het project waartoe dit werkitem behoort.",
+    "button": "{count, plural, one {# gedeeld werkitem} other {# gedeelde werkitems}}",
+    "title": "Gedeeld met dit project",
+    "description": "Werkitems uit andere projecten die hier zijn toegevoegd. Ze behouden de statussen van hun oorspronkelijke project.",
+    "from_project": "Uit {project}",
+    "activity": {
+      "added": "heeft dit werkitem toegevoegd aan {project}",
+      "removed": "heeft dit werkitem verwijderd uit {project}"
+    }
   }
 }

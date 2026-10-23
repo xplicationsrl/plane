@@ -489,5 +489,19 @@
       "on_days": "{summary} vào {days}",
       "until": "{summary} đến {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Cũng trong",
+    "none": "Thêm vào dự án",
+    "update_error": "Không thể chia sẻ mục công việc với dự án đó. Vui lòng thử lại.",
+    "no_access": "Bạn không có quyền truy cập dự án chứa mục công việc này.",
+    "button": "{count, plural, one {# mục công việc được chia sẻ} other {# mục công việc được chia sẻ}}",
+    "title": "Được chia sẻ với dự án này",
+    "description": "Các mục công việc từ dự án khác đã được thêm vào đây. Chúng giữ nguyên trạng thái của dự án gốc.",
+    "from_project": "Từ {project}",
+    "activity": {
+      "added": "đã thêm mục công việc này vào {project}",
+      "removed": "đã xóa mục công việc này khỏi {project}"
+    }
   }
 }

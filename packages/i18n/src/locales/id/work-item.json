@@ -489,5 +489,19 @@
       "on_days": "{summary} pada {days}",
       "until": "{summary} hingga {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Juga di",
+    "none": "Tambahkan ke proyek",
+    "update_error": "Item kerja tidak dapat dibagikan ke proyek tersebut. Silakan coba lagi.",
+    "no_access": "Anda tidak memiliki akses ke proyek tempat item kerja ini berada.",
+    "button": "{count, plural, one {# item kerja dibagikan} other {# item kerja dibagikan}}",
+    "title": "Dibagikan ke proyek ini",
+    "description": "Item kerja dari proyek lain yang ditambahkan di sini. Item tersebut tetap memakai status proyek asalnya.",
+    "from_project": "Dari {project}",
+    "activity": {
+      "added": "menambahkan item kerja ini ke {project}",
+      "removed": "menghapus item kerja ini dari {project}"
+    }
   }
 }

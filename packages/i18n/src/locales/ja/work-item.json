@@ -489,5 +489,19 @@
       "on_days": "{summary}（{days}）",
       "until": "{summary}（{date} まで）"
     }
+  },
+  "shared_work_items": {
+    "label": "共有先",
+    "none": "プロジェクトに追加",
+    "update_error": "作業項目をそのプロジェクトと共有できませんでした。もう一度お試しください。",
+    "no_access": "この作業項目が属するプロジェクトへのアクセス権がありません。",
+    "button": "{count, plural, one {共有された作業項目 # 件} other {共有された作業項目 # 件}}",
+    "title": "このプロジェクトに共有",
+    "description": "他のプロジェクトからここに追加された作業項目です。元のプロジェクトのステートがそのまま使われます。",
+    "from_project": "{project} から",
+    "activity": {
+      "added": "この作業項目を {project} に追加しました",
+      "removed": "この作業項目を {project} から削除しました"
+    }
   }
 }

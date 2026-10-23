@@ -31,6 +31,7 @@ import {
   IssueArchivedAtActivity,
   IssueInboxActivity,
   IssueCustomPropertyActivity,
+  IssueSharedProjectActivity,
 } from "./actions";
 
 type TIssueActivityItem = {
@@ -94,6 +95,8 @@ export const IssueActivityItem = observer(function IssueActivityItem(props: TIss
       return <IssueInboxActivity {...componentDefaultProps} />;
     case "custom_property":
       return <IssueCustomPropertyActivity {...componentDefaultProps} />;
+    case "shared_project":
+      return <IssueSharedProjectActivity {...componentDefaultProps} />;
     default:
       return null;
   }

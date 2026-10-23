@@ -489,5 +489,19 @@
       "on_days": "{summary}: {days}",
       "until": "{summary} fino al {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Anche in",
+    "none": "Aggiungi a progetto",
+    "update_error": "Non è stato possibile condividere l’elemento di lavoro con quel progetto. Riprovi.",
+    "no_access": "Non ha accesso al progetto a cui appartiene questo elemento di lavoro.",
+    "button": "{count, plural, one {# elemento di lavoro condiviso} many {# elementi di lavoro condivisi} other {# elementi di lavoro condivisi}}",
+    "title": "Condiviso con questo progetto",
+    "description": "Elementi di lavoro di altri progetti aggiunti qui. Mantengono gli stati del loro progetto di origine.",
+    "from_project": "Da {project}",
+    "activity": {
+      "added": "ha aggiunto questo elemento di lavoro a {project}",
+      "removed": "ha rimosso questo elemento di lavoro da {project}"
+    }
   }
 }

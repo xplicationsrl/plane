@@ -489,5 +489,19 @@
       "on_days": "{summary} le {days}",
       "until": "{summary} jusqu’au {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Aussi dans",
+    "none": "Ajouter à un projet",
+    "update_error": "L’élément de travail n’a pas pu être partagé avec ce projet. Veuillez réessayer.",
+    "no_access": "Vous n’avez pas accès au projet auquel appartient cet élément de travail.",
+    "button": "{count, plural, one {# élément de travail partagé} many {# éléments de travail partagés} other {# éléments de travail partagés}}",
+    "title": "Partagé avec ce projet",
+    "description": "Éléments de travail d’autres projets ajoutés ici. Ils conservent les états de leur projet d’origine.",
+    "from_project": "De {project}",
+    "activity": {
+      "added": "a ajouté cet élément de travail à {project}",
+      "removed": "a retiré cet élément de travail de {project}"
+    }
   }
 }

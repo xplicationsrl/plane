@@ -48,6 +48,7 @@ export * from "./intake-form";
 export * from "./rich-filters";
 export * from "./search";
 export * from "./settings";
+export * from "./shared-work-item";
 export * from "./state";
 export * from "./stickies";
 export * from "./time-entry";

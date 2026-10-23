@@ -11,6 +11,7 @@ from .time_entry import urlpatterns as time_entry_urls
 from .recurrence import urlpatterns as recurrence_urls
 from .template import urlpatterns as template_urls
 from .intake_form import urlpatterns as intake_form_urls
+from .issue_project_link import urlpatterns as issue_project_link_urls
 from .estimate import urlpatterns as estimate_urls
 from .external import urlpatterns as external_urls
 from .intake import urlpatterns as intake_urls
@@ -37,6 +38,7 @@ urlpatterns = [
     *recurrence_urls,
     *template_urls,
     *intake_form_urls,
+    *issue_project_link_urls,
     *estimate_urls,
     *external_urls,
     *intake_urls,

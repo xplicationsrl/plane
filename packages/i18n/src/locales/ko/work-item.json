@@ -489,5 +489,19 @@
       "on_days": "{summary} ({days})",
       "until": "{summary} ({date}까지)"
     }
+  },
+  "shared_work_items": {
+    "label": "공유 프로젝트",
+    "none": "프로젝트에 추가",
+    "update_error": "작업 항목을 해당 프로젝트와 공유하지 못했습니다. 다시 시도해 주십시오.",
+    "no_access": "이 작업 항목이 속한 프로젝트에 대한 액세스 권한이 없습니다.",
+    "button": "{count, plural, one {공유된 작업 항목 #개} other {공유된 작업 항목 #개}}",
+    "title": "이 프로젝트와 공유됨",
+    "description": "다른 프로젝트에서 여기에 추가된 작업 항목입니다. 원래 프로젝트의 상태를 그대로 유지합니다.",
+    "from_project": "{project}에서",
+    "activity": {
+      "added": "이 작업 항목을 {project}에 추가했습니다",
+      "removed": "이 작업 항목을 {project}에서 제거했습니다"
+    }
   }
 }

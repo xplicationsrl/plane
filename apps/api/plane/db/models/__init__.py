@@ -96,3 +96,4 @@ from .time_entry import IssueTimeEntry
 from .recurrence import IssueRecurrence, RecurrenceFrequency
 from .template import ProjectTemplate, WorkItemTemplate
 from .intake_form import IntakeForm
+from .issue_project_link import IssueProjectLink

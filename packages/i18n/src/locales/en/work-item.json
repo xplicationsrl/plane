@@ -489,5 +489,19 @@
       "on_days": "{summary} on {days}",
       "until": "{summary} until {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Also in",
+    "none": "Add to project",
+    "update_error": "The work item couldn't be shared with that project. Please try again.",
+    "no_access": "You don't have access to the project this work item belongs to.",
+    "button": "{count, plural, one {# shared work item} other {# shared work items}}",
+    "title": "Shared with this project",
+    "description": "Work items from other projects that were added here. They keep their home project's states.",
+    "from_project": "From {project}",
+    "activity": {
+      "added": "added this work item to {project}",
+      "removed": "removed this work item from {project}"
+    }
   }
 }

@@ -489,5 +489,19 @@
       "on_days": "{summary}: {days}",
       "until": "{summary} do {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Również w",
+    "none": "Dodaj do projektu",
+    "update_error": "Nie udało się udostępnić elementu pracy w tym projekcie. Spróbuj ponownie.",
+    "no_access": "Nie masz dostępu do projektu, do którego należy ten element pracy.",
+    "button": "{count, plural, one {# udostępniony element pracy} few {# udostępnione elementy pracy} many {# udostępnionych elementów pracy} other {# udostępnionego elementu pracy}}",
+    "title": "Udostępnione w tym projekcie",
+    "description": "Elementy pracy z innych projektów dodane tutaj. Zachowują stany swojego projektu macierzystego.",
+    "from_project": "Z projektu {project}",
+    "activity": {
+      "added": "dodał(a) ten element pracy do projektu {project}",
+      "removed": "usunął(-ęła) ten element pracy z projektu {project}"
+    }
   }
 }

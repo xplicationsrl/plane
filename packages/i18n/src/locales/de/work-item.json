@@ -489,5 +489,19 @@
       "on_days": "{summary} am {days}",
       "until": "{summary} bis {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Auch in",
+    "none": "Zu Projekt hinzufügen",
+    "update_error": "Das Arbeitselement konnte nicht mit diesem Projekt geteilt werden. Bitte erneut versuchen.",
+    "no_access": "Sie haben keinen Zugriff auf das Projekt, zu dem dieses Arbeitselement gehört.",
+    "button": "{count, plural, one {# geteiltes Arbeitselement} other {# geteilte Arbeitselemente}}",
+    "title": "Mit diesem Projekt geteilt",
+    "description": "Arbeitselemente aus anderen Projekten, die hier hinzugefügt wurden. Sie behalten die Status ihres Ursprungsprojekts.",
+    "from_project": "Aus {project}",
+    "activity": {
+      "added": "hat dieses Arbeitselement zu {project} hinzugefügt",
+      "removed": "hat dieses Arbeitselement aus {project} entfernt"
+    }
   }
 }

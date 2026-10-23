@@ -489,5 +489,19 @@
       "on_days": "{summary}: {days}",
       "until": "{summary}, {date} tarihine kadar"
     }
+  },
+  "shared_work_items": {
+    "label": "Diğer projeler",
+    "none": "Projeye ekle",
+    "update_error": "İş öğesi bu projeyle paylaşılamadı. Lütfen tekrar deneyin.",
+    "no_access": "Bu iş öğesinin ait olduğu projeye erişiminiz yok.",
+    "button": "{count, plural, one {# paylaşılan iş öğesi} other {# paylaşılan iş öğesi}}",
+    "title": "Bu projeyle paylaşılanlar",
+    "description": "Diğer projelerden buraya eklenen iş öğeleri. Kendi projelerinin durumlarını korurlar.",
+    "from_project": "{project} projesinden",
+    "activity": {
+      "added": "bu iş öğesini {project} projesine ekledi",
+      "removed": "bu iş öğesini {project} projesinden kaldırdı"
+    }
   }
 }

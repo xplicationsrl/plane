@@ -489,5 +489,19 @@
       "on_days": "{summary}: {days}",
       "until": "{summary} până la {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Și în",
+    "none": "Adaugă în proiect",
+    "update_error": "Activitatea nu a putut fi partajată cu acel proiect. Vă rugăm să încercați din nou.",
+    "no_access": "Nu aveți acces la proiectul căruia îi aparține această activitate.",
+    "button": "{count, plural, one {# activitate partajată} few {# activități partajate} other {# de activități partajate}}",
+    "title": "Partajat cu acest proiect",
+    "description": "Activități din alte proiecte adăugate aici. Își păstrează stările proiectului de origine.",
+    "from_project": "Din {project}",
+    "activity": {
+      "added": "a adăugat această activitate în {project}",
+      "removed": "a eliminat această activitate din {project}"
+    }
   }
 }

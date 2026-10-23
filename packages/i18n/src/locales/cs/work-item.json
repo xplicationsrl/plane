@@ -489,5 +489,19 @@
       "on_days": "{summary}: {days}",
       "until": "{summary} do {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "Také v",
+    "none": "Přidat do projektu",
+    "update_error": "Pracovní položku se nepodařilo sdílet s tímto projektem. Zkuste to prosím znovu.",
+    "no_access": "Nemáte přístup k projektu, do kterého tato pracovní položka patří.",
+    "button": "{count, plural, one {# sdílená položka} few {# sdílené položky} many {# sdílené položky} other {# sdílených položek}}",
+    "title": "Sdíleno s tímto projektem",
+    "description": "Pracovní položky z jiných projektů, které sem byly přidány. Zachovávají si stavy svého domovského projektu.",
+    "from_project": "Z projektu {project}",
+    "activity": {
+      "added": "přidal(a) tuto pracovní položku do projektu {project}",
+      "removed": "odebral(a) tuto pracovní položku z projektu {project}"
+    }
   }
 }

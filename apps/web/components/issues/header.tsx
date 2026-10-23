@@ -20,6 +20,7 @@ import { Header } from "@plane/blocks/layout";
 // components
 import { BreadcrumbLink } from "@/components/common/breadcrumb-link";
 import { CountChip } from "@/components/common/count-chip";
+import { ProjectSharedWorkItemsButton } from "@/components/shared-work-items";
 // constants
 import { HeaderFilters } from "@/components/issues/filters";
 // helpers
@@ -93,6 +94,9 @@ export const IssuesHeader = observer(function IssuesHeader() {
               <CountChip count={issuesCount} />
             </Tooltip>
           ) : null}
+          {workspaceSlug && projectId && (
+            <ProjectSharedWorkItemsButton workspaceSlug={workspaceSlug.toString()} projectId={projectId.toString()} />
+          )}
         </div>
         {currentProjectDetails?.anchor ? (
           <a

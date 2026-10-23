@@ -489,5 +489,19 @@
       "on_days": "{summary}（{days}）",
       "until": "{summary}，直到 {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "分享至",
+    "none": "新增至專案",
+    "update_error": "無法將工作事項分享至該專案，請再試一次。",
+    "no_access": "您無權存取此工作事項所屬的專案。",
+    "button": "{count, plural, one {# 個共享工作事項} other {# 個共享工作事項}}",
+    "title": "分享至此專案",
+    "description": "從其他專案新增到這裡的工作事項，沿用其所屬專案的狀態。",
+    "from_project": "來自 {project}",
+    "activity": {
+      "added": "將此工作事項新增至 {project}",
+      "removed": "將此工作事項從 {project} 移除"
+    }
   }
 }

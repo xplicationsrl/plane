@@ -18,6 +18,7 @@ import {
   ModuleOutline,
   ParentOutline,
   PriorityOutline,
+  ProjectsOutline,
   RepeatOutline,
   StartDateOutline,
   StateOutline,
@@ -41,6 +42,7 @@ import { useUserProfile } from "@/hooks/store/user";
 // components
 import { IssueCustomProperties } from "@/components/custom-properties";
 import { IssueRecurrence } from "@/components/recurrence";
+import { IssueAlsoInProjects } from "@/components/shared-work-items";
 import { IssueTimeTracking } from "@/components/time-tracking";
 import { IssueParentSelectRoot } from "@/components/issues/parent-select-root";
 import { SidebarPropertyListItem } from "@/components/common/layout/sidebar/property-list-item";
@@ -240,6 +242,15 @@ export const IssueDetailsSidebar = observer(function IssueDetailsSidebar(props: 
                 projectId={projectId}
                 issueId={issueId}
                 issueOperations={issueOperations}
+                disabled={!isEditable}
+              />
+            </SidebarPropertyListItem>
+
+            <SidebarPropertyListItem icon={ProjectsOutline} label={t("shared_work_items.label")}>
+              <IssueAlsoInProjects
+                workspaceSlug={workspaceSlug}
+                projectId={projectId}
+                issueId={issueId}
                 disabled={!isEditable}
               />
             </SidebarPropertyListItem>

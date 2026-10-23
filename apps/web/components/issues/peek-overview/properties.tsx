@@ -18,6 +18,7 @@ import {
   ModuleOutline,
   ParentOutline,
   PriorityOutline,
+  ProjectsOutline,
   RepeatOutline,
   StartDateOutline,
   StateOutline,
@@ -28,6 +29,7 @@ import { cn, getDate, renderFormattedPayloadDate, shouldHighlightIssueDueDate } 
 // components
 import { IssueCustomProperties } from "@/components/custom-properties";
 import { IssueRecurrence } from "@/components/recurrence";
+import { IssueAlsoInProjects } from "@/components/shared-work-items";
 import { IssueTimeTracking } from "@/components/time-tracking";
 import { EstimateSelect } from "@/components/dropdowns/estimate/estimate-select";
 import { ButtonAvatars } from "@/components/dropdowns/member/avatar";
@@ -232,6 +234,15 @@ export const PeekOverviewProperties = observer(function PeekOverviewProperties(p
             issueOperations={issueOperations}
             projectId={projectId}
             workspaceSlug={workspaceSlug}
+          />
+        </SidebarPropertyListItem>
+
+        <SidebarPropertyListItem icon={ProjectsOutline} label={t("shared_work_items.label")}>
+          <IssueAlsoInProjects
+            workspaceSlug={workspaceSlug}
+            projectId={projectId}
+            issueId={issueId}
+            disabled={disabled}
           />
         </SidebarPropertyListItem>
 

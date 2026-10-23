@@ -264,3 +264,5 @@ from .template.base import (
 )
 
 from .intake_form.base import IntakeFormEndpoint, IntakeFormDetailEndpoint
+
+from .issue_project_link.base import IssueLinkedProjectsEndpoint, ProjectSharedIssuesEndpoint

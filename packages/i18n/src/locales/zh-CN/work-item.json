@@ -489,5 +489,19 @@
       "on_days": "{summary}（{days}）",
       "until": "{summary}，直到 {date}"
     }
+  },
+  "shared_work_items": {
+    "label": "共享到",
+    "none": "添加到项目",
+    "update_error": "无法将工作项共享到该项目，请重试。",
+    "no_access": "您无权访问此工作项所属的项目。",
+    "button": "{count, plural, one {# 个共享工作项} other {# 个共享工作项}}",
+    "title": "共享到此项目",
+    "description": "从其他项目添加到这里的工作项，沿用其所属项目的状态。",
+    "from_project": "来自 {project}",
+    "activity": {
+      "added": "将此工作项添加到了 {project}",
+      "removed": "将此工作项从 {project} 中移除"
+    }
   }
 }
