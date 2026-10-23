@@ -440,5 +440,27 @@
       "label": "Epic Title",
       "required": "Epic title is required."
     }
+  },
+  "time_log": {
+    "label": "Time",
+    "none": "Log time",
+    "title": "Time log",
+    "total": "Total {duration}",
+    "form": {
+      "duration": "Duration",
+      "duration_placeholder": "1h 30m",
+      "note": "Note",
+      "note_placeholder": "What did you work on? (optional)",
+      "submit": "Log time",
+      "invalid_duration": "Enter a duration such as 45m, 1h 30m or 1:30.",
+      "error": "The time entry couldn't be saved. Please try again."
+    },
+    "timer": {
+      "start": "Start timer",
+      "stop": "Stop timer",
+      "error": "The timer couldn't be updated. Please try again.",
+      "switched_title": "Timer moved here",
+      "switched_message": "Your previous timer was stopped and {duration} was logged."
+    }
   }
 }

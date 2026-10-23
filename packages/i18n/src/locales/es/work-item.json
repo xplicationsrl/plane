@@ -440,5 +440,27 @@
       "label": "Título del Epic",
       "required": "El título del epic es obligatorio."
     }
+  },
+  "time_log": {
+    "label": "Tiempo",
+    "none": "Registrar tiempo",
+    "title": "Registro de tiempo",
+    "total": "Total {duration}",
+    "form": {
+      "duration": "Duración",
+      "duration_placeholder": "1h 30m",
+      "note": "Nota",
+      "note_placeholder": "¿En qué trabajó? (opcional)",
+      "submit": "Registrar tiempo",
+      "invalid_duration": "Escriba una duración como 45m, 1h 30m o 1:30.",
+      "error": "No se pudo guardar el registro de tiempo. Inténtelo de nuevo."
+    },
+    "timer": {
+      "start": "Iniciar temporizador",
+      "stop": "Detener temporizador",
+      "error": "No se pudo actualizar el temporizador. Inténtelo de nuevo.",
+      "switched_title": "El temporizador se movió aquí",
+      "switched_message": "Su temporizador anterior se detuvo y se registraron {duration}."
+    }
   }
 }

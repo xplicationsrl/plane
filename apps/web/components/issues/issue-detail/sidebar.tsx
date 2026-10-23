@@ -9,6 +9,7 @@ import { observer } from "mobx-react";
 import { useTranslation } from "@plane/i18n";
 // ui
 import {
+  ClockOutline,
   CyclesOutline,
   DueDateOutline,
   EstimateOutline,
@@ -38,6 +39,7 @@ import { useProjectState } from "@/hooks/store/use-project-state";
 import { useUserProfile } from "@/hooks/store/user";
 // components
 import { IssueCustomProperties } from "@/components/custom-properties";
+import { IssueTimeTracking } from "@/components/time-tracking";
 import { IssueParentSelectRoot } from "@/components/issues/parent-select-root";
 import { SidebarPropertyListItem } from "@/components/common/layout/sidebar/property-list-item";
 import { IssueCycleSelect } from "./cycle-select";
@@ -233,6 +235,15 @@ export const IssueDetailsSidebar = observer(function IssueDetailsSidebar(props: 
 
             <SidebarPropertyListItem icon={LabelsOutline} label={t("common.labels")}>
               <IssueLabel
+                workspaceSlug={workspaceSlug}
+                projectId={projectId}
+                issueId={issueId}
+                disabled={!isEditable}
+              />
+            </SidebarPropertyListItem>
+
+            <SidebarPropertyListItem icon={ClockOutline} label={t("time_log.label")}>
+              <IssueTimeTracking
                 workspaceSlug={workspaceSlug}
                 projectId={projectId}
                 issueId={issueId}

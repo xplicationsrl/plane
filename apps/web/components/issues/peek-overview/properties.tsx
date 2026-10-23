@@ -9,6 +9,7 @@ import { observer } from "mobx-react";
 import { useTranslation } from "@plane/i18n";
 // ui icons
 import {
+  ClockOutline,
   CyclesOutline,
   DueDateOutline,
   EstimateOutline,
@@ -25,6 +26,7 @@ import { DateSelect } from "@plane/blocks/property-select";
 import { cn, getDate, renderFormattedPayloadDate, shouldHighlightIssueDueDate } from "@plane/utils";
 // components
 import { IssueCustomProperties } from "@/components/custom-properties";
+import { IssueTimeTracking } from "@/components/time-tracking";
 import { EstimateSelect } from "@/components/dropdowns/estimate/estimate-select";
 import { ButtonAvatars } from "@/components/dropdowns/member/avatar";
 import { MemberSelect } from "@/components/dropdowns/member/member-select";
@@ -229,6 +231,15 @@ export const PeekOverviewProperties = observer(function PeekOverviewProperties(p
 
         <SidebarPropertyListItem icon={LabelsOutline} label={t("common.labels")}>
           <IssueLabel workspaceSlug={workspaceSlug} projectId={projectId} issueId={issueId} disabled={disabled} />
+        </SidebarPropertyListItem>
+
+        <SidebarPropertyListItem icon={ClockOutline} label={t("time_log.label")}>
+          <IssueTimeTracking
+            workspaceSlug={workspaceSlug}
+            projectId={projectId}
+            issueId={issueId}
+            disabled={disabled}
+          />
         </SidebarPropertyListItem>
 
         <IssueCustomProperties

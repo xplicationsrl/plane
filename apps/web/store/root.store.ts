@@ -25,6 +25,8 @@ import { TimeLineStore } from "./timeline/timeline.store";
 import type { ICustomPropertyStore } from "./custom-property.store";
 import { CustomPropertyStore } from "./custom-property.store";
 import type { ICycleStore } from "./cycle.store";
+import type { ITimeEntryStore } from "./time-entry.store";
+import { TimeEntryStore } from "./time-entry.store";
 import { CycleStore } from "./cycle.store";
 import type { ICycleFilterStore } from "./cycle_filter.store";
 import { CycleFilterStore } from "./cycle_filter.store";
@@ -106,6 +108,7 @@ export class CoreRootStore {
   powerK: IPowerKStore;
   timelineStore: ITimelineStore;
   customProperty: ICustomPropertyStore;
+  timeEntry: ITimeEntryStore;
 
   constructor() {
     this.router = new RouterStore();
@@ -139,6 +142,7 @@ export class CoreRootStore {
     this.powerK = new PowerKStore();
     this.timelineStore = new TimeLineStore(this);
     this.customProperty = new CustomPropertyStore();
+    this.timeEntry = new TimeEntryStore();
   }
 
   resetOnSignOut() {
@@ -174,6 +178,7 @@ export class CoreRootStore {
     this.powerK = new PowerKStore();
     this.timelineStore = new TimeLineStore(this);
     this.customProperty = new CustomPropertyStore();
+    this.timeEntry = new TimeEntryStore();
   }
 }
 

@@ -440,5 +440,27 @@
       "label": "エピックのタイトル",
       "required": "エピックのタイトルは必須です。"
     }
+  },
+  "time_log": {
+    "label": "時間",
+    "none": "時間を記録",
+    "title": "作業時間の記録",
+    "total": "合計 {duration}",
+    "form": {
+      "duration": "時間",
+      "duration_placeholder": "1h 30m",
+      "note": "メモ",
+      "note_placeholder": "作業内容（任意）",
+      "submit": "時間を記録",
+      "invalid_duration": "45m、1h 30m、1:30 のように時間を入力してください。",
+      "error": "時間の記録を保存できませんでした。もう一度お試しください。"
+    },
+    "timer": {
+      "start": "タイマーを開始",
+      "stop": "タイマーを停止",
+      "error": "タイマーを更新できませんでした。もう一度お試しください。",
+      "switched_title": "タイマーをここに移動しました",
+      "switched_message": "前のタイマーを停止し、{duration} を記録しました。"
+    }
   }
 }

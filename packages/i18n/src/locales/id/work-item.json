@@ -440,5 +440,27 @@
       "label": "Judul Epik",
       "required": "Judul epik wajib diisi."
     }
+  },
+  "time_log": {
+    "label": "Waktu",
+    "none": "Catat waktu",
+    "title": "Log waktu",
+    "total": "Total {duration}",
+    "form": {
+      "duration": "Durasi",
+      "duration_placeholder": "1h 30m",
+      "note": "Catatan",
+      "note_placeholder": "Apa yang Anda kerjakan? (opsional)",
+      "submit": "Catat waktu",
+      "invalid_duration": "Masukkan durasi seperti 45m, 1h 30m, atau 1:30.",
+      "error": "Catatan waktu tidak dapat disimpan. Silakan coba lagi."
+    },
+    "timer": {
+      "start": "Mulai timer",
+      "stop": "Hentikan timer",
+      "error": "Timer tidak dapat diperbarui. Silakan coba lagi.",
+      "switched_title": "Timer dipindahkan ke sini",
+      "switched_message": "Timer sebelumnya telah dihentikan dan {duration} telah dicatat."
+    }
   }
 }

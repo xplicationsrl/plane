@@ -440,5 +440,27 @@
       "label": "Názov epiky",
       "required": "Názov epiky je povinný."
     }
+  },
+  "time_log": {
+    "label": "Čas",
+    "none": "Zapísať čas",
+    "title": "Záznam času",
+    "total": "Spolu {duration}",
+    "form": {
+      "duration": "Trvanie",
+      "duration_placeholder": "1h 30m",
+      "note": "Poznámka",
+      "note_placeholder": "Na čom ste pracovali? (voliteľné)",
+      "submit": "Zapísať čas",
+      "invalid_duration": "Zadajte trvanie, napríklad 45m, 1h 30m alebo 1:30.",
+      "error": "Časový záznam sa nepodarilo uložiť. Skúste to znova."
+    },
+    "timer": {
+      "start": "Spustiť časovač",
+      "stop": "Zastaviť časovač",
+      "error": "Časovač sa nepodarilo aktualizovať. Skúste to znova.",
+      "switched_title": "Časovač bol presunutý sem",
+      "switched_message": "Predchádzajúci časovač bol zastavený a zapísalo sa {duration}."
+    }
   }
 }

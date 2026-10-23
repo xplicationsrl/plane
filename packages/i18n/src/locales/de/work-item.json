@@ -440,5 +440,27 @@
       "label": "Epic-Titel",
       "required": "Ein Titel für das Epic ist erforderlich."
     }
+  },
+  "time_log": {
+    "label": "Zeit",
+    "none": "Zeit erfassen",
+    "title": "Zeiterfassung",
+    "total": "Gesamt {duration}",
+    "form": {
+      "duration": "Dauer",
+      "duration_placeholder": "1h 30m",
+      "note": "Notiz",
+      "note_placeholder": "Woran haben Sie gearbeitet? (optional)",
+      "submit": "Zeit erfassen",
+      "invalid_duration": "Dauer eingeben, z. B. 45m, 1h 30m oder 1:30.",
+      "error": "Der Zeiteintrag konnte nicht gespeichert werden. Bitte erneut versuchen."
+    },
+    "timer": {
+      "start": "Timer starten",
+      "stop": "Timer stoppen",
+      "error": "Der Timer konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+      "switched_title": "Timer hierher verschoben",
+      "switched_message": "Ihr vorheriger Timer wurde gestoppt und {duration} wurden erfasst."
+    }
   }
 }

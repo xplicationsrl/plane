@@ -440,5 +440,27 @@
       "label": "Epik Başlığı",
       "required": "Epik başlığı gereklidir."
     }
+  },
+  "time_log": {
+    "label": "Süre",
+    "none": "Süre kaydet",
+    "title": "Süre kaydı",
+    "total": "Toplam {duration}",
+    "form": {
+      "duration": "Süre",
+      "duration_placeholder": "1h 30m",
+      "note": "Not",
+      "note_placeholder": "Ne üzerinde çalıştınız? (isteğe bağlı)",
+      "submit": "Süre kaydet",
+      "invalid_duration": "45m, 1h 30m veya 1:30 gibi bir süre girin.",
+      "error": "Süre kaydı kaydedilemedi. Lütfen tekrar deneyin."
+    },
+    "timer": {
+      "start": "Zamanlayıcıyı başlat",
+      "stop": "Zamanlayıcıyı durdur",
+      "error": "Zamanlayıcı güncellenemedi. Lütfen tekrar deneyin.",
+      "switched_title": "Zamanlayıcı buraya taşındı",
+      "switched_message": "Önceki zamanlayıcınız durduruldu ve {duration} kaydedildi."
+    }
   }
 }

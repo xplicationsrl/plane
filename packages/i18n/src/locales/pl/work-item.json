@@ -440,5 +440,27 @@
       "label": "Tytuł epiku",
       "required": "Tytuł epiku jest wymagany."
     }
+  },
+  "time_log": {
+    "label": "Czas",
+    "none": "Zarejestruj czas",
+    "title": "Rejestr czasu",
+    "total": "Łącznie {duration}",
+    "form": {
+      "duration": "Czas trwania",
+      "duration_placeholder": "1h 30m",
+      "note": "Notatka",
+      "note_placeholder": "Opis wykonanej pracy (opcjonalnie)",
+      "submit": "Zarejestruj czas",
+      "invalid_duration": "Wpisz czas trwania, np. 45m, 1h 30m lub 1:30.",
+      "error": "Nie udało się zapisać wpisu czasu. Spróbuj ponownie."
+    },
+    "timer": {
+      "start": "Uruchom licznik",
+      "stop": "Zatrzymaj licznik",
+      "error": "Nie udało się zaktualizować licznika. Spróbuj ponownie.",
+      "switched_title": "Licznik przeniesiony tutaj",
+      "switched_message": "Poprzedni licznik został zatrzymany i zarejestrowano {duration}."
+    }
   }
 }

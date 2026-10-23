@@ -440,5 +440,27 @@
       "label": "Tiêu đề sử thi",
       "required": "Tiêu đề sử thi là bắt buộc"
     }
+  },
+  "time_log": {
+    "label": "Thời gian",
+    "none": "Ghi thời gian",
+    "title": "Nhật ký thời gian",
+    "total": "Tổng {duration}",
+    "form": {
+      "duration": "Thời lượng",
+      "duration_placeholder": "1h 30m",
+      "note": "Ghi chú",
+      "note_placeholder": "Bạn đã làm gì? (không bắt buộc)",
+      "submit": "Ghi thời gian",
+      "invalid_duration": "Nhập thời lượng, ví dụ 45m, 1h 30m hoặc 1:30.",
+      "error": "Không thể lưu mục thời gian. Vui lòng thử lại."
+    },
+    "timer": {
+      "start": "Bắt đầu bấm giờ",
+      "stop": "Dừng bấm giờ",
+      "error": "Không thể cập nhật bộ bấm giờ. Vui lòng thử lại.",
+      "switched_title": "Đã chuyển bộ bấm giờ sang đây",
+      "switched_message": "Bộ bấm giờ trước đã dừng và đã ghi {duration}."
+    }
   }
 }

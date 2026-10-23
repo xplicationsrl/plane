@@ -440,5 +440,27 @@
       "label": "Título do Épico",
       "required": "O título do épico é obrigatório."
     }
+  },
+  "time_log": {
+    "label": "Tempo",
+    "none": "Registrar tempo",
+    "title": "Registro de tempo",
+    "total": "Total {duration}",
+    "form": {
+      "duration": "Duração",
+      "duration_placeholder": "1h 30m",
+      "note": "Observação",
+      "note_placeholder": "No que você trabalhou? (opcional)",
+      "submit": "Registrar tempo",
+      "invalid_duration": "Digite uma duração como 45m, 1h 30m ou 1:30.",
+      "error": "Não foi possível salvar o registro de tempo. Tente novamente."
+    },
+    "timer": {
+      "start": "Iniciar cronômetro",
+      "stop": "Parar cronômetro",
+      "error": "Não foi possível atualizar o cronômetro. Tente novamente.",
+      "switched_title": "Cronômetro movido para cá",
+      "switched_message": "Seu cronômetro anterior foi parado e {duration} foram registrados."
+    }
   }
 }

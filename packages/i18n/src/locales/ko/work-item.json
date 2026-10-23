@@ -440,5 +440,27 @@
       "label": "에픽 제목",
       "required": "에픽 제목이 필요합니다."
     }
+  },
+  "time_log": {
+    "label": "시간",
+    "none": "시간 기록",
+    "title": "시간 기록",
+    "total": "합계 {duration}",
+    "form": {
+      "duration": "소요 시간",
+      "duration_placeholder": "1h 30m",
+      "note": "메모",
+      "note_placeholder": "어떤 작업을 했나요? (선택 사항)",
+      "submit": "시간 기록",
+      "invalid_duration": "45m, 1h 30m, 1:30 같은 형식으로 시간을 입력해 주십시오.",
+      "error": "시간 기록을 저장하지 못했습니다. 다시 시도해 주십시오."
+    },
+    "timer": {
+      "start": "타이머 시작",
+      "stop": "타이머 중지",
+      "error": "타이머를 업데이트하지 못했습니다. 다시 시도해 주십시오.",
+      "switched_title": "타이머가 여기로 이동했습니다",
+      "switched_message": "이전 타이머가 중지되었고 {duration}이(가) 기록되었습니다."
+    }
   }
 }

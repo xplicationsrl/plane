@@ -8,3 +8,4 @@ export { DotSeparator } from "./dot-separator";
 export type { DotSeparatorProps } from "./dot-separator";
 export { convertPlacementToSideAndAlign } from "./placement";
 export type { Align, Placement, Side, TAlign, TPlacement, TSide } from "./placement";
+export { formatDuration, formatTimerClock, parseDuration } from "./duration";

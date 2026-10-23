@@ -440,5 +440,27 @@
       "label": "史诗标题",
       "required": "史诗标题为必填项"
     }
+  },
+  "time_log": {
+    "label": "工时",
+    "none": "记录工时",
+    "title": "工时记录",
+    "total": "共 {duration}",
+    "form": {
+      "duration": "时长",
+      "duration_placeholder": "1h 30m",
+      "note": "备注",
+      "note_placeholder": "您做了什么工作？（可选）",
+      "submit": "记录工时",
+      "invalid_duration": "请输入时长，例如 45m、1h 30m 或 1:30。",
+      "error": "无法保存工时记录，请重试。"
+    },
+    "timer": {
+      "start": "开始计时",
+      "stop": "停止计时",
+      "error": "无法更新计时器，请重试。",
+      "switched_title": "计时已移到此处",
+      "switched_message": "之前的计时已停止，并记录了 {duration}。"
+    }
   }
 }

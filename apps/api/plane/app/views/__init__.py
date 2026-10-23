@@ -244,3 +244,10 @@ from .custom_property.base import (
     CustomPropertyDetailEndpoint,
     IssueCustomPropertyValueEndpoint,
 )
+
+from .time_entry.base import (
+    IssueTimeEntryEndpoint,
+    IssueTimeEntryDetailEndpoint,
+    RunningTimeEntryEndpoint,
+)
+

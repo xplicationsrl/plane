@@ -440,5 +440,27 @@
       "label": "Epic 標題",
       "required": "Epic 標題為必填。"
     }
+  },
+  "time_log": {
+    "label": "工時",
+    "none": "記錄工時",
+    "title": "工時記錄",
+    "total": "共 {duration}",
+    "form": {
+      "duration": "時長",
+      "duration_placeholder": "1h 30m",
+      "note": "備註",
+      "note_placeholder": "您做了哪些工作？（選填）",
+      "submit": "記錄工時",
+      "invalid_duration": "請輸入時長，例如 45m、1h 30m 或 1:30。",
+      "error": "無法儲存工時記錄，請再試一次。"
+    },
+    "timer": {
+      "start": "開始計時",
+      "stop": "停止計時",
+      "error": "無法更新計時器，請再試一次。",
+      "switched_title": "計時已移到此處",
+      "switched_message": "先前的計時已停止，並記錄了 {duration}。"
+    }
   }
 }

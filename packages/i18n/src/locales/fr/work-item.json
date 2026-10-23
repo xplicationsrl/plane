@@ -440,5 +440,27 @@
       "label": "Titre de l’Epic",
       "required": "Le titre de l’Epic est requis."
     }
+  },
+  "time_log": {
+    "label": "Temps",
+    "none": "Saisir du temps",
+    "title": "Journal du temps",
+    "total": "Total {duration}",
+    "form": {
+      "duration": "Durée",
+      "duration_placeholder": "1h 30m",
+      "note": "Note",
+      "note_placeholder": "Sur quoi avez-vous travaillé ? (facultatif)",
+      "submit": "Saisir du temps",
+      "invalid_duration": "Saisissez une durée comme 45m, 1h 30m ou 1:30.",
+      "error": "L’entrée de temps n’a pas pu être enregistrée. Veuillez réessayer."
+    },
+    "timer": {
+      "start": "Démarrer le minuteur",
+      "stop": "Arrêter le minuteur",
+      "error": "Le minuteur n’a pas pu être mis à jour. Veuillez réessayer.",
+      "switched_title": "Minuteur déplacé ici",
+      "switched_message": "Votre minuteur précédent a été arrêté et {duration} ont été saisis."
+    }
   }
 }

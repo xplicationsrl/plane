@@ -440,5 +440,27 @@
       "label": "Titlu sarcină majoră",
       "required": "Titlul sarcinii majore este obligatoriu."
     }
+  },
+  "time_log": {
+    "label": "Timp",
+    "none": "Înregistrează timp",
+    "title": "Jurnal de timp",
+    "total": "Total {duration}",
+    "form": {
+      "duration": "Durată",
+      "duration_placeholder": "1h 30m",
+      "note": "Notă",
+      "note_placeholder": "La ce ați lucrat? (opțional)",
+      "submit": "Înregistrează timp",
+      "invalid_duration": "Introduceți o durată, de exemplu 45m, 1h 30m sau 1:30.",
+      "error": "Înregistrarea de timp nu a putut fi salvată. Vă rugăm să încercați din nou."
+    },
+    "timer": {
+      "start": "Pornește cronometrul",
+      "stop": "Oprește cronometrul",
+      "error": "Cronometrul nu a putut fi actualizat. Vă rugăm să încercați din nou.",
+      "switched_title": "Cronometrul a fost mutat aici",
+      "switched_message": "Cronometrul anterior a fost oprit și s-au înregistrat {duration}."
+    }
   }
 }

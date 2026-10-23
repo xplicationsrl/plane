@@ -440,5 +440,27 @@
       "label": "Epic-titel",
       "required": "Epic-titel is verplicht."
     }
+  },
+  "time_log": {
+    "label": "Tijd",
+    "none": "Tijd registreren",
+    "title": "Tijdregistratie",
+    "total": "Totaal {duration}",
+    "form": {
+      "duration": "Duur",
+      "duration_placeholder": "1h 30m",
+      "note": "Notitie",
+      "note_placeholder": "Waaraan heeft u gewerkt? (optioneel)",
+      "submit": "Tijd registreren",
+      "invalid_duration": "Voer een duur in, zoals 45m, 1h 30m of 1:30.",
+      "error": "De tijdregistratie kon niet worden opgeslagen. Probeer het opnieuw."
+    },
+    "timer": {
+      "start": "Timer starten",
+      "stop": "Timer stoppen",
+      "error": "De timer kon niet worden bijgewerkt. Probeer het opnieuw.",
+      "switched_title": "Timer hierheen verplaatst",
+      "switched_message": "Uw vorige timer is gestopt en {duration} is geregistreerd."
+    }
   }
 }
