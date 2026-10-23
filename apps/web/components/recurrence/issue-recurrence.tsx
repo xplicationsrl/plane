@@ -97,7 +97,7 @@ const RecurrenceEditor = observer(function RecurrenceEditor(
       ...prev,
       weekdays: prev.weekdays.includes(day)
         ? prev.weekdays.filter((d) => d !== day)
-        : [...prev.weekdays, day].toSorted((a, b) => a - b),
+        : WEEKDAYS.filter((d) => d === day || prev.weekdays.includes(d)),
     }));
 
   return (
