@@ -341,7 +341,8 @@
         "save_submit": "保存模板",
         "saved_title": "模板已保存",
         "saved_message": "创建工作项时即可使用 {name}。",
-        "apply_error": "无法添加模板中的子工作项，请重试或手动添加。"
+        "apply_error": "无法添加模板中的子工作项，请重试或手动添加。",
+        "prefill": "新工作项的初始内容"
       },
       "project": {
         "description": "创建新项目时复用本项目的状态、标签、自定义属性和工作项模板。",

@@ -341,7 +341,8 @@
         "save_submit": "Salva modello",
         "saved_title": "Modello salvato",
         "saved_message": "{name} è pronto per la creazione di elementi di lavoro.",
-        "apply_error": "Non è stato possibile aggiungere i sotto-elementi del modello. Riprovi o li aggiunga manualmente."
+        "apply_error": "Non è stato possibile aggiungere i sotto-elementi del modello. Riprovi o li aggiunga manualmente.",
+        "prefill": "I nuovi elementi di lavoro iniziano con"
       },
       "project": {
         "description": "Riutilizzi stati, etichette, proprietà personalizzate e modelli di elementi di lavoro di questo progetto quando crea nuovi progetti.",

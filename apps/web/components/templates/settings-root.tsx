@@ -31,6 +31,8 @@ import { useTranslation } from "@plane/i18n";
 import type { TProjectTemplate, TWorkItemTemplate } from "@plane/types";
 // hooks
 import { useTemplate } from "@/hooks/store/use-template";
+// local imports
+import { EditWorkItemTemplateModal } from "./edit-work-item-template-modal";
 
 type Props = {
   workspaceSlug: string;
@@ -177,7 +179,6 @@ export const ProjectTemplatesSettings = observer(function ProjectTemplatesSettin
     projectTemplates,
     fetchWorkItemTemplates,
     fetchProjectTemplates,
-    updateWorkItemTemplate,
     deleteWorkItemTemplate,
     createProjectTemplate,
     updateProjectTemplate,
@@ -291,18 +292,23 @@ export const ProjectTemplatesSettings = observer(function ProjectTemplatesSettin
         )}
       </section>
 
+      <EditWorkItemTemplateModal
+        isOpen={editing?.kind === "work_item"}
+        onClose={() => setEditing(null)}
+        workspaceSlug={workspaceSlug}
+        projectId={projectId}
+        template={editing?.kind === "work_item" ? editing.item : null}
+      />
       <TemplateDetailsDialog
-        isOpen={!!editing}
+        isOpen={editing?.kind === "project"}
         title={t("templates.manage.edit_title")}
         submitLabel={t("save")}
         initialName={editing?.item.name ?? ""}
         initialDescription={editing?.item.description ?? ""}
         onClose={() => setEditing(null)}
         onSubmit={async ({ name, description }) => {
-          if (!editing) return;
-          if (editing.kind === "work_item")
-            await updateWorkItemTemplate(workspaceSlug, projectId, editing.item.id, { name, description });
-          else await updateProjectTemplate(workspaceSlug, editing.item.id, { name, description });
+          if (editing?.kind === "project")
+            await updateProjectTemplate(workspaceSlug, editing.item.id, { name, description });
         }}
       />
       <TemplateDetailsDialog

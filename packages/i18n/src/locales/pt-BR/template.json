@@ -341,7 +341,8 @@
         "save_submit": "Salvar modelo",
         "saved_title": "Modelo salvo",
         "saved_message": "{name} está pronto para uso ao criar itens de trabalho.",
-        "apply_error": "Não foi possível adicionar os sub-itens do modelo. Tente novamente ou adicione-os manualmente."
+        "apply_error": "Não foi possível adicionar os sub-itens do modelo. Tente novamente ou adicione-os manualmente.",
+        "prefill": "Novos itens de trabalho começam com"
       },
       "project": {
         "description": "Reutilize os estados, rótulos, propriedades personalizadas e modelos de itens de trabalho deste projeto ao criar novos projetos.",

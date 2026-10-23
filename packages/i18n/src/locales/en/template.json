@@ -341,7 +341,8 @@
         "save_submit": "Save template",
         "saved_title": "Template saved",
         "saved_message": "{name} is ready to use when creating work items.",
-        "apply_error": "The template's sub-work items couldn't be added. Please try again or add them manually."
+        "apply_error": "The template's sub-work items couldn't be added. Please try again or add them manually.",
+        "prefill": "New work items start with"
       },
       "project": {
         "description": "Reuse this project's states, labels, custom properties and work item templates when creating new projects.",

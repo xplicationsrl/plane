@@ -341,7 +341,8 @@
         "save_submit": "Salvează șablonul",
         "saved_title": "Șablon salvat",
         "saved_message": "{name} poate fi folosit la crearea activităților.",
-        "apply_error": "Sub-activitățile din șablon nu au putut fi adăugate. Încercați din nou sau adăugați-le manual."
+        "apply_error": "Sub-activitățile din șablon nu au putut fi adăugate. Încercați din nou sau adăugați-le manual.",
+        "prefill": "Activitățile noi pornesc cu"
       },
       "project": {
         "description": "Refolosiți stările, etichetele, proprietățile personalizate și șabloanele de activități ale acestui proiect atunci când creați proiecte noi.",

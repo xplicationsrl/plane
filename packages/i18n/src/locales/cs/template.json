@@ -341,7 +341,8 @@
         "save_submit": "Uložit šablonu",
         "saved_title": "Šablona uložena",
         "saved_message": "Šablonu {name} můžete použít při vytváření pracovních položek.",
-        "apply_error": "Podřízené položky ze šablony se nepodařilo přidat. Zkuste to znovu nebo je přidejte ručně."
+        "apply_error": "Podřízené položky ze šablony se nepodařilo přidat. Zkuste to znovu nebo je přidejte ručně.",
+        "prefill": "Nové pracovní položky začínají s"
       },
       "project": {
         "description": "Znovu použijte stavy, štítky, vlastní vlastnosti a šablony pracovních položek tohoto projektu při vytváření nových projektů.",

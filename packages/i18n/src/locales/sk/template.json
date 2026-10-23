@@ -341,7 +341,8 @@
         "save_submit": "Uložiť šablónu",
         "saved_title": "Šablóna uložená",
         "saved_message": "Šablónu {name} môžete použiť pri vytváraní pracovných položiek.",
-        "apply_error": "Podriadené položky zo šablóny sa nepodarilo pridať. Skúste to znova alebo ich pridajte ručne."
+        "apply_error": "Podriadené položky zo šablóny sa nepodarilo pridať. Skúste to znova alebo ich pridajte ručne.",
+        "prefill": "Nové pracovné položky začínajú s"
       },
       "project": {
         "description": "Znova použite stavy, štítky, vlastné vlastnosti a šablóny pracovných položiek tohto projektu pri vytváraní nových projektov.",

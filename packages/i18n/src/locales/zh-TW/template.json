@@ -341,7 +341,8 @@
         "save_submit": "儲存模板",
         "saved_title": "模板已儲存",
         "saved_message": "建立工作事項時即可使用 {name}。",
-        "apply_error": "無法新增模板中的子工作事項，請再試一次或手動新增。"
+        "apply_error": "無法新增模板中的子工作事項，請再試一次或手動新增。",
+        "prefill": "新工作事項的初始內容"
       },
       "project": {
         "description": "建立新專案時重複使用此專案的狀態、標籤、自訂屬性和工作事項模板。",

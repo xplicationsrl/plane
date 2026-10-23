@@ -341,7 +341,8 @@
         "save_submit": "Şablonu kaydet",
         "saved_title": "Şablon kaydedildi",
         "saved_message": "{name}, iş öğeleri oluştururken kullanılabilir.",
-        "apply_error": "Şablonun alt iş öğeleri eklenemedi. Lütfen tekrar deneyin veya elle ekleyin."
+        "apply_error": "Şablonun alt iş öğeleri eklenemedi. Lütfen tekrar deneyin veya elle ekleyin.",
+        "prefill": "Yeni iş öğelerinin başlangıç değerleri"
       },
       "project": {
         "description": "Yeni projeler oluştururken bu projenin durumlarını, etiketlerini, özel özelliklerini ve iş öğesi şablonlarını yeniden kullanın.",

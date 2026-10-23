@@ -341,7 +341,8 @@
         "save_submit": "Sjabloon opslaan",
         "saved_title": "Sjabloon opgeslagen",
         "saved_message": "{name} is klaar voor gebruik bij het aanmaken van werkitems.",
-        "apply_error": "De subwerkitems van het sjabloon konden niet worden toegevoegd. Probeer het opnieuw of voeg ze handmatig toe."
+        "apply_error": "De subwerkitems van het sjabloon konden niet worden toegevoegd. Probeer het opnieuw of voeg ze handmatig toe.",
+        "prefill": "Nieuwe werkitems beginnen met"
       },
       "project": {
         "description": "Hergebruik de statussen, labels, aangepaste eigenschappen en werkitemsjablonen van dit project bij het aanmaken van nieuwe projecten.",

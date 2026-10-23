@@ -341,7 +341,8 @@
         "save_submit": "Zapisz szablon",
         "saved_title": "Szablon zapisany",
         "saved_message": "Szablon {name} jest gotowy do użycia przy tworzeniu elementów pracy.",
-        "apply_error": "Nie udało się dodać elementów podrzędnych z szablonu. Spróbuj ponownie lub dodaj je ręcznie."
+        "apply_error": "Nie udało się dodać elementów podrzędnych z szablonu. Spróbuj ponownie lub dodaj je ręcznie.",
+        "prefill": "Nowe elementy pracy zaczynają się od"
       },
       "project": {
         "description": "Używaj ponownie stanów, etykiet, właściwości niestandardowych i szablonów elementów pracy tego projektu podczas tworzenia nowych projektów.",

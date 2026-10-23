@@ -341,7 +341,8 @@
         "save_submit": "Enregistrer le modèle",
         "saved_title": "Modèle enregistré",
         "saved_message": "{name} est prêt à être utilisé lors de la création d’éléments de travail.",
-        "apply_error": "Les sous-éléments du modèle n’ont pas pu être ajoutés. Veuillez réessayer ou les ajouter manuellement."
+        "apply_error": "Les sous-éléments du modèle n’ont pas pu être ajoutés. Veuillez réessayer ou les ajouter manuellement.",
+        "prefill": "Les nouveaux éléments de travail commencent avec"
       },
       "project": {
         "description": "Réutilisez les états, libellés, propriétés personnalisées et modèles d’éléments de travail de ce projet lors de la création de nouveaux projets.",

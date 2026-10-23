@@ -341,7 +341,8 @@
         "save_submit": "Vorlage speichern",
         "saved_title": "Vorlage gespeichert",
         "saved_message": "{name} steht beim Erstellen von Arbeitselementen bereit.",
-        "apply_error": "Die untergeordneten Elemente der Vorlage konnten nicht hinzugefügt werden. Bitte erneut versuchen oder manuell hinzufügen."
+        "apply_error": "Die untergeordneten Elemente der Vorlage konnten nicht hinzugefügt werden. Bitte erneut versuchen oder manuell hinzufügen.",
+        "prefill": "Neue Arbeitselemente beginnen mit"
       },
       "project": {
         "description": "Status, Labels, benutzerdefinierte Eigenschaften und Arbeitselementvorlagen dieses Projekts für neue Projekte wiederverwenden.",

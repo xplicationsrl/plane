@@ -341,7 +341,8 @@
         "save_submit": "Lưu mẫu",
         "saved_title": "Đã lưu mẫu",
         "saved_message": "{name} đã sẵn sàng để dùng khi tạo mục công việc.",
-        "apply_error": "Không thể thêm các mục công việc con của mẫu. Vui lòng thử lại hoặc thêm thủ công."
+        "apply_error": "Không thể thêm các mục công việc con của mẫu. Vui lòng thử lại hoặc thêm thủ công.",
+        "prefill": "Mục công việc mới bắt đầu với"
       },
       "project": {
         "description": "Tái sử dụng trạng thái, nhãn, thuộc tính tùy chỉnh và mẫu mục công việc của dự án này khi tạo dự án mới.",

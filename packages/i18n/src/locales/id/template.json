@@ -341,7 +341,8 @@
         "save_submit": "Simpan template",
         "saved_title": "Template disimpan",
         "saved_message": "{name} siap digunakan saat membuat item kerja.",
-        "apply_error": "Sub-item kerja dari template tidak dapat ditambahkan. Silakan coba lagi atau tambahkan secara manual."
+        "apply_error": "Sub-item kerja dari template tidak dapat ditambahkan. Silakan coba lagi atau tambahkan secara manual.",
+        "prefill": "Item kerja baru dimulai dengan"
       },
       "project": {
         "description": "Gunakan kembali status, label, properti kustom, dan template item kerja proyek ini saat membuat proyek baru.",

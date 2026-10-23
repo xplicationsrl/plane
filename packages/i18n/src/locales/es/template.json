@@ -341,7 +341,8 @@
         "save_submit": "Guardar plantilla",
         "saved_title": "Plantilla guardada",
         "saved_message": "{name} está lista para usarse al crear elementos de trabajo.",
-        "apply_error": "No se pudieron agregar los sub-elementos de la plantilla. Inténtelo de nuevo o agréguelos manualmente."
+        "apply_error": "No se pudieron agregar los sub-elementos de la plantilla. Inténtelo de nuevo o agréguelos manualmente.",
+        "prefill": "Los nuevos elementos de trabajo empiezan con"
       },
       "project": {
         "description": "Reutilice los estados, las etiquetas, las propiedades personalizadas y las plantillas de elementos de trabajo de este proyecto al crear proyectos nuevos.",
