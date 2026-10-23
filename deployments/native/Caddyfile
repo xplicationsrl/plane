@@ -4,7 +4,9 @@
 {
 	servers {
 		max_header_size 25MB
-		client_ip_headers X-Forwarded-For X-Real-IP
+		# Cloudflare's CF-Connecting-IP is the visitor; it is only honoured from the
+		# trusted (private-range) proxy in front of Caddy.
+		client_ip_headers CF-Connecting-IP X-Forwarded-For X-Real-IP
 		trusted_proxies static private_ranges
 	}
 }
@@ -41,7 +43,11 @@
 
 	@api path /api/* /auth/* /static/*
 	handle @api {
-		reverse_proxy 127.0.0.1:8100
+		reverse_proxy 127.0.0.1:8100 {
+			# Hand the API exactly one address, the resolved visitor IP, so its rate
+			# limits (NUM_PROXIES=1) key on visitors whatever proxies sit in front.
+			header_up X-Forwarded-For {client_ip}
+		}
 	}
 
 	@bucket path /uploads /uploads/*

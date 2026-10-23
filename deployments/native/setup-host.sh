@@ -105,6 +105,8 @@ install -m 640 -o root -g silo "$ENV_DIR/silo.env" /etc/default/silo
 
 log "Environment files"
 install -m 640 -o root -g plane "$ENV_DIR/api.env" $ROOT/shared/api.env
+# Caddy sends the API a single X-Forwarded-For entry (the visitor), see Caddyfile
+grep -q '^NUM_PROXIES=' $ROOT/shared/api.env || echo 'NUM_PROXIES=1' >>$ROOT/shared/api.env
 install -m 640 -o root -g plane "$ENV_DIR/live.env" $ROOT/shared/live.env
 
 log "PostgreSQL 18"

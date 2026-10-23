@@ -26,7 +26,7 @@ Migrations: `0126`–`0131` (all new tables, no changes to existing ones). New b
 ## Left to do
 
 1. **Manual UI pass** on a staging copy: sub-item checkbox and inline add; comment replies; each custom property type; timer and time log; repeat editor; template picker in the create form and in create-project; Forms settings and the public form page; "Also in" and the shared list.
-2. **Set `NUM_PROXIES=1`** on the native install (behind Caddy) so the form rate limit keys on the real client IP. Without it, DRF keys on the X-Forwarded-For header, which a client can spoof.
+2. **Real client IPs for rate limits.** The repo now has a fix: Caddy resolves the visitor from `CF-Connecting-IP` and sends the API a single `X-Forwarded-For`, and `setup-host.sh` adds `NUM_PROXIES=1` to `api.env`. Both are root-owned installed copies, so they take effect only after `sudo bash deployments/native/setup-host.sh` is re-run on the server. (Or by hand: copy the Caddyfile to `/etc/caddy/Caddyfile`, run `systemctl reload caddy`, add `NUM_PROXIES=1` to `/opt/plane/shared/api.env`, then restart `plane.target`.) Caveat: port 80 is open directly, so a client that bypasses Cloudflare can still forge `CF-Connecting-IP`.
 3. Not built yet (deliberately scoped out):
    - Custom properties as list/spreadsheet columns and filters.
    - A global "timer running" indicator outside the work item.

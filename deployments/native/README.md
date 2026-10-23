@@ -45,6 +45,8 @@ The CI key can do nothing else. `plane` may only run `systemctl restart plane.ta
 **Re-run or roll back:** run the workflow manually (Actions → Deploy production) on `production`, or on the server run `sudo -u plane /opt/plane/bin/deploy <older-sha-on-production>`.
 **Logs:** `journalctl -u plane-api -f` (likewise `plane-worker`, `plane-beat`, `plane-space`, `plane-live`, `caddy`, `silo`).
 
+**Client IPs:** Caddy resolves the visitor from Cloudflare's `CF-Connecting-IP` (trusted only from the private-range proxy in front of it) and sends the API that single address as `X-Forwarded-For`, so `api.env` needs `NUM_PROXIES=1` (`setup-host.sh` adds it when missing). Anonymous rate limits, such as public form submissions, then apply per visitor.
+
 Changes to `deploy.sh`, the systemd units or the Caddyfile only take effect after re-running `setup-host.sh`, because the installed copies are root-owned and a push can't modify them.
 
 ## First-time install
