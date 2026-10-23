@@ -15,6 +15,7 @@ import { cn } from "@plane/utils";
 import { MultipleSelectGroupAction } from "@/components/core/multiple-select";
 // hooks
 import type { TSelectionHelper } from "@/hooks/use-multiple-select";
+import { CustomPropertyHeaderColumns } from "@/components/custom-properties/spreadsheet-columns";
 import { SpreadsheetHeaderColumn } from "./spreadsheet-header-column";
 
 interface Props {
@@ -87,6 +88,7 @@ export const SpreadsheetHeader = observer(function SpreadsheetHeader(props: Prop
             isEpic={isEpic}
           />
         ))}
+        {!isEpic && <CustomPropertyHeaderColumns />}
       </tr>
     </thead>
   );

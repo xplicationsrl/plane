@@ -175,3 +175,24 @@ class IssueCustomPropertyValueEndpoint(BaseAPIView):
         if errors:
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(serialize_values(issue), status=status.HTTP_200_OK)
+
+
+class ProjectCustomPropertyValuesEndpoint(BaseAPIView):
+    """Values of many work items at once, for list layouts: ``?issue_ids=a,b,c``."""
+
+    MAX_ISSUES = 500
+
+    @allow_permission([ROLE.ADMIN, ROLE.MEMBER])
+    def get(self, request, slug, project_id):
+        issue_ids = valid_uuids(request.query_params.get("issue_ids", "").split(","))[: self.MAX_ISSUES]
+        rows = IssueCustomPropertyValue.objects.filter(
+            workspace__slug=slug,
+            project_id=project_id,
+            issue_id__in=issue_ids,
+            issue__deleted_at__isnull=True,
+            property__is_active=True,
+        ).values("issue_id", "property_id", "value")
+        result = {issue_id: {} for issue_id in issue_ids}
+        for row in rows:
+            result[str(row["issue_id"])][str(row["property_id"])] = row["value"]
+        return Response(result, status=status.HTTP_200_OK)

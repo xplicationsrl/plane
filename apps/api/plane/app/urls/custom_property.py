@@ -8,6 +8,7 @@ from plane.app.views import (
     CustomPropertyEndpoint,
     CustomPropertyDetailEndpoint,
     IssueCustomPropertyValueEndpoint,
+    ProjectCustomPropertyValuesEndpoint,
 )
 
 urlpatterns = [
@@ -25,5 +26,10 @@ urlpatterns = [
         "workspaces/<str:slug>/projects/<uuid:project_id>/issues/<uuid:issue_id>/custom-property-values/",
         IssueCustomPropertyValueEndpoint.as_view(),
         name="issue-custom-property-values",
+    ),
+    path(
+        "workspaces/<str:slug>/projects/<uuid:project_id>/custom-property-values/",
+        ProjectCustomPropertyValuesEndpoint.as_view(),
+        name="project-custom-property-values",
     ),
 ]

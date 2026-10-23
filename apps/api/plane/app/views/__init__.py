@@ -243,6 +243,7 @@ from .custom_property.base import (
     CustomPropertyEndpoint,
     CustomPropertyDetailEndpoint,
     IssueCustomPropertyValueEndpoint,
+    ProjectCustomPropertyValuesEndpoint,
 )
 
 from .time_entry.base import (

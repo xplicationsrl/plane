@@ -7,3 +7,4 @@
 export * from "./constants";
 export * from "./issue-properties";
 export * from "./property-value-input";
+export * from "./spreadsheet-columns";

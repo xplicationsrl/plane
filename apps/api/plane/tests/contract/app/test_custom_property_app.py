@@ -216,3 +216,41 @@ class TestIssueCustomPropertyValues:
         response = guest.patch(values_url(workspace.slug, project.id, issue.id), {str(prop["id"]): "x"}, format="json")
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
+
+
+def bulk_values_url(slug, project_id, issue_ids):
+    ids = ",".join(str(i) for i in issue_ids)
+    return f"/api/workspaces/{slug}/projects/{project_id}/custom-property-values/?issue_ids={ids}"
+
+
+@pytest.mark.contract
+class TestBulkCustomPropertyValues:
+    def test_values_for_many_work_items(self, session_client, workspace, project, issue):
+        prop = _create(session_client, workspace, project, name="Score", property_type="number").data
+        other = Issue.objects.create(name="Second", project=project, workspace=workspace)
+        session_client.patch(values_url(workspace.slug, project.id, issue.id), {str(prop["id"]): 7}, format="json")
+
+        response = session_client.get(bulk_values_url(workspace.slug, project.id, [issue.id, other.id, "junk"]))
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == {str(issue.id): {str(prop["id"]): 7}, str(other.id): {}}
+
+    def test_work_items_of_other_projects_are_not_returned(self, session_client, workspace, project, create_user):
+        other = Project.objects.create(name="Other", identifier="OTB", workspace=workspace, created_by=create_user)
+        ProjectMember.objects.create(project=other, member=create_user, workspace=workspace, role=20)
+        prop = _create(session_client, workspace, other, name="Secret", property_type="text").data
+        foreign = Issue.objects.create(name="Foreign", project=other, workspace=workspace)
+        session_client.patch(values_url(workspace.slug, other.id, foreign.id), {str(prop["id"]): "x"}, format="json")
+
+        response = session_client.get(bulk_values_url(workspace.slug, project.id, [foreign.id]))
+
+        assert response.data == {str(foreign.id): {}}
+
+    def test_hidden_properties_are_left_out(self, session_client, workspace, project, issue):
+        prop = _create(session_client, workspace, project, name="Hidden", property_type="text").data
+        session_client.patch(values_url(workspace.slug, project.id, issue.id), {str(prop["id"]): "x"}, format="json")
+        CustomProperty.objects.filter(pk=prop["id"]).update(is_active=False)
+
+        response = session_client.get(bulk_values_url(workspace.slug, project.id, [issue.id]))
+
+        assert response.data == {str(issue.id): {}}

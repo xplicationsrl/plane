@@ -20,6 +20,7 @@ import { useTableKeyboardNavigation } from "@/hooks/use-table-keyboard-navigatio
 import type { TRenderQuickActions } from "../list/list-view-types";
 import { getDisplayPropertiesCount } from "../utils";
 import { SpreadsheetIssueRow } from "./issue-row";
+import { useSpreadsheetCustomPropertyValues } from "@/components/custom-properties/spreadsheet-columns";
 import { SpreadsheetHeader } from "./spreadsheet-header";
 
 type Props = {
@@ -59,6 +60,7 @@ export const SpreadsheetTable = observer(function SpreadsheetTable(props: Props)
     isEpic = false,
   } = props;
 
+  useSpreadsheetCustomPropertyValues(isEpic ? [] : issueIds);
   // states
   const isScrolled = useRef(false);
   const [intersectionElement, setIntersectionElement] = useState<HTMLTableSectionElement | null>(null);
@@ -144,8 +146,8 @@ export const SpreadsheetTable = observer(function SpreadsheetTable(props: Props)
       </tbody>
       {canLoadMoreIssues && (
         <tfoot ref={setIntersectionElement}>
-          {Array.from({ length: 3 }).map((_, index) => (
-            <SpreadsheetIssueRowLoader key={index} columnCount={displayPropertiesCount} />
+          {["loader-1", "loader-2", "loader-3"].map((key) => (
+            <SpreadsheetIssueRowLoader key={key} columnCount={displayPropertiesCount} />
           ))}
         </tfoot>
       )}

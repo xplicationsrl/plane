@@ -63,6 +63,20 @@ export class CustomPropertyService extends APIService {
       });
   }
 
+  async getBulkIssueValues(
+    workspaceSlug: string,
+    projectId: string,
+    issueIds: string[]
+  ): Promise<Record<string, TIssueCustomPropertyValues>> {
+    return this.get(`${this.base(workspaceSlug, projectId)}/custom-property-values/`, {
+      params: { issue_ids: issueIds.join(",") },
+    })
+      .then((res) => res?.data)
+      .catch((err) => {
+        throw err?.response?.data;
+      });
+  }
+
   async updateIssueValues(
     workspaceSlug: string,
     projectId: string,

@@ -36,6 +36,8 @@ export interface ICustomPropertyStore {
   ) => Promise<TCustomProperty>;
   deleteProperty: (workspaceSlug: string, projectId: string, propertyId: string) => Promise<void>;
   fetchIssueValues: (workspaceSlug: string, projectId: string, issueId: string) => Promise<TIssueCustomPropertyValues>;
+  /** Loads values for list rows, skipping work items already loaded. */
+  fetchBulkIssueValues: (workspaceSlug: string, projectId: string, issueIds: string[]) => Promise<void>;
   updateIssueValue: (
     workspaceSlug: string,
     projectId: string,
@@ -62,6 +64,7 @@ export class CustomPropertyStore implements ICustomPropertyStore {
       updateProperty: action,
       deleteProperty: action,
       fetchIssueValues: action,
+      fetchBulkIssueValues: action,
       updateIssueValue: action,
     });
     this.service = new CustomPropertyService();
@@ -120,6 +123,21 @@ export class CustomPropertyStore implements ICustomPropertyStore {
     const values = await this.service.getIssueValues(workspaceSlug, projectId, issueId);
     runInAction(() => set(this.issueValues, [issueId], values));
     return values;
+  };
+
+  fetchBulkIssueValues = async (workspaceSlug: string, projectId: string, issueIds: string[]) => {
+    const missing = issueIds.filter((id) => !this.issueValues[id]);
+    // The API takes up to 500 ids per request
+    const chunks: string[][] = [];
+    for (let start = 0; start < missing.length; start += 500) chunks.push(missing.slice(start, start + 500));
+    const responses = await Promise.all(
+      chunks.map((chunk) => this.service.getBulkIssueValues(workspaceSlug, projectId, chunk))
+    );
+    runInAction(() =>
+      responses.forEach((values) =>
+        Object.entries(values).forEach(([issueId, issueValues]) => set(this.issueValues, [issueId], issueValues))
+      )
+    );
   };
 
   /** Optimistic: the value shows immediately and rolls back if the server rejects it. */

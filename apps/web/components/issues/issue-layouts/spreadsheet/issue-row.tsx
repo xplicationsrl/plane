@@ -33,6 +33,7 @@ import { usePlatformOS } from "@/hooks/use-platform-os";
 // local components
 import type { TRenderQuickActions } from "../list/list-view-types";
 import { isIssueNew } from "../utils";
+import { CustomPropertyCells } from "@/components/custom-properties/spreadsheet-columns";
 import { IssueColumn } from "./issue-column";
 
 interface Props {
@@ -365,8 +366,10 @@ const IssueRowDetails = observer(function IssueRowDetails(props: IssueRowDetails
                   </div>
                 </div>
                 <div
+                  role="presentation"
                   className={`opacity-0 transition-opacity group-hover:opacity-100 ${isMenuActive ? "!opacity-100" : ""}`}
                   onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
                 >
                   {quickActions({
                     issue: issueDetail,
@@ -392,6 +395,7 @@ const IssueRowDetails = observer(function IssueRowDetails(props: IssueRowDetails
           isEstimateEnabled={isEstimateEnabled}
         />
       ))}
+      {!isEpic && <CustomPropertyCells issue={issueDetail} disabled={disableUserActions} />}
     </>
   );
 });
