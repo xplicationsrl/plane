@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "დასრულებულად მონიშვნა",
       "reopen": "დაუსრულებლად მონიშვნა",
-      "completed": null
+      "completed": "დასრულებული"
     }
   },
   "sub_work_item": {

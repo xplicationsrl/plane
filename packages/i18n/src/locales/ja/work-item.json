@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "完了にする",
       "reopen": "未完了に戻す",
-      "completed": null
+      "completed": "完了"
     }
   },
   "sub_work_item": {

@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "Tamamlandı olarak işaretle",
       "reopen": "Tamamlanmadı olarak işaretle",
-      "completed": null
+      "completed": "Tamamlandı"
     }
   },
   "sub_work_item": {

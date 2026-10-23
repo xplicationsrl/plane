@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Text",
+      "number": "Număr",
+      "date": "Dată",
+      "select": "Selecție unică",
+      "multi_select": "Selecție multiplă",
+      "checkbox": "Casetă de selectare",
+      "url": "URL",
+      "member": "Persoane"
+    },
+    "value": {
+      "empty": "Gol",
+      "update_error": "Valoarea nu a putut fi salvată. Vă rugăm să încercați din nou."
+    },
+    "activity": {
+      "set": "a setat {field} la {value}",
+      "cleared": "a golit {field}"
+    },
+    "settings": {
+      "description": "Adăugați proprietăți pe care le poate avea fiecare activitate din acest proiect, cum ar fi un buget, un client sau o dată de revizuire.",
+      "add": "Adaugă proprietate",
+      "empty_title": "Încă nu există proprietăți personalizate",
+      "empty_description": "Proprietățile personalizate apar în bara laterală a fiecărei activități din acest proiect. Folosiți text, numere, date, liste derulante, casete de selectare, linkuri sau persoane.",
+      "visible": "Afișează în activități",
+      "move_up": "Mută în sus",
+      "move_down": "Mută în jos"
+    },
+    "form": {
+      "create_title": "Proprietate personalizată nouă",
+      "edit_title": "Editează proprietatea personalizată",
+      "name": "Nume",
+      "name_placeholder": "De exemplu: Buget",
+      "name_required": "Introduceți un nume pentru proprietate.",
+      "type": "Tip",
+      "type_locked": "Tipul nu poate fi modificat după crearea proprietății.",
+      "options": "Opțiuni",
+      "option_color": "Culoarea opțiunii",
+      "option_placeholder": "Opțiunea {index}",
+      "add_option": "Adaugă opțiune",
+      "options_required": "Adăugați cel puțin o opțiune.",
+      "description": "Descriere",
+      "description_placeholder": "Opțional: la ce folosește această proprietate",
+      "create": "Creează proprietatea",
+      "save_error": "Proprietatea nu a putut fi salvată. Vă rugăm să încercați din nou."
+    },
+    "delete": {
+      "title": "Șterge proprietatea personalizată",
+      "description": "Ștergeți {name}? Valoarea sa va fi eliminată din toate activitățile din acest proiect. Această acțiune nu poate fi anulată."
+    }
   }
 }

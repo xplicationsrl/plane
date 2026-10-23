@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Teks",
+      "number": "Angka",
+      "date": "Tanggal",
+      "select": "Pilihan tunggal",
+      "multi_select": "Pilihan ganda",
+      "checkbox": "Kotak centang",
+      "url": "URL",
+      "member": "Orang"
+    },
+    "value": {
+      "empty": "Kosong",
+      "update_error": "Nilai tidak dapat disimpan. Silakan coba lagi."
+    },
+    "activity": {
+      "set": "mengatur {field} menjadi {value}",
+      "cleared": "mengosongkan {field}"
+    },
+    "settings": {
+      "description": "Tambahkan properti yang dapat dimiliki setiap item kerja dalam proyek ini, seperti anggaran, pelanggan, atau tanggal tinjauan.",
+      "add": "Tambah properti",
+      "empty_title": "Belum ada properti kustom",
+      "empty_description": "Properti kustom muncul di bilah samping setiap item kerja dalam proyek ini. Gunakan teks, angka, tanggal, daftar pilihan, kotak centang, tautan, atau orang.",
+      "visible": "Tampilkan di item kerja",
+      "move_up": "Pindahkan ke atas",
+      "move_down": "Pindahkan ke bawah"
+    },
+    "form": {
+      "create_title": "Properti kustom baru",
+      "edit_title": "Edit properti kustom",
+      "name": "Nama",
+      "name_placeholder": "Misalnya: Anggaran",
+      "name_required": "Beri nama properti.",
+      "type": "Jenis",
+      "type_locked": "Jenis tidak dapat diubah setelah properti dibuat.",
+      "options": "Opsi",
+      "option_color": "Warna opsi",
+      "option_placeholder": "Opsi {index}",
+      "add_option": "Tambah opsi",
+      "options_required": "Tambahkan setidaknya satu opsi.",
+      "description": "Deskripsi",
+      "description_placeholder": "Opsional: untuk apa properti ini",
+      "create": "Buat properti",
+      "save_error": "Properti tidak dapat disimpan. Silakan coba lagi."
+    },
+    "delete": {
+      "title": "Hapus properti kustom",
+      "description": "Hapus {name}? Nilainya akan dihapus dari setiap item kerja dalam proyek ini. Tindakan ini tidak dapat dibatalkan."
+    }
   }
 }

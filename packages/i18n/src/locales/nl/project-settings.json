@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Tekst",
+      "number": "Getal",
+      "date": "Datum",
+      "select": "Enkele keuze",
+      "multi_select": "Meerdere keuzes",
+      "checkbox": "Selectievakje",
+      "url": "URL",
+      "member": "Personen"
+    },
+    "value": {
+      "empty": "Leeg",
+      "update_error": "De waarde kon niet worden opgeslagen. Probeer het opnieuw."
+    },
+    "activity": {
+      "set": "heeft {field} ingesteld op {value}",
+      "cleared": "heeft {field} gewist"
+    },
+    "settings": {
+      "description": "Voeg eigenschappen toe die elk werkitem in dit project kan hebben, zoals een budget, een klant of een reviewdatum.",
+      "add": "Eigenschap toevoegen",
+      "empty_title": "Nog geen aangepaste eigenschappen",
+      "empty_description": "Aangepaste eigenschappen verschijnen in de zijbalk van elk werkitem in dit project. Gebruik tekst, getallen, datums, keuzelijsten, selectievakjes, links of personen.",
+      "visible": "Tonen bij werkitems",
+      "move_up": "Omhoog verplaatsen",
+      "move_down": "Omlaag verplaatsen"
+    },
+    "form": {
+      "create_title": "Nieuwe aangepaste eigenschap",
+      "edit_title": "Aangepaste eigenschap bewerken",
+      "name": "Naam",
+      "name_placeholder": "Bijvoorbeeld: Budget",
+      "name_required": "Geef de eigenschap een naam.",
+      "type": "Type",
+      "type_locked": "Het type kan niet worden gewijzigd nadat de eigenschap is gemaakt.",
+      "options": "Opties",
+      "option_color": "Kleur van optie",
+      "option_placeholder": "Optie {index}",
+      "add_option": "Optie toevoegen",
+      "options_required": "Voeg ten minste één optie toe.",
+      "description": "Omschrijving",
+      "description_placeholder": "Optioneel: waarvoor deze eigenschap dient",
+      "create": "Eigenschap maken",
+      "save_error": "De eigenschap kon niet worden opgeslagen. Probeer het opnieuw."
+    },
+    "delete": {
+      "title": "Aangepaste eigenschap verwijderen",
+      "description": "{name} verwijderen? De waarde wordt uit elk werkitem in dit project verwijderd. Dit kan niet ongedaan worden gemaakt."
+    }
   }
 }

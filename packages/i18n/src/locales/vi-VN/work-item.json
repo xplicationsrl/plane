@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "Đánh dấu hoàn thành",
       "reopen": "Đánh dấu chưa hoàn thành",
-      "completed": null
+      "completed": "Đã hoàn thành"
     }
   },
   "sub_work_item": {

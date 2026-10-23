@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "文本",
+      "number": "数字",
+      "date": "日期",
+      "select": "单选",
+      "multi_select": "多选",
+      "checkbox": "复选框",
+      "url": "URL",
+      "member": "人员"
+    },
+    "value": {
+      "empty": "空",
+      "update_error": "无法保存该值，请重试。"
+    },
+    "activity": {
+      "set": "将 {field} 设置为 {value}",
+      "cleared": "清除了 {field}"
+    },
+    "settings": {
+      "description": "添加本项目中每个工作项都可以使用的属性，例如预算、客户或评审日期。",
+      "add": "添加属性",
+      "empty_title": "暂无自定义属性",
+      "empty_description": "自定义属性会显示在本项目每个工作项的侧边栏中。可以使用文本、数字、日期、下拉列表、复选框、链接或人员。",
+      "visible": "在工作项中显示",
+      "move_up": "上移",
+      "move_down": "下移"
+    },
+    "form": {
+      "create_title": "新建自定义属性",
+      "edit_title": "编辑自定义属性",
+      "name": "名称",
+      "name_placeholder": "例如：预算",
+      "name_required": "请输入属性名称。",
+      "type": "类型",
+      "type_locked": "属性创建后无法更改类型。",
+      "options": "选项",
+      "option_color": "选项颜色",
+      "option_placeholder": "选项 {index}",
+      "add_option": "添加选项",
+      "options_required": "请至少添加一个选项。",
+      "description": "描述",
+      "description_placeholder": "可选：此属性的用途",
+      "create": "创建属性",
+      "save_error": "无法保存属性，请重试。"
+    },
+    "delete": {
+      "title": "删除自定义属性",
+      "description": "删除 {name}？该属性在本项目所有工作项中的值都将被移除。此操作无法撤销。"
+    }
   }
 }

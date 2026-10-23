@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Text",
+      "number": "Zahl",
+      "date": "Datum",
+      "select": "Einfachauswahl",
+      "multi_select": "Mehrfachauswahl",
+      "checkbox": "Kontrollkästchen",
+      "url": "URL",
+      "member": "Personen"
+    },
+    "value": {
+      "empty": "Leer",
+      "update_error": "Der Wert konnte nicht gespeichert werden. Bitte erneut versuchen."
+    },
+    "activity": {
+      "set": "hat {field} auf {value} gesetzt",
+      "cleared": "hat {field} geleert"
+    },
+    "settings": {
+      "description": "Fügen Sie Eigenschaften hinzu, die jedes Arbeitselement in diesem Projekt haben kann, etwa ein Budget, einen Kunden oder ein Prüfdatum.",
+      "add": "Eigenschaft hinzufügen",
+      "empty_title": "Noch keine benutzerdefinierten Eigenschaften",
+      "empty_description": "Benutzerdefinierte Eigenschaften erscheinen in der Seitenleiste jedes Arbeitselements in diesem Projekt. Verfügbar sind Text, Zahlen, Datumsangaben, Auswahllisten, Kontrollkästchen, Links und Personen.",
+      "visible": "In Arbeitselementen anzeigen",
+      "move_up": "Nach oben verschieben",
+      "move_down": "Nach unten verschieben"
+    },
+    "form": {
+      "create_title": "Neue benutzerdefinierte Eigenschaft",
+      "edit_title": "Benutzerdefinierte Eigenschaft bearbeiten",
+      "name": "Name",
+      "name_placeholder": "Zum Beispiel: Budget",
+      "name_required": "Bitte einen Namen für die Eigenschaft eingeben.",
+      "type": "Typ",
+      "type_locked": "Der Typ kann nach dem Erstellen der Eigenschaft nicht geändert werden.",
+      "options": "Optionen",
+      "option_color": "Farbe der Option",
+      "option_placeholder": "Option {index}",
+      "add_option": "Option hinzufügen",
+      "options_required": "Bitte mindestens eine Option hinzufügen.",
+      "description": "Beschreibung",
+      "description_placeholder": "Optional: wofür diese Eigenschaft dient",
+      "create": "Eigenschaft erstellen",
+      "save_error": "Die Eigenschaft konnte nicht gespeichert werden. Bitte erneut versuchen."
+    },
+    "delete": {
+      "title": "Benutzerdefinierte Eigenschaft löschen",
+      "description": "{name} löschen? Der Wert wird aus allen Arbeitselementen in diesem Projekt entfernt. Dies kann nicht rückgängig gemacht werden."
+    }
   }
 }

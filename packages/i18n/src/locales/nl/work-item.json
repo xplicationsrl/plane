@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "Markeren als voltooid",
       "reopen": "Markeren als niet voltooid",
-      "completed": null
+      "completed": "Voltooid"
     }
   },
   "sub_work_item": {

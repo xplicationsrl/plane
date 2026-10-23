@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Văn bản",
+      "number": "Số",
+      "date": "Ngày",
+      "select": "Chọn một",
+      "multi_select": "Chọn nhiều",
+      "checkbox": "Hộp kiểm",
+      "url": "URL",
+      "member": "Người"
+    },
+    "value": {
+      "empty": "Trống",
+      "update_error": "Không thể lưu giá trị. Vui lòng thử lại."
+    },
+    "activity": {
+      "set": "đã đặt {field} thành {value}",
+      "cleared": "đã xóa {field}"
+    },
+    "settings": {
+      "description": "Thêm các thuộc tính mà mọi mục công việc trong dự án này có thể có, chẳng hạn như ngân sách, khách hàng hoặc ngày xem xét.",
+      "add": "Thêm thuộc tính",
+      "empty_title": "Chưa có thuộc tính tùy chỉnh",
+      "empty_description": "Thuộc tính tùy chỉnh xuất hiện trong thanh bên của mọi mục công việc trong dự án này. Sử dụng văn bản, số, ngày, danh sách thả xuống, hộp kiểm, liên kết hoặc người.",
+      "visible": "Hiển thị trên mục công việc",
+      "move_up": "Di chuyển lên",
+      "move_down": "Di chuyển xuống"
+    },
+    "form": {
+      "create_title": "Thuộc tính tùy chỉnh mới",
+      "edit_title": "Chỉnh sửa thuộc tính tùy chỉnh",
+      "name": "Tên",
+      "name_placeholder": "Ví dụ: Ngân sách",
+      "name_required": "Hãy đặt tên cho thuộc tính.",
+      "type": "Loại",
+      "type_locked": "Không thể thay đổi loại sau khi đã tạo thuộc tính.",
+      "options": "Tùy chọn",
+      "option_color": "Màu tùy chọn",
+      "option_placeholder": "Tùy chọn {index}",
+      "add_option": "Thêm tùy chọn",
+      "options_required": "Hãy thêm ít nhất một tùy chọn.",
+      "description": "Mô tả",
+      "description_placeholder": "Tùy chọn: thuộc tính này dùng để làm gì",
+      "create": "Tạo thuộc tính",
+      "save_error": "Không thể lưu thuộc tính. Vui lòng thử lại."
+    },
+    "delete": {
+      "title": "Xóa thuộc tính tùy chỉnh",
+      "description": "Xóa {name}? Giá trị của thuộc tính này sẽ bị xóa khỏi mọi mục công việc trong dự án này. Không thể hoàn tác thao tác này."
+    }
   }
 }

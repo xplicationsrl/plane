@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Texto",
+      "number": "Número",
+      "date": "Data",
+      "select": "Seleção única",
+      "multi_select": "Seleção múltipla",
+      "checkbox": "Caixa de seleção",
+      "url": "URL",
+      "member": "Pessoas"
+    },
+    "value": {
+      "empty": "Vazio",
+      "update_error": "Não foi possível salvar o valor. Tente novamente."
+    },
+    "activity": {
+      "set": "definiu {field} como {value}",
+      "cleared": "limpou {field}"
+    },
+    "settings": {
+      "description": "Adicione propriedades que cada item de trabalho deste projeto pode ter, como um orçamento, um cliente ou uma data de revisão.",
+      "add": "Adicionar propriedade",
+      "empty_title": "Ainda não há propriedades personalizadas",
+      "empty_description": "As propriedades personalizadas aparecem na barra lateral de cada item de trabalho deste projeto. Use texto, números, datas, listas suspensas, caixas de seleção, links ou pessoas.",
+      "visible": "Mostrar nos itens de trabalho",
+      "move_up": "Mover para cima",
+      "move_down": "Mover para baixo"
+    },
+    "form": {
+      "create_title": "Nova propriedade personalizada",
+      "edit_title": "Editar propriedade personalizada",
+      "name": "Nome",
+      "name_placeholder": "Por exemplo: Orçamento",
+      "name_required": "Dê um nome à propriedade.",
+      "type": "Tipo",
+      "type_locked": "O tipo não pode ser alterado depois que a propriedade é criada.",
+      "options": "Opções",
+      "option_color": "Cor da opção",
+      "option_placeholder": "Opção {index}",
+      "add_option": "Adicionar opção",
+      "options_required": "Adicione pelo menos uma opção.",
+      "description": "Descrição",
+      "description_placeholder": "Opcional: para que serve esta propriedade",
+      "create": "Criar propriedade",
+      "save_error": "Não foi possível salvar a propriedade. Tente novamente."
+    },
+    "delete": {
+      "title": "Excluir propriedade personalizada",
+      "description": "Excluir {name}? O valor dela será removido de todos os itens de trabalho deste projeto. Esta ação não pode ser desfeita."
+    }
   }
 }

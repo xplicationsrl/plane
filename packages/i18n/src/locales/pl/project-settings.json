@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Tekst",
+      "number": "Liczba",
+      "date": "Data",
+      "select": "Pojedynczy wybór",
+      "multi_select": "Wielokrotny wybór",
+      "checkbox": "Pole wyboru",
+      "url": "URL",
+      "member": "Osoby"
+    },
+    "value": {
+      "empty": "Puste",
+      "update_error": "Nie udało się zapisać wartości. Spróbuj ponownie."
+    },
+    "activity": {
+      "set": "ustawił(a) {field} na {value}",
+      "cleared": "wyczyścił(a) {field}"
+    },
+    "settings": {
+      "description": "Dodaj właściwości, które może mieć każdy element pracy w tym projekcie, np. budżet, klienta lub datę przeglądu.",
+      "add": "Dodaj właściwość",
+      "empty_title": "Brak właściwości niestandardowych",
+      "empty_description": "Właściwości niestandardowe pojawiają się na pasku bocznym każdego elementu pracy w tym projekcie. Użyj tekstu, liczb, dat, list rozwijanych, pól wyboru, linków lub osób.",
+      "visible": "Pokaż w elementach pracy",
+      "move_up": "Przenieś w górę",
+      "move_down": "Przenieś w dół"
+    },
+    "form": {
+      "create_title": "Nowa właściwość niestandardowa",
+      "edit_title": "Edytuj właściwość niestandardową",
+      "name": "Nazwa",
+      "name_placeholder": "Na przykład: Budżet",
+      "name_required": "Podaj nazwę właściwości.",
+      "type": "Typ",
+      "type_locked": "Po utworzeniu właściwości nie można zmienić jej typu.",
+      "options": "Opcje",
+      "option_color": "Kolor opcji",
+      "option_placeholder": "Opcja {index}",
+      "add_option": "Dodaj opcję",
+      "options_required": "Dodaj co najmniej jedną opcję.",
+      "description": "Opis",
+      "description_placeholder": "Opcjonalnie: do czego służy ta właściwość",
+      "create": "Utwórz właściwość",
+      "save_error": "Nie udało się zapisać właściwości. Spróbuj ponownie."
+    },
+    "delete": {
+      "title": "Usuń właściwość niestandardową",
+      "description": "Usunąć {name}? Jej wartość zostanie usunięta ze wszystkich elementów pracy w tym projekcie. Tej operacji nie można cofnąć."
+    }
   }
 }

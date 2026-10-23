@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Texte",
+      "number": "Nombre",
+      "date": "Date",
+      "select": "Sélection unique",
+      "multi_select": "Sélection multiple",
+      "checkbox": "Case à cocher",
+      "url": "URL",
+      "member": "Personnes"
+    },
+    "value": {
+      "empty": "Vide",
+      "update_error": "La valeur n’a pas pu être enregistrée. Veuillez réessayer."
+    },
+    "activity": {
+      "set": "a défini {field} sur {value}",
+      "cleared": "a effacé {field}"
+    },
+    "settings": {
+      "description": "Ajoutez des propriétés que chaque élément de travail de ce projet peut porter, comme un budget, un client ou une date de revue.",
+      "add": "Ajouter une propriété",
+      "empty_title": "Aucune propriété personnalisée pour le moment",
+      "empty_description": "Les propriétés personnalisées apparaissent dans le panneau latéral de chaque élément de travail de ce projet. Utilisez du texte, des nombres, des dates, des listes déroulantes, des cases à cocher, des liens ou des personnes.",
+      "visible": "Afficher sur les éléments de travail",
+      "move_up": "Monter",
+      "move_down": "Descendre"
+    },
+    "form": {
+      "create_title": "Nouvelle propriété personnalisée",
+      "edit_title": "Modifier la propriété personnalisée",
+      "name": "Nom",
+      "name_placeholder": "Par exemple : Budget",
+      "name_required": "Saisissez un nom pour la propriété.",
+      "type": "Type",
+      "type_locked": "Le type ne peut pas être modifié après la création de la propriété.",
+      "options": "Options",
+      "option_color": "Couleur de l’option",
+      "option_placeholder": "Option {index}",
+      "add_option": "Ajouter une option",
+      "options_required": "Ajoutez au moins une option.",
+      "description": "Description",
+      "description_placeholder": "Facultatif : à quoi sert cette propriété",
+      "create": "Créer la propriété",
+      "save_error": "La propriété n’a pas pu être enregistrée. Veuillez réessayer."
+    },
+    "delete": {
+      "title": "Supprimer la propriété personnalisée",
+      "description": "Supprimer {name} ? Sa valeur sera retirée de tous les éléments de travail de ce projet. Cette action est irréversible."
+    }
   }
 }

@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Text",
+      "number": "Číslo",
+      "date": "Datum",
+      "select": "Jednoduchý výběr",
+      "multi_select": "Vícenásobný výběr",
+      "checkbox": "Zaškrtávací políčko",
+      "url": "URL",
+      "member": "Lidé"
+    },
+    "value": {
+      "empty": "Prázdné",
+      "update_error": "Hodnotu se nepodařilo uložit. Zkuste to prosím znovu."
+    },
+    "activity": {
+      "set": "nastavil(a) {field} na {value}",
+      "cleared": "vymazal(a) {field}"
+    },
+    "settings": {
+      "description": "Přidejte vlastnosti, které může mít každá pracovní položka v tomto projektu, například rozpočet, zákazníka nebo datum kontroly.",
+      "add": "Přidat vlastnost",
+      "empty_title": "Zatím žádné vlastní vlastnosti",
+      "empty_description": "Vlastní vlastnosti se zobrazují v postranním panelu každé pracovní položky v tomto projektu. Použijte text, čísla, data, rozbalovací seznamy, zaškrtávací políčka, odkazy nebo lidi.",
+      "visible": "Zobrazit u pracovních položek",
+      "move_up": "Posunout nahoru",
+      "move_down": "Posunout dolů"
+    },
+    "form": {
+      "create_title": "Nová vlastní vlastnost",
+      "edit_title": "Upravit vlastní vlastnost",
+      "name": "Název",
+      "name_placeholder": "Například: Rozpočet",
+      "name_required": "Zadejte název vlastnosti.",
+      "type": "Typ",
+      "type_locked": "Typ nelze po vytvoření vlastnosti změnit.",
+      "options": "Možnosti",
+      "option_color": "Barva možnosti",
+      "option_placeholder": "Možnost {index}",
+      "add_option": "Přidat možnost",
+      "options_required": "Přidejte alespoň jednu možnost.",
+      "description": "Popis",
+      "description_placeholder": "Volitelné: k čemu tato vlastnost slouží",
+      "create": "Vytvořit vlastnost",
+      "save_error": "Vlastnost se nepodařilo uložit. Zkuste to prosím znovu."
+    },
+    "delete": {
+      "title": "Smazat vlastní vlastnost",
+      "description": "Smazat {name}? Její hodnota bude odstraněna ze všech pracovních položek v tomto projektu. Tuto akci nelze vrátit zpět."
+    }
   }
 }

@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "Позначити як завершене",
       "reopen": "Позначити як незавершене",
-      "completed": null
+      "completed": "Завершено"
     }
   },
   "sub_work_item": {

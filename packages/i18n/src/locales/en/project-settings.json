@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Text",
+      "number": "Number",
+      "date": "Date",
+      "select": "Single select",
+      "multi_select": "Multi select",
+      "checkbox": "Checkbox",
+      "url": "URL",
+      "member": "People"
+    },
+    "value": {
+      "empty": "Empty",
+      "update_error": "The value couldn't be saved. Please try again."
+    },
+    "activity": {
+      "set": "set {field} to {value}",
+      "cleared": "cleared {field}"
+    },
+    "settings": {
+      "description": "Add properties that every work item in this project can carry, such as a budget, a customer or a review date.",
+      "add": "Add property",
+      "empty_title": "No custom properties yet",
+      "empty_description": "Custom properties appear in the sidebar of every work item in this project. Use text, numbers, dates, dropdowns, checkboxes, links or people.",
+      "visible": "Show on work items",
+      "move_up": "Move up",
+      "move_down": "Move down"
+    },
+    "form": {
+      "create_title": "New custom property",
+      "edit_title": "Edit custom property",
+      "name": "Name",
+      "name_placeholder": "For example, Budget",
+      "name_required": "Give the property a name.",
+      "type": "Type",
+      "type_locked": "The type can't be changed after the property is created.",
+      "options": "Options",
+      "option_color": "Option color",
+      "option_placeholder": "Option {index}",
+      "add_option": "Add option",
+      "options_required": "Add at least one option.",
+      "description": "Description",
+      "description_placeholder": "Optional: what this property is for",
+      "create": "Create property",
+      "save_error": "The property couldn't be saved. Please try again."
+    },
+    "delete": {
+      "title": "Delete custom property",
+      "description": "Delete {name}? Its value is removed from every work item in this project. This can't be undone."
+    }
   }
 }

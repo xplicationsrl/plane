@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "标记为已完成",
       "reopen": "标记为未完成",
-      "completed": null
+      "completed": "已完成"
     }
   },
   "sub_work_item": {

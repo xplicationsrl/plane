@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "Marchează ca finalizat",
       "reopen": "Marchează ca nefinalizat",
-      "completed": null
+      "completed": "Finalizat"
     }
   },
   "sub_work_item": {

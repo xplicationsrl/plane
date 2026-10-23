@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Testo",
+      "number": "Numero",
+      "date": "Data",
+      "select": "Selezione singola",
+      "multi_select": "Selezione multipla",
+      "checkbox": "Casella di controllo",
+      "url": "URL",
+      "member": "Persone"
+    },
+    "value": {
+      "empty": "Vuoto",
+      "update_error": "Non è stato possibile salvare il valore. Riprovi."
+    },
+    "activity": {
+      "set": "ha impostato {field} su {value}",
+      "cleared": "ha cancellato {field}"
+    },
+    "settings": {
+      "description": "Aggiunga proprietà che ogni elemento di lavoro di questo progetto può avere, come un budget, un cliente o una data di revisione.",
+      "add": "Aggiungi proprietà",
+      "empty_title": "Ancora nessuna proprietà personalizzata",
+      "empty_description": "Le proprietà personalizzate compaiono nella barra laterale di ogni elemento di lavoro di questo progetto. Usi testo, numeri, date, elenchi a discesa, caselle di controllo, link o persone.",
+      "visible": "Mostra negli elementi di lavoro",
+      "move_up": "Sposta su",
+      "move_down": "Sposta giù"
+    },
+    "form": {
+      "create_title": "Nuova proprietà personalizzata",
+      "edit_title": "Modifica proprietà personalizzata",
+      "name": "Nome",
+      "name_placeholder": "Ad esempio: Budget",
+      "name_required": "Inserisca un nome per la proprietà.",
+      "type": "Tipo",
+      "type_locked": "Il tipo non può essere modificato dopo la creazione della proprietà.",
+      "options": "Opzioni",
+      "option_color": "Colore dell’opzione",
+      "option_placeholder": "Opzione {index}",
+      "add_option": "Aggiungi opzione",
+      "options_required": "Aggiunga almeno un’opzione.",
+      "description": "Descrizione",
+      "description_placeholder": "Facoltativo: a cosa serve questa proprietà",
+      "create": "Crea proprietà",
+      "save_error": "Non è stato possibile salvare la proprietà. Riprovi."
+    },
+    "delete": {
+      "title": "Elimina proprietà personalizzata",
+      "description": "Eliminare {name}? Il suo valore verrà rimosso da tutti gli elementi di lavoro di questo progetto. L’operazione non può essere annullata."
+    }
   }
 }

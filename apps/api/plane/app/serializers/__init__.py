@@ -135,3 +135,5 @@ from .draft import (
     DraftIssueSerializer,
     DraftIssueDetailSerializer,
 )
+
+from .custom_property import CustomPropertySerializer

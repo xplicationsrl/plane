@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "Marcar como completado",
       "reopen": "Marcar como no completado",
-      "completed": null
+      "completed": "Completado"
     }
   },
   "sub_work_item": {

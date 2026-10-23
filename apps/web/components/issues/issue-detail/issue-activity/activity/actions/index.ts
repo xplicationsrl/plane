@@ -23,6 +23,7 @@ export * from "./attachment";
 export * from "./archived-at";
 export * from "./inbox";
 export * from "./label-activity-chip";
+export * from "./custom-property";
 
 // helpers
 export * from "./helpers/activity-block";

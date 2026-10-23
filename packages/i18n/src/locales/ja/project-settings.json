@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "テキスト",
+      "number": "数値",
+      "date": "日付",
+      "select": "単一選択",
+      "multi_select": "複数選択",
+      "checkbox": "チェックボックス",
+      "url": "URL",
+      "member": "ユーザー"
+    },
+    "value": {
+      "empty": "未設定",
+      "update_error": "値を保存できませんでした。もう一度お試しください。"
+    },
+    "activity": {
+      "set": "{field} を {value} に設定しました",
+      "cleared": "{field} をクリアしました"
+    },
+    "settings": {
+      "description": "このプロジェクトのすべての作業項目に持たせるプロパティ（予算、顧客、レビュー日など）を追加します。",
+      "add": "プロパティを追加",
+      "empty_title": "カスタムプロパティはまだありません",
+      "empty_description": "カスタムプロパティは、このプロジェクトのすべての作業項目のサイドバーに表示されます。テキスト、数値、日付、ドロップダウン、チェックボックス、リンク、ユーザーを使用できます。",
+      "visible": "作業項目に表示",
+      "move_up": "上へ移動",
+      "move_down": "下へ移動"
+    },
+    "form": {
+      "create_title": "新しいカスタムプロパティ",
+      "edit_title": "カスタムプロパティを編集",
+      "name": "名前",
+      "name_placeholder": "例：予算",
+      "name_required": "プロパティ名を入力してください。",
+      "type": "種類",
+      "type_locked": "プロパティの作成後は種類を変更できません。",
+      "options": "選択肢",
+      "option_color": "選択肢の色",
+      "option_placeholder": "選択肢 {index}",
+      "add_option": "選択肢を追加",
+      "options_required": "選択肢を 1 つ以上追加してください。",
+      "description": "説明",
+      "description_placeholder": "任意：このプロパティの用途",
+      "create": "プロパティを作成",
+      "save_error": "プロパティを保存できませんでした。もう一度お試しください。"
+    },
+    "delete": {
+      "title": "カスタムプロパティを削除",
+      "description": "{name} を削除しますか？このプロジェクトのすべての作業項目からその値が削除されます。この操作は元に戻せません。"
+    }
   }
 }

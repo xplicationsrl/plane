@@ -274,7 +274,7 @@
     "completion": {
       "mark_complete": "Označit jako dokončené",
       "reopen": "Označit jako nedokončené",
-      "completed": null
+      "completed": "Dokončeno"
     }
   },
   "sub_work_item": {

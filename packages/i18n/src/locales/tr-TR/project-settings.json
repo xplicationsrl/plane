@@ -522,5 +522,56 @@
         }
       }
     }
+  },
+  "custom_properties": {
+    "types": {
+      "text": "Metin",
+      "number": "Sayı",
+      "date": "Tarih",
+      "select": "Tekli seçim",
+      "multi_select": "Çoklu seçim",
+      "checkbox": "Onay kutusu",
+      "url": "URL",
+      "member": "Kişiler"
+    },
+    "value": {
+      "empty": "Boş",
+      "update_error": "Değer kaydedilemedi. Lütfen tekrar deneyin."
+    },
+    "activity": {
+      "set": "{field} alanını {value} olarak ayarladı",
+      "cleared": "{field} alanını temizledi"
+    },
+    "settings": {
+      "description": "Bu projedeki her iş öğesinin taşıyabileceği bütçe, müşteri veya inceleme tarihi gibi özellikler ekleyin.",
+      "add": "Özellik ekle",
+      "empty_title": "Henüz özel özellik yok",
+      "empty_description": "Özel özellikler bu projedeki her iş öğesinin kenar çubuğunda görünür. Metin, sayı, tarih, açılır liste, onay kutusu, bağlantı veya kişi kullanın.",
+      "visible": "İş öğelerinde göster",
+      "move_up": "Yukarı taşı",
+      "move_down": "Aşağı taşı"
+    },
+    "form": {
+      "create_title": "Yeni özel özellik",
+      "edit_title": "Özel özelliği düzenle",
+      "name": "Ad",
+      "name_placeholder": "Örneğin: Bütçe",
+      "name_required": "Özelliğe bir ad verin.",
+      "type": "Tür",
+      "type_locked": "Özellik oluşturulduktan sonra türü değiştirilemez.",
+      "options": "Seçenekler",
+      "option_color": "Seçenek rengi",
+      "option_placeholder": "Seçenek {index}",
+      "add_option": "Seçenek ekle",
+      "options_required": "En az bir seçenek ekleyin.",
+      "description": "Açıklama",
+      "description_placeholder": "İsteğe bağlı: bu özelliğin amacı",
+      "create": "Özellik oluştur",
+      "save_error": "Özellik kaydedilemedi. Lütfen tekrar deneyin."
+    },
+    "delete": {
+      "title": "Özel özelliği sil",
+      "description": "{name} silinsin mi? Değeri bu projedeki tüm iş öğelerinden kaldırılır. Bu işlem geri alınamaz."
+    }
   }
 }
