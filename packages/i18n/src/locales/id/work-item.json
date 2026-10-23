@@ -462,5 +462,32 @@
       "switched_title": "Timer dipindahkan ke sini",
       "switched_message": "Timer sebelumnya telah dihentikan dan {duration} telah dicatat."
     }
+  },
+  "recurrence": {
+    "label": "Pengulangan",
+    "none": "Tidak berulang",
+    "title": "Ulangi",
+    "every": "Ulangi setiap",
+    "interval": "Interval",
+    "on_days": "Pada",
+    "ends": "Berakhir",
+    "never": "Tidak pernah",
+    "stop": "Berhenti mengulang",
+    "error": "Pengaturan pengulangan tidak dapat disimpan. Silakan coba lagi.",
+    "explainer": "Setelah selesai, yang berikutnya dibuat secara otomatis.",
+    "frequency": {
+      "daily": "{count, plural, one {hari} other {hari}}",
+      "weekly": "{count, plural, one {minggu} other {minggu}}",
+      "monthly": "{count, plural, one {bulan} other {bulan}}",
+      "yearly": "{count, plural, one {tahun} other {tahun}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Setiap hari} other {Setiap # hari}}",
+      "weekly": "{count, plural, one {Setiap minggu} other {Setiap # minggu}}",
+      "monthly": "{count, plural, one {Setiap bulan} other {Setiap # bulan}}",
+      "yearly": "{count, plural, one {Setiap tahun} other {Setiap # tahun}}",
+      "on_days": "{summary} pada {days}",
+      "until": "{summary} hingga {date}"
+    }
   }
 }

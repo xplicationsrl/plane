@@ -462,5 +462,32 @@
       "switched_title": "ტაიმერი აქ გადმოვიდა",
       "switched_message": "წინა ტაიმერი გაჩერდა და აღირიცხა {duration}."
     }
+  },
+  "recurrence": {
+    "label": "გამეორება",
+    "none": "არ მეორდება",
+    "title": "გამეორება",
+    "every": "გამეორება ყოველ",
+    "interval": "ინტერვალი",
+    "on_days": "დღეები",
+    "ends": "დასრულება",
+    "never": "არასოდეს",
+    "stop": "გამეორების შეწყვეტა",
+    "error": "გამეორების პარამეტრების შენახვა ვერ მოხერხდა. გთხოვთ, სცადოთ ხელახლა.",
+    "explainer": "დასრულების შემდეგ შემდეგი ავტომატურად შეიქმნება.",
+    "frequency": {
+      "daily": "{count, plural, one {დღე} other {დღე}}",
+      "weekly": "{count, plural, one {კვირა} other {კვირა}}",
+      "monthly": "{count, plural, one {თვე} other {თვე}}",
+      "yearly": "{count, plural, one {წელი} other {წელი}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {ყოველდღე} other {ყოველ # დღეში}}",
+      "weekly": "{count, plural, one {ყოველკვირა} other {ყოველ # კვირაში}}",
+      "monthly": "{count, plural, one {ყოველთვე} other {ყოველ # თვეში}}",
+      "yearly": "{count, plural, one {ყოველწლიურად} other {ყოველ # წელიწადში}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary} {date}-მდე"
+    }
   }
 }

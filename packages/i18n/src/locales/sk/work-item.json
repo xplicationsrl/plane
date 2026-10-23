@@ -462,5 +462,32 @@
       "switched_title": "Časovač bol presunutý sem",
       "switched_message": "Predchádzajúci časovač bol zastavený a zapísalo sa {duration}."
     }
+  },
+  "recurrence": {
+    "label": "Opakovanie",
+    "none": "Neopakuje sa",
+    "title": "Opakovať",
+    "every": "Opakovať raz za",
+    "interval": "Interval",
+    "on_days": "V dni",
+    "ends": "Koniec",
+    "never": "Nikdy",
+    "stop": "Zrušiť opakovanie",
+    "error": "Nastavenia opakovania sa nepodarilo uložiť. Skúste to znova.",
+    "explainer": "Po dokončení sa automaticky vytvorí ďalšia.",
+    "frequency": {
+      "daily": "{count, plural, one {deň} few {dni} many {dňa} other {dní}}",
+      "weekly": "{count, plural, one {týždeň} few {týždne} many {týždňa} other {týždňov}}",
+      "monthly": "{count, plural, one {mesiac} few {mesiace} many {mesiaca} other {mesiacov}}",
+      "yearly": "{count, plural, one {rok} few {roky} many {roka} other {rokov}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Každý deň} few {Každé # dni} many {Každých # dňa} other {Každých # dní}}",
+      "weekly": "{count, plural, one {Každý týždeň} few {Každé # týždne} many {Každých # týždňa} other {Každých # týždňov}}",
+      "monthly": "{count, plural, one {Každý mesiac} few {Každé # mesiace} many {Každých # mesiaca} other {Každých # mesiacov}}",
+      "yearly": "{count, plural, one {Každý rok} few {Každé # roky} many {Každých # roka} other {Každých # rokov}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary} do {date}"
+    }
   }
 }

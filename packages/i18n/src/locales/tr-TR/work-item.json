@@ -462,5 +462,32 @@
       "switched_title": "Zamanlayıcı buraya taşındı",
       "switched_message": "Önceki zamanlayıcınız durduruldu ve {duration} kaydedildi."
     }
+  },
+  "recurrence": {
+    "label": "Tekrar",
+    "none": "Tekrarlanmaz",
+    "title": "Tekrarla",
+    "every": "Tekrarlama aralığı",
+    "interval": "Aralık",
+    "on_days": "Günler",
+    "ends": "Bitiş",
+    "never": "Hiçbir zaman",
+    "stop": "Tekrarlamayı durdur",
+    "error": "Tekrar ayarları kaydedilemedi. Lütfen tekrar deneyin.",
+    "explainer": "Tamamlandığında bir sonraki otomatik olarak oluşturulur.",
+    "frequency": {
+      "daily": "{count, plural, one {gün} other {gün}}",
+      "weekly": "{count, plural, one {hafta} other {hafta}}",
+      "monthly": "{count, plural, one {ay} other {ay}}",
+      "yearly": "{count, plural, one {yıl} other {yıl}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Her gün} other {# günde bir}}",
+      "weekly": "{count, plural, one {Her hafta} other {# haftada bir}}",
+      "monthly": "{count, plural, one {Her ay} other {# ayda bir}}",
+      "yearly": "{count, plural, one {Her yıl} other {# yılda bir}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary}, {date} tarihine kadar"
+    }
   }
 }

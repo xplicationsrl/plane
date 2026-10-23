@@ -18,6 +18,7 @@ import {
   ModuleOutline,
   ParentOutline,
   PriorityOutline,
+  RepeatOutline,
   StartDateOutline,
   StateOutline,
   UserOutline,
@@ -26,6 +27,7 @@ import { DateSelect } from "@plane/blocks/property-select";
 import { cn, getDate, renderFormattedPayloadDate, shouldHighlightIssueDueDate } from "@plane/utils";
 // components
 import { IssueCustomProperties } from "@/components/custom-properties";
+import { IssueRecurrence } from "@/components/recurrence";
 import { IssueTimeTracking } from "@/components/time-tracking";
 import { EstimateSelect } from "@/components/dropdowns/estimate/estimate-select";
 import { ButtonAvatars } from "@/components/dropdowns/member/avatar";
@@ -176,6 +178,10 @@ export const PeekOverviewProperties = observer(function PeekOverviewProperties(p
               tooltipHeading={t("common.order_by.due_date")}
             />
           </div>
+        </SidebarPropertyListItem>
+
+        <SidebarPropertyListItem icon={RepeatOutline} label={t("recurrence.label")}>
+          <IssueRecurrence workspaceSlug={workspaceSlug} projectId={projectId} issueId={issueId} disabled={disabled} />
         </SidebarPropertyListItem>
 
         {isEstimateEnabled && (

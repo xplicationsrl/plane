@@ -462,5 +462,32 @@
       "switched_title": "타이머가 여기로 이동했습니다",
       "switched_message": "이전 타이머가 중지되었고 {duration}이(가) 기록되었습니다."
     }
+  },
+  "recurrence": {
+    "label": "반복",
+    "none": "반복 안 함",
+    "title": "반복",
+    "every": "반복 간격",
+    "interval": "간격",
+    "on_days": "요일",
+    "ends": "종료",
+    "never": "안 함",
+    "stop": "반복 중지",
+    "error": "반복 설정을 저장하지 못했습니다. 다시 시도해 주십시오.",
+    "explainer": "완료하면 다음 항목이 자동으로 생성됩니다.",
+    "frequency": {
+      "daily": "{count, plural, one {일} other {일}}",
+      "weekly": "{count, plural, one {주} other {주}}",
+      "monthly": "{count, plural, one {개월} other {개월}}",
+      "yearly": "{count, plural, one {년} other {년}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {매일} other {#일마다}}",
+      "weekly": "{count, plural, one {매주} other {#주마다}}",
+      "monthly": "{count, plural, one {매월} other {#개월마다}}",
+      "yearly": "{count, plural, one {매년} other {#년마다}}",
+      "on_days": "{summary} ({days})",
+      "until": "{summary} ({date}까지)"
+    }
   }
 }

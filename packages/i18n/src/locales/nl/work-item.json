@@ -462,5 +462,32 @@
       "switched_title": "Timer hierheen verplaatst",
       "switched_message": "Uw vorige timer is gestopt en {duration} is geregistreerd."
     }
+  },
+  "recurrence": {
+    "label": "Herhaling",
+    "none": "Herhaalt niet",
+    "title": "Herhalen",
+    "every": "Herhaal elke",
+    "interval": "Interval",
+    "on_days": "Op",
+    "ends": "Eindigt",
+    "never": "Nooit",
+    "stop": "Herhaling stoppen",
+    "error": "De herhaalinstellingen konden niet worden opgeslagen. Probeer het opnieuw.",
+    "explainer": "Wanneer het is voltooid, wordt het volgende automatisch aangemaakt.",
+    "frequency": {
+      "daily": "{count, plural, one {dag} other {dagen}}",
+      "weekly": "{count, plural, one {week} other {weken}}",
+      "monthly": "{count, plural, one {maand} other {maanden}}",
+      "yearly": "{count, plural, one {jaar} other {jaar}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Elke dag} other {Elke # dagen}}",
+      "weekly": "{count, plural, one {Elke week} other {Elke # weken}}",
+      "monthly": "{count, plural, one {Elke maand} other {Elke # maanden}}",
+      "yearly": "{count, plural, one {Elk jaar} other {Elke # jaar}}",
+      "on_days": "{summary} op {days}",
+      "until": "{summary} tot {date}"
+    }
   }
 }

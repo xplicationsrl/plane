@@ -7,38 +7,97 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('db', '0126_custom_properties'),
+        ("db", "0126_custom_properties"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='IssueTimeEntry',
+            name="IssueTimeEntry",
             fields=[
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created At')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Last Modified At')),
-                ('deleted_at', models.DateTimeField(blank=True, null=True, verbose_name='Deleted At')),
-                ('id', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('started_at', models.DateTimeField(blank=True, null=True)),
-                ('ended_at', models.DateTimeField(blank=True, null=True)),
-                ('duration_seconds', models.PositiveIntegerField(default=0)),
-                ('logged_on', models.DateField()),
-                ('description', models.TextField(blank=True, default='')),
-                ('created_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(class)s_created_by', to=settings.AUTH_USER_MODEL, verbose_name='Created By')),
-                ('issue', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='time_entries', to='db.issue')),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='project_%(class)s', to='db.project')),
-                ('updated_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(class)s_updated_by', to=settings.AUTH_USER_MODEL, verbose_name='Last Modified By')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='time_entries', to=settings.AUTH_USER_MODEL)),
-                ('workspace', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='workspace_%(class)s', to='db.workspace')),
+                ("created_at", models.DateTimeField(auto_now_add=True, verbose_name="Created At")),
+                ("updated_at", models.DateTimeField(auto_now=True, verbose_name="Last Modified At")),
+                ("deleted_at", models.DateTimeField(blank=True, null=True, verbose_name="Deleted At")),
+                (
+                    "id",
+                    models.UUIDField(
+                        db_index=True,
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("started_at", models.DateTimeField(blank=True, null=True)),
+                ("ended_at", models.DateTimeField(blank=True, null=True)),
+                ("duration_seconds", models.PositiveIntegerField(default=0)),
+                ("logged_on", models.DateField()),
+                ("description", models.TextField(blank=True, default="")),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(class)s_created_by",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Created By",
+                    ),
+                ),
+                (
+                    "issue",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="time_entries", to="db.issue"
+                    ),
+                ),
+                (
+                    "project",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="project_%(class)s", to="db.project"
+                    ),
+                ),
+                (
+                    "updated_by",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(class)s_updated_by",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Last Modified By",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="time_entries",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "workspace",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="workspace_%(class)s",
+                        to="db.workspace",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Issue Time Entry',
-                'verbose_name_plural': 'Issue Time Entries',
-                'db_table': 'issue_time_entries',
-                'ordering': ('-logged_on', '-created_at'),
-                'indexes': [models.Index(fields=['issue', 'logged_on'], name='time_entry_issue_logged_on_idx')],
-                'constraints': [models.UniqueConstraint(condition=models.Q(('deleted_at__isnull', True), ('ended_at__isnull', True), ('started_at__isnull', False)), fields=('user',), name='issue_time_entry_one_running_timer_per_user')],
+                "verbose_name": "Issue Time Entry",
+                "verbose_name_plural": "Issue Time Entries",
+                "db_table": "issue_time_entries",
+                "ordering": ("-logged_on", "-created_at"),
+                "indexes": [models.Index(fields=["issue", "logged_on"], name="time_entry_issue_logged_on_idx")],
+                "constraints": [
+                    models.UniqueConstraint(
+                        condition=models.Q(
+                            ("deleted_at__isnull", True), ("ended_at__isnull", True), ("started_at__isnull", False)
+                        ),
+                        fields=("user",),
+                        name="issue_time_entry_one_running_timer_per_user",
+                    )
+                ],
             },
         ),
     ]

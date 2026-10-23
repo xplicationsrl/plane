@@ -462,5 +462,32 @@
       "switched_title": "Timer spostato qui",
       "switched_message": "Il timer precedente è stato fermato e sono stati registrati {duration}."
     }
+  },
+  "recurrence": {
+    "label": "Ripetizione",
+    "none": "Non si ripete",
+    "title": "Ripeti",
+    "every": "Ripeti ogni",
+    "interval": "Intervallo",
+    "on_days": "Nei giorni",
+    "ends": "Termina",
+    "never": "Mai",
+    "stop": "Interrompi ripetizione",
+    "error": "Non è stato possibile salvare le impostazioni di ripetizione. Riprovi.",
+    "explainer": "Quando viene completato, il successivo viene creato automaticamente.",
+    "frequency": {
+      "daily": "{count, plural, one {giorno} many {giorni} other {giorni}}",
+      "weekly": "{count, plural, one {settimana} many {settimane} other {settimane}}",
+      "monthly": "{count, plural, one {mese} many {mesi} other {mesi}}",
+      "yearly": "{count, plural, one {anno} many {anni} other {anni}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Ogni giorno} many {Ogni # giorni} other {Ogni # giorni}}",
+      "weekly": "{count, plural, one {Ogni settimana} many {Ogni # settimane} other {Ogni # settimane}}",
+      "monthly": "{count, plural, one {Ogni mese} many {Ogni # mesi} other {Ogni # mesi}}",
+      "yearly": "{count, plural, one {Ogni anno} many {Ogni # anni} other {Ogni # anni}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary} fino al {date}"
+    }
   }
 }

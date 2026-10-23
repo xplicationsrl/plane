@@ -462,5 +462,32 @@
       "switched_title": "Timer hierher verschoben",
       "switched_message": "Ihr vorheriger Timer wurde gestoppt und {duration} wurden erfasst."
     }
+  },
+  "recurrence": {
+    "label": "Wiederholung",
+    "none": "Keine Wiederholung",
+    "title": "Wiederholen",
+    "every": "Wiederholen alle",
+    "interval": "Intervall",
+    "on_days": "An",
+    "ends": "Endet",
+    "never": "Nie",
+    "stop": "Wiederholung beenden",
+    "error": "Die Wiederholungseinstellungen konnten nicht gespeichert werden. Bitte erneut versuchen.",
+    "explainer": "Nach dem Abschließen wird das nächste automatisch erstellt.",
+    "frequency": {
+      "daily": "{count, plural, one {Tag} other {Tage}}",
+      "weekly": "{count, plural, one {Woche} other {Wochen}}",
+      "monthly": "{count, plural, one {Monat} other {Monate}}",
+      "yearly": "{count, plural, one {Jahr} other {Jahre}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Täglich} other {Alle # Tage}}",
+      "weekly": "{count, plural, one {Wöchentlich} other {Alle # Wochen}}",
+      "monthly": "{count, plural, one {Monatlich} other {Alle # Monate}}",
+      "yearly": "{count, plural, one {Jährlich} other {Alle # Jahre}}",
+      "on_days": "{summary} am {days}",
+      "until": "{summary} bis {date}"
+    }
   }
 }

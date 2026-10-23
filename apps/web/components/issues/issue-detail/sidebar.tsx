@@ -18,6 +18,7 @@ import {
   ModuleOutline,
   ParentOutline,
   PriorityOutline,
+  RepeatOutline,
   StartDateOutline,
   StateOutline,
   UserOutline,
@@ -39,6 +40,7 @@ import { useProjectState } from "@/hooks/store/use-project-state";
 import { useUserProfile } from "@/hooks/store/user";
 // components
 import { IssueCustomProperties } from "@/components/custom-properties";
+import { IssueRecurrence } from "@/components/recurrence";
 import { IssueTimeTracking } from "@/components/time-tracking";
 import { IssueParentSelectRoot } from "@/components/issues/parent-select-root";
 import { SidebarPropertyListItem } from "@/components/common/layout/sidebar/property-list-item";
@@ -178,6 +180,15 @@ export const IssueDetailsSidebar = observer(function IssueDetailsSidebar(props: 
                   tooltipHeading={t("common.order_by.due_date")}
                 />
               </div>
+            </SidebarPropertyListItem>
+
+            <SidebarPropertyListItem icon={RepeatOutline} label={t("recurrence.label")}>
+              <IssueRecurrence
+                workspaceSlug={workspaceSlug}
+                projectId={projectId}
+                issueId={issueId}
+                disabled={!isEditable}
+              />
             </SidebarPropertyListItem>
 
             {projectId && areEstimateEnabledByProjectId(projectId) && (

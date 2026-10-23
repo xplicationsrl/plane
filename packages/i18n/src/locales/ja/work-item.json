@@ -462,5 +462,32 @@
       "switched_title": "タイマーをここに移動しました",
       "switched_message": "前のタイマーを停止し、{duration} を記録しました。"
     }
+  },
+  "recurrence": {
+    "label": "繰り返し",
+    "none": "繰り返さない",
+    "title": "繰り返し",
+    "every": "繰り返す間隔",
+    "interval": "間隔",
+    "on_days": "曜日",
+    "ends": "終了",
+    "never": "なし",
+    "stop": "繰り返しを停止",
+    "error": "繰り返しの設定を保存できませんでした。もう一度お試しください。",
+    "explainer": "完了すると、次の作業項目が自動的に作成されます。",
+    "frequency": {
+      "daily": "{count, plural, one {日} other {日}}",
+      "weekly": "{count, plural, one {週間} other {週間}}",
+      "monthly": "{count, plural, one {か月} other {か月}}",
+      "yearly": "{count, plural, one {年} other {年}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {毎日} other {#日ごと}}",
+      "weekly": "{count, plural, one {毎週} other {#週間ごと}}",
+      "monthly": "{count, plural, one {毎月} other {#か月ごと}}",
+      "yearly": "{count, plural, one {毎年} other {#年ごと}}",
+      "on_days": "{summary}（{days}）",
+      "until": "{summary}（{date} まで）"
+    }
   }
 }

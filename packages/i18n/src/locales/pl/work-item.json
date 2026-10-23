@@ -462,5 +462,32 @@
       "switched_title": "Licznik przeniesiony tutaj",
       "switched_message": "Poprzedni licznik został zatrzymany i zarejestrowano {duration}."
     }
+  },
+  "recurrence": {
+    "label": "Powtarzanie",
+    "none": "Nie powtarza się",
+    "title": "Powtarzaj",
+    "every": "Powtarzaj co",
+    "interval": "Interwał",
+    "on_days": "W dni",
+    "ends": "Koniec",
+    "never": "Nigdy",
+    "stop": "Zatrzymaj powtarzanie",
+    "error": "Nie udało się zapisać ustawień powtarzania. Spróbuj ponownie.",
+    "explainer": "Po zakończeniu następny zostanie utworzony automatycznie.",
+    "frequency": {
+      "daily": "{count, plural, one {dzień} few {dni} many {dni} other {dnia}}",
+      "weekly": "{count, plural, one {tydzień} few {tygodnie} many {tygodni} other {tygodnia}}",
+      "monthly": "{count, plural, one {miesiąc} few {miesiące} many {miesięcy} other {miesiąca}}",
+      "yearly": "{count, plural, one {rok} few {lata} many {lat} other {roku}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Codziennie} few {Co # dni} many {Co # dni} other {Co # dnia}}",
+      "weekly": "{count, plural, one {Co tydzień} few {Co # tygodnie} many {Co # tygodni} other {Co # tygodnia}}",
+      "monthly": "{count, plural, one {Co miesiąc} few {Co # miesiące} many {Co # miesięcy} other {Co # miesiąca}}",
+      "yearly": "{count, plural, one {Co roku} few {Co # lata} many {Co # lat} other {Co # roku}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary} do {date}"
+    }
   }
 }

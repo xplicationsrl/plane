@@ -49,6 +49,10 @@ app.conf.beat_schedule = {
         "task": "plane.bgtasks.email_notification_task.stack_email_notification",
         "schedule": crontab(minute="*/5"),  # Every 5 minutes
     },
+    "spawn-due-recurring-work-items": {
+        "task": "plane.bgtasks.recurring_issue_task.spawn_due_recurrences",
+        "schedule": crontab(minute="*/5"),  # Every 5 minutes
+    },
     "check-every-five-minutes-to-unsnooze-intake-issues": {
         "task": "plane.bgtasks.issue_automation_task.unsnooze_expired_intake_issues",
         "schedule": crontab(minute="*/5"),  # Every 5 minutes

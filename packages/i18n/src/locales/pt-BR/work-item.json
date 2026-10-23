@@ -462,5 +462,32 @@
       "switched_title": "Cronômetro movido para cá",
       "switched_message": "Seu cronômetro anterior foi parado e {duration} foram registrados."
     }
+  },
+  "recurrence": {
+    "label": "Repetição",
+    "none": "Não se repete",
+    "title": "Repetir",
+    "every": "Repetir a cada",
+    "interval": "Intervalo",
+    "on_days": "Nos dias",
+    "ends": "Termina",
+    "never": "Nunca",
+    "stop": "Parar de repetir",
+    "error": "Não foi possível salvar as configurações de repetição. Tente novamente.",
+    "explainer": "Quando concluído, o próximo é criado automaticamente.",
+    "frequency": {
+      "daily": "{count, plural, one {dia} many {dias} other {dias}}",
+      "weekly": "{count, plural, one {semana} many {semanas} other {semanas}}",
+      "monthly": "{count, plural, one {mês} many {meses} other {meses}}",
+      "yearly": "{count, plural, one {ano} many {anos} other {anos}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Todos os dias} many {A cada # dias} other {A cada # dias}}",
+      "weekly": "{count, plural, one {Toda semana} many {A cada # semanas} other {A cada # semanas}}",
+      "monthly": "{count, plural, one {Todo mês} many {A cada # meses} other {A cada # meses}}",
+      "yearly": "{count, plural, one {Todo ano} many {A cada # anos} other {A cada # anos}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary} até {date}"
+    }
   }
 }

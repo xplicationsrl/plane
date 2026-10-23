@@ -93,3 +93,4 @@ from .description import Description, DescriptionVersion
 
 from .custom_property import CustomProperty, CustomPropertyType, IssueCustomPropertyValue
 from .time_entry import IssueTimeEntry
+from .recurrence import IssueRecurrence, RecurrenceFrequency

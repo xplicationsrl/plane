@@ -462,5 +462,32 @@
       "switched_title": "Таймер перенесено сюди",
       "switched_message": "Попередній таймер зупинено, записано {duration}."
     }
+  },
+  "recurrence": {
+    "label": "Повторення",
+    "none": "Не повторюється",
+    "title": "Повторювати",
+    "every": "Повторювати раз на",
+    "interval": "Інтервал",
+    "on_days": "У дні",
+    "ends": "Завершення",
+    "never": "Ніколи",
+    "stop": "Припинити повторення",
+    "error": "Не вдалося зберегти налаштування повторення. Спробуйте ще раз.",
+    "explainer": "Після завершення наступна створюється автоматично.",
+    "frequency": {
+      "daily": "{count, plural, one {день} few {дні} many {днів} other {дня}}",
+      "weekly": "{count, plural, one {тиждень} few {тижні} many {тижнів} other {тижня}}",
+      "monthly": "{count, plural, one {місяць} few {місяці} many {місяців} other {місяця}}",
+      "yearly": "{count, plural, one {рік} few {роки} many {років} other {року}}"
+    },
+    "summary": {
+      "daily": "{count, plural, =1 {Щодня} one {Кожен # день} few {Кожні # дні} many {Кожні # днів} other {Кожні # дня}}",
+      "weekly": "{count, plural, =1 {Щотижня} one {Кожен # тиждень} few {Кожні # тижні} many {Кожні # тижнів} other {Кожні # тижня}}",
+      "monthly": "{count, plural, =1 {Щомісяця} one {Кожен # місяць} few {Кожні # місяці} many {Кожні # місяців} other {Кожні # місяця}}",
+      "yearly": "{count, plural, =1 {Щороку} one {Кожен # рік} few {Кожні # роки} many {Кожні # років} other {Кожні # року}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary} до {date}"
+    }
   }
 }

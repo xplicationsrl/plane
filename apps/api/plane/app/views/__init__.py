@@ -251,3 +251,5 @@ from .time_entry.base import (
     RunningTimeEntryEndpoint,
 )
 
+
+from .recurrence.base import IssueRecurrenceEndpoint

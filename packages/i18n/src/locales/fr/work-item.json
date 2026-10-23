@@ -462,5 +462,32 @@
       "switched_title": "Minuteur déplacé ici",
       "switched_message": "Votre minuteur précédent a été arrêté et {duration} ont été saisis."
     }
+  },
+  "recurrence": {
+    "label": "Répétition",
+    "none": "Ne se répète pas",
+    "title": "Répéter",
+    "every": "Intervalle",
+    "interval": "Intervalle",
+    "on_days": "Les jours",
+    "ends": "Fin",
+    "never": "Jamais",
+    "stop": "Arrêter la répétition",
+    "error": "Les paramètres de répétition n’ont pas pu être enregistrés. Veuillez réessayer.",
+    "explainer": "Une fois terminé, le suivant est créé automatiquement.",
+    "frequency": {
+      "daily": "{count, plural, one {jour} many {jours} other {jours}}",
+      "weekly": "{count, plural, one {semaine} many {semaines} other {semaines}}",
+      "monthly": "{count, plural, one {mois} many {mois} other {mois}}",
+      "yearly": "{count, plural, one {an} many {ans} other {ans}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Tous les jours} many {Tous les # jours} other {Tous les # jours}}",
+      "weekly": "{count, plural, one {Toutes les semaines} many {Toutes les # semaines} other {Toutes les # semaines}}",
+      "monthly": "{count, plural, one {Tous les mois} many {Tous les # mois} other {Tous les # mois}}",
+      "yearly": "{count, plural, one {Tous les ans} many {Tous les # ans} other {Tous les # ans}}",
+      "on_days": "{summary} le {days}",
+      "until": "{summary} jusqu’au {date}"
+    }
   }
 }

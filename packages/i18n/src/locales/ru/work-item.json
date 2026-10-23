@@ -462,5 +462,32 @@
       "switched_title": "Таймер перенесён сюда",
       "switched_message": "Предыдущий таймер остановлен, записано {duration}."
     }
+  },
+  "recurrence": {
+    "label": "Повтор",
+    "none": "Не повторяется",
+    "title": "Повторять",
+    "every": "Повторять раз в",
+    "interval": "Интервал",
+    "on_days": "По дням",
+    "ends": "Окончание",
+    "never": "Никогда",
+    "stop": "Прекратить повтор",
+    "error": "Не удалось сохранить настройки повтора. Попробуйте ещё раз.",
+    "explainer": "После завершения следующий создаётся автоматически.",
+    "frequency": {
+      "daily": "{count, plural, one {день} few {дня} many {дней} other {дня}}",
+      "weekly": "{count, plural, one {неделю} few {недели} many {недель} other {недели}}",
+      "monthly": "{count, plural, one {месяц} few {месяца} many {месяцев} other {месяца}}",
+      "yearly": "{count, plural, one {год} few {года} many {лет} other {года}}"
+    },
+    "summary": {
+      "daily": "{count, plural, =1 {Каждый день} one {Каждый # день} few {Каждые # дня} many {Каждые # дней} other {Каждые # дня}}",
+      "weekly": "{count, plural, =1 {Каждую неделю} one {Каждую # неделю} few {Каждые # недели} many {Каждые # недель} other {Каждые # недели}}",
+      "monthly": "{count, plural, =1 {Каждый месяц} one {Каждый # месяц} few {Каждые # месяца} many {Каждые # месяцев} other {Каждые # месяца}}",
+      "yearly": "{count, plural, =1 {Каждый год} one {Каждый # год} few {Каждые # года} many {Каждые # лет} other {Каждые # года}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary} до {date}"
+    }
   }
 }

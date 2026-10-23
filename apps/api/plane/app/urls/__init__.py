@@ -8,6 +8,7 @@ from .asset import urlpatterns as asset_urls
 from .cycle import urlpatterns as cycle_urls
 from .custom_property import urlpatterns as custom_property_urls
 from .time_entry import urlpatterns as time_entry_urls
+from .recurrence import urlpatterns as recurrence_urls
 from .estimate import urlpatterns as estimate_urls
 from .external import urlpatterns as external_urls
 from .intake import urlpatterns as intake_urls
@@ -31,6 +32,7 @@ urlpatterns = [
     *cycle_urls,
     *custom_property_urls,
     *time_entry_urls,
+    *recurrence_urls,
     *estimate_urls,
     *external_urls,
     *intake_urls,

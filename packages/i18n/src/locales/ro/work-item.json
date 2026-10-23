@@ -462,5 +462,32 @@
       "switched_title": "Cronometrul a fost mutat aici",
       "switched_message": "Cronometrul anterior a fost oprit și s-au înregistrat {duration}."
     }
+  },
+  "recurrence": {
+    "label": "Repetare",
+    "none": "Nu se repetă",
+    "title": "Repetă",
+    "every": "Repetă la fiecare",
+    "interval": "Interval",
+    "on_days": "În zilele",
+    "ends": "Se termină",
+    "never": "Niciodată",
+    "stop": "Oprește repetarea",
+    "error": "Setările de repetare nu au putut fi salvate. Vă rugăm să încercați din nou.",
+    "explainer": "După finalizare, următoarea este creată automat.",
+    "frequency": {
+      "daily": "{count, plural, one {zi} few {zile} other {de zile}}",
+      "weekly": "{count, plural, one {săptămână} few {săptămâni} other {de săptămâni}}",
+      "monthly": "{count, plural, one {lună} few {luni} other {de luni}}",
+      "yearly": "{count, plural, one {an} few {ani} other {de ani}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Zilnic} few {La fiecare # zile} other {La fiecare # de zile}}",
+      "weekly": "{count, plural, one {Săptămânal} few {La fiecare # săptămâni} other {La fiecare # de săptămâni}}",
+      "monthly": "{count, plural, one {Lunar} few {La fiecare # luni} other {La fiecare # de luni}}",
+      "yearly": "{count, plural, one {Anual} few {La fiecare # ani} other {La fiecare # de ani}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary} până la {date}"
+    }
   }
 }

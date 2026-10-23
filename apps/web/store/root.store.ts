@@ -25,6 +25,8 @@ import { TimeLineStore } from "./timeline/timeline.store";
 import type { ICustomPropertyStore } from "./custom-property.store";
 import { CustomPropertyStore } from "./custom-property.store";
 import type { ICycleStore } from "./cycle.store";
+import type { IRecurrenceStore } from "./recurrence.store";
+import { RecurrenceStore } from "./recurrence.store";
 import type { ITimeEntryStore } from "./time-entry.store";
 import { TimeEntryStore } from "./time-entry.store";
 import { CycleStore } from "./cycle.store";
@@ -109,6 +111,7 @@ export class CoreRootStore {
   timelineStore: ITimelineStore;
   customProperty: ICustomPropertyStore;
   timeEntry: ITimeEntryStore;
+  recurrence: IRecurrenceStore;
 
   constructor() {
     this.router = new RouterStore();
@@ -143,6 +146,7 @@ export class CoreRootStore {
     this.timelineStore = new TimeLineStore(this);
     this.customProperty = new CustomPropertyStore();
     this.timeEntry = new TimeEntryStore();
+    this.recurrence = new RecurrenceStore();
   }
 
   resetOnSignOut() {
@@ -179,6 +183,7 @@ export class CoreRootStore {
     this.timelineStore = new TimeLineStore(this);
     this.customProperty = new CustomPropertyStore();
     this.timeEntry = new TimeEntryStore();
+    this.recurrence = new RecurrenceStore();
   }
 }
 

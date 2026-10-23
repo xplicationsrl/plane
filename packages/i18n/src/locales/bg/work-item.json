@@ -462,5 +462,32 @@
       "switched_title": "Таймерът е преместен тук",
       "switched_message": "Предишният ви таймер беше спрян и бяха отчетени {duration}."
     }
+  },
+  "recurrence": {
+    "label": "Повторение",
+    "none": "Не се повтаря",
+    "title": "Повторение",
+    "every": "Повтаряне на всеки",
+    "interval": "Интервал",
+    "on_days": "Дни",
+    "ends": "Край",
+    "never": "Никога",
+    "stop": "Спри повторението",
+    "error": "Настройките за повторение не можаха да бъдат запазени. Моля, опитайте отново.",
+    "explainer": "Когато бъде завършен, следващият се създава автоматично.",
+    "frequency": {
+      "daily": "{count, plural, one {ден} other {дни}}",
+      "weekly": "{count, plural, one {седмица} other {седмици}}",
+      "monthly": "{count, plural, one {месец} other {месеца}}",
+      "yearly": "{count, plural, one {година} other {години}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Всеки ден} other {На всеки # дни}}",
+      "weekly": "{count, plural, one {Всяка седмица} other {На всеки # седмици}}",
+      "monthly": "{count, plural, one {Всеки месец} other {На всеки # месеца}}",
+      "yearly": "{count, plural, one {Всяка година} other {На всеки # години}}",
+      "on_days": "{summary}: {days}",
+      "until": "{summary} до {date}"
+    }
   }
 }

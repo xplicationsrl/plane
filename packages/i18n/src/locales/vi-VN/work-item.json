@@ -462,5 +462,32 @@
       "switched_title": "Đã chuyển bộ bấm giờ sang đây",
       "switched_message": "Bộ bấm giờ trước đã dừng và đã ghi {duration}."
     }
+  },
+  "recurrence": {
+    "label": "Lặp lại",
+    "none": "Không lặp lại",
+    "title": "Lặp lại",
+    "every": "Lặp lại mỗi",
+    "interval": "Khoảng cách",
+    "on_days": "Vào các ngày",
+    "ends": "Kết thúc",
+    "never": "Không bao giờ",
+    "stop": "Ngừng lặp lại",
+    "error": "Không thể lưu cài đặt lặp lại. Vui lòng thử lại.",
+    "explainer": "Khi hoàn thành, mục tiếp theo sẽ được tạo tự động.",
+    "frequency": {
+      "daily": "{count, plural, one {ngày} other {ngày}}",
+      "weekly": "{count, plural, one {tuần} other {tuần}}",
+      "monthly": "{count, plural, one {tháng} other {tháng}}",
+      "yearly": "{count, plural, one {năm} other {năm}}"
+    },
+    "summary": {
+      "daily": "{count, plural, one {Hằng ngày} other {Mỗi # ngày}}",
+      "weekly": "{count, plural, one {Hằng tuần} other {Mỗi # tuần}}",
+      "monthly": "{count, plural, one {Hằng tháng} other {Mỗi # tháng}}",
+      "yearly": "{count, plural, one {Hằng năm} other {Mỗi # năm}}",
+      "on_days": "{summary} vào {days}",
+      "until": "{summary} đến {date}"
+    }
   }
 }
