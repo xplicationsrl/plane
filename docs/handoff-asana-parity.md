@@ -23,14 +23,18 @@ Migrations: `0126`–`0131` (all new tables, no changes to existing ones). New b
 - Translations: every new string is in all 22 locales. sync-check is clean and ICU/placeholder checks pass.
 - **Not done: nobody has clicked through the UI.** There was no browser on the build machine. Check each screen once before release.
 
+## Since the first handoff
+
+- `1159c1581` Running timer pill in the top bar (elapsed time, link to the work item, stop).
+- `a27b2cf32` Work item templates can be edited: prefilled title and priority, plus the sub-work items list.
+- `ffda8bab6` Real visitor IPs for rate limits (see item 2).
+
 ## Left to do
 
 1. **Manual UI pass** on a staging copy: sub-item checkbox and inline add; comment replies; each custom property type; timer and time log; repeat editor; template picker in the create form and in create-project; Forms settings and the public form page; "Also in" and the shared list.
 2. **Real client IPs for rate limits.** The repo now has a fix: Caddy resolves the visitor from `CF-Connecting-IP` and sends the API a single `X-Forwarded-For`, and `setup-host.sh` adds `NUM_PROXIES=1` to `api.env`. Both are root-owned installed copies, so they take effect only after `sudo bash deployments/native/setup-host.sh` is re-run on the server. (Or by hand: copy the Caddyfile to `/etc/caddy/Caddyfile`, run `systemctl reload caddy`, add `NUM_PROXIES=1` to `/opt/plane/shared/api.env`, then restart `plane.target`.) Caveat: port 80 is open directly, so a client that bypasses Cloudflare can still forge `CF-Connecting-IP`.
 3. Not built yet (deliberately scoped out):
    - Custom properties as list/spreadsheet columns and filters.
-   - A global "timer running" indicator outside the work item.
    - Shared work items on the target project's boards: those boards group by the target project's own states, so shared items only appear in the shared list.
-   - Editing a template's content in place (re-save it from a work item instead).
-4. Existing Ukrainian template strings use "Темплейти"; the new ones use "шаблон". Do a sweep later.
+4. Ukrainian: "темплейт"/"проджект"/"Плейн" were swept to "шаблон"/"проєкт"/"Xplication". Other transliterations (Воркфлоу, Пейджі, проперті, …) still need a native review.
 5. Deploy: merge into `production` and the GitHub workflow deploys. Remember the old queued run noted earlier (`e28a15e85`) must be cancelled first, or deploys stay stuck.
