@@ -32,7 +32,7 @@ type Props = {
 };
 
 /** Seconds since `startedAt`, ticking every second while mounted. */
-const useElapsed = (startedAt: string | null | undefined) => {
+export const useElapsed = (startedAt: string | null | undefined) => {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     if (!startedAt) return;

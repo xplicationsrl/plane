@@ -7,7 +7,10 @@
 import { set } from "lodash-es";
 import { action, makeObservable, observable, runInAction } from "mobx";
 // plane imports
-import type { TIssueTimeEntry, TIssueTimeSummary } from "@plane/types";
+import type { TIssueTimeEntry, TIssueTimeSummary, TRunningTimeEntry } from "@plane/types";
+
+/** A timer started here lacks `issue_detail` until the running endpoint is re-read. */
+export type TRunningTimer = TIssueTimeEntry & Partial<Pick<TRunningTimeEntry, "issue_detail">>;
 // services
 import type { TTimeEntryPayload } from "@/services/time-entry.service";
 import { TimeEntryService } from "@/services/time-entry.service";
@@ -16,7 +19,7 @@ export interface ITimeEntryStore {
   // observables
   summaries: Record<string, TIssueTimeSummary>;
   /** The current user's running timer, wherever it is. */
-  running: TIssueTimeEntry | null;
+  running: TRunningTimer | null;
   // actions
   fetchSummary: (workspaceSlug: string, projectId: string, issueId: string) => Promise<TIssueTimeSummary>;
   fetchRunning: (workspaceSlug: string) => Promise<void>;
@@ -36,7 +39,7 @@ export interface ITimeEntryStore {
 
 export class TimeEntryStore implements ITimeEntryStore {
   summaries: Record<string, TIssueTimeSummary> = {};
-  running: TIssueTimeEntry | null = null;
+  running: TRunningTimer | null = null;
   service: TimeEntryService;
 
   constructor() {

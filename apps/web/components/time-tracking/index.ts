@@ -5,3 +5,4 @@
  */
 
 export * from "./issue-time-tracking";
+export * from "./running-timer-indicator";
