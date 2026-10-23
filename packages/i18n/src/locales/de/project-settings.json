@@ -573,5 +573,55 @@
       "title": "Benutzerdefinierte Eigenschaft löschen",
       "description": "{name} löschen? Der Wert wird aus allen Arbeitselementen in diesem Projekt entfernt. Dies kann nicht rückgängig gemacht werden."
     }
+  },
+  "intake_forms": {
+    "title": "Formulare",
+    "description": "Teilen Sie einen Link, damit jeder, auch Personen außerhalb Ihres Arbeitsbereichs, Anfragen an dieses Projekt senden kann. Einsendungen landen in Intake, wenn es aktiviert ist, sonst direkt als Arbeitselemente.",
+    "new": "Neues Formular",
+    "empty_title": "Noch keine Formulare",
+    "empty_description": "Erstellen Sie ein Formular für Fehlermeldungen, Zugriffsanfragen oder anderes und teilen Sie den Link.",
+    "submissions": "{count, plural, one {# Einsendung} other {# Einsendungen}}",
+    "paused": "Nimmt keine Antworten an",
+    "open": "Formular öffnen",
+    "accepting": "Nimmt Antworten an",
+    "link_copied": "Formularlink in die Zwischenablage kopiert",
+    "save_error": "Das Formular konnte nicht gespeichert werden. Bitte erneut versuchen.",
+    "create_title": "Neues Formular",
+    "edit_title": "Formular bearbeiten",
+    "name": "Formularname",
+    "name_placeholder": "Zum Beispiel: Fehler melden",
+    "intro": "Einleitung",
+    "intro_placeholder": "Wird über den Fragen angezeigt",
+    "questions": "Fragen",
+    "always_required": "Wird immer abgefragt",
+    "required": "Pflichtfeld",
+    "question_label": "Frage",
+    "question_label_placeholder": "Fragetext (Standard: {label})",
+    "add_question": "Frage hinzufügen",
+    "success_message": "Bestätigungsnachricht",
+    "success_message_placeholder": "Wird angezeigt, nachdem jemand das Formular gesendet hat",
+    "create": "Formular erstellen",
+    "delete_title": "Formular löschen",
+    "delete_description": "{name} löschen? Der Link funktioniert dann nicht mehr. Bereits erstellte Arbeitselemente bleiben erhalten.",
+    "fields": {
+      "name": "Titel",
+      "description": "Beschreibung",
+      "priority": "Priorität",
+      "submitter_name": "Ihr Name",
+      "submitter_email": "Ihre E-Mail-Adresse"
+    },
+    "public": {
+      "submit": "Senden",
+      "submitting": "Wird gesendet...",
+      "select_placeholder": "Option auswählen",
+      "fix_errors": "Bitte die markierten Felder prüfen.",
+      "error": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "rate_limited": "Zu viele Einsendungen aus Ihrem Netzwerk. Bitte später erneut versuchen.",
+      "not_found_title": "Dieses Formular ist nicht verfügbar",
+      "not_found_description": "Der Link ist möglicherweise falsch oder das Formular nimmt keine Antworten mehr an.",
+      "success_title": "Vielen Dank",
+      "success_default": "Ihre Anfrage ist eingegangen.",
+      "another": "Weitere Antwort senden"
+    }
   }
 }

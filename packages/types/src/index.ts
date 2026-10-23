@@ -44,6 +44,7 @@ export * from "./publish";
 export * from "./reaction";
 export * from "./recurrence";
 export * from "./intake";
+export * from "./intake-form";
 export * from "./rich-filters";
 export * from "./search";
 export * from "./settings";

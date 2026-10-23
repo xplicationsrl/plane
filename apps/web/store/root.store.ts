@@ -27,6 +27,8 @@ import { CustomPropertyStore } from "./custom-property.store";
 import type { ICycleStore } from "./cycle.store";
 import type { IRecurrenceStore } from "./recurrence.store";
 import { RecurrenceStore } from "./recurrence.store";
+import type { IIntakeFormStore } from "./intake-form.store";
+import { IntakeFormStore } from "./intake-form.store";
 import type { ITemplateStore } from "./template.store";
 import { TemplateStore } from "./template.store";
 import type { ITimeEntryStore } from "./time-entry.store";
@@ -115,6 +117,7 @@ export class CoreRootStore {
   timeEntry: ITimeEntryStore;
   recurrence: IRecurrenceStore;
   template: ITemplateStore;
+  intakeForm: IIntakeFormStore;
 
   constructor() {
     this.router = new RouterStore();
@@ -151,6 +154,7 @@ export class CoreRootStore {
     this.timeEntry = new TimeEntryStore();
     this.recurrence = new RecurrenceStore();
     this.template = new TemplateStore();
+    this.intakeForm = new IntakeFormStore();
   }
 
   resetOnSignOut() {
@@ -189,6 +193,7 @@ export class CoreRootStore {
     this.timeEntry = new TimeEntryStore();
     this.recurrence = new RecurrenceStore();
     this.template = new TemplateStore();
+    this.intakeForm = new IntakeFormStore();
   }
 }
 

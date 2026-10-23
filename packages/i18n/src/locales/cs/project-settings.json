@@ -573,5 +573,55 @@
       "title": "Smazat vlastní vlastnost",
       "description": "Smazat {name}? Její hodnota bude odstraněna ze všech pracovních položek v tomto projektu. Tuto akci nelze vrátit zpět."
     }
+  },
+  "intake_forms": {
+    "title": "Formuláře",
+    "description": "Sdílejte odkaz, aby kdokoli, včetně lidí mimo váš pracovní prostor, mohl posílat požadavky do tohoto projektu. Odpovědi jdou do Intake, pokud je zapnutý, jinak přímo mezi pracovní položky.",
+    "new": "Nový formulář",
+    "empty_title": "Zatím žádné formuláře",
+    "empty_description": "Vytvořte formulář pro hlášení chyb, žádosti o přístup nebo cokoli jiného a sdílejte jeho odkaz.",
+    "submissions": "{count, plural, one {# odpověď} few {# odpovědi} many {# odpovědi} other {# odpovědí}}",
+    "paused": "Nepřijímá odpovědi",
+    "open": "Otevřít formulář",
+    "accepting": "Přijímá odpovědi",
+    "link_copied": "Odkaz na formulář byl zkopírován",
+    "save_error": "Formulář se nepodařilo uložit. Zkuste to prosím znovu.",
+    "create_title": "Nový formulář",
+    "edit_title": "Upravit formulář",
+    "name": "Název formuláře",
+    "name_placeholder": "Například: Nahlásit chybu",
+    "intro": "Úvod",
+    "intro_placeholder": "Zobrazí se nad otázkami",
+    "questions": "Otázky",
+    "always_required": "Vždy se ptá",
+    "required": "Povinné",
+    "question_label": "Otázka",
+    "question_label_placeholder": "Text otázky (výchozí: {label})",
+    "add_question": "Přidat otázku",
+    "success_message": "Potvrzovací zpráva",
+    "success_message_placeholder": "Zobrazí se poté, co někdo formulář odešle",
+    "create": "Vytvořit formulář",
+    "delete_title": "Smazat formulář",
+    "delete_description": "Smazat {name}? Jeho odkaz přestane fungovat. Pracovní položky, které již vytvořil, zůstanou zachovány.",
+    "fields": {
+      "name": "Název",
+      "description": "Popis",
+      "priority": "Priorita",
+      "submitter_name": "Vaše jméno",
+      "submitter_email": "Váš e-mail"
+    },
+    "public": {
+      "submit": "Odeslat",
+      "submitting": "Odesílání...",
+      "select_placeholder": "Vyberte možnost",
+      "fix_errors": "Zkontrolujte prosím zvýrazněná pole.",
+      "error": "Něco se pokazilo. Zkuste to prosím znovu.",
+      "rate_limited": "Příliš mnoho odeslání z vaší sítě. Zkuste to prosím později.",
+      "not_found_title": "Tento formulář není k dispozici",
+      "not_found_description": "Odkaz může být chybný nebo formulář již nepřijímá odpovědi.",
+      "success_title": "Děkujeme",
+      "success_default": "Váš požadavek byl přijat.",
+      "another": "Odeslat další odpověď"
+    }
   }
 }

@@ -343,6 +343,11 @@ export const coreRoutes: RouteConfigEntry[] = [
               ":workspaceSlug/settings/projects/:projectId/templates",
               "./(all)/[workspaceSlug]/(settings)/settings/projects/[projectId]/templates/page.tsx"
             ),
+            // Project Forms
+            route(
+              ":workspaceSlug/settings/projects/:projectId/forms",
+              "./(all)/[workspaceSlug]/(settings)/settings/projects/[projectId]/forms/page.tsx"
+            ),
             // Project Estimates
             route(
               ":workspaceSlug/settings/projects/:projectId/estimates",

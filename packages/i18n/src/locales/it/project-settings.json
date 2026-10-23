@@ -573,5 +573,55 @@
       "title": "Elimina proprietà personalizzata",
       "description": "Eliminare {name}? Il suo valore verrà rimosso da tutti gli elementi di lavoro di questo progetto. L’operazione non può essere annullata."
     }
+  },
+  "intake_forms": {
+    "title": "Moduli",
+    "description": "Condivida un link così che chiunque, anche persone esterne al suo spazio di lavoro, possa inviare richieste a questo progetto. Gli invii arrivano in Intake se è attivo, altrimenti direttamente come elementi di lavoro.",
+    "new": "Nuovo modulo",
+    "empty_title": "Ancora nessun modulo",
+    "empty_description": "Crei un modulo per segnalazioni di bug, richieste di accesso o altro e ne condivida il link.",
+    "submissions": "{count, plural, one {# invio} many {# invii} other {# invii}}",
+    "paused": "Non accetta risposte",
+    "open": "Apri modulo",
+    "accepting": "Accetta risposte",
+    "link_copied": "Link del modulo copiato negli appunti",
+    "save_error": "Non è stato possibile salvare il modulo. Riprovi.",
+    "create_title": "Nuovo modulo",
+    "edit_title": "Modifica modulo",
+    "name": "Nome del modulo",
+    "name_placeholder": "Ad esempio: Segnala un bug",
+    "intro": "Introduzione",
+    "intro_placeholder": "Mostrata sopra le domande",
+    "questions": "Domande",
+    "always_required": "Sempre richiesta",
+    "required": "Obbligatorio",
+    "question_label": "Domanda",
+    "question_label_placeholder": "Testo della domanda (predefinito: {label})",
+    "add_question": "Aggiungi domanda",
+    "success_message": "Messaggio di conferma",
+    "success_message_placeholder": "Mostrato dopo che qualcuno ha inviato il modulo",
+    "create": "Crea modulo",
+    "delete_title": "Elimina modulo",
+    "delete_description": "Eliminare {name}? Il suo link smetterà di funzionare. Gli elementi di lavoro già creati vengono mantenuti.",
+    "fields": {
+      "name": "Titolo",
+      "description": "Descrizione",
+      "priority": "Priorità",
+      "submitter_name": "Il suo nome",
+      "submitter_email": "La sua email"
+    },
+    "public": {
+      "submit": "Invia",
+      "submitting": "Invio in corso...",
+      "select_placeholder": "Selezioni un’opzione",
+      "fix_errors": "Controlli i campi evidenziati.",
+      "error": "Qualcosa è andato storto. Riprovi.",
+      "rate_limited": "Troppi invii dalla sua rete. Riprovi più tardi.",
+      "not_found_title": "Questo modulo non è disponibile",
+      "not_found_description": "Il link potrebbe essere errato oppure il modulo non accetta più risposte.",
+      "success_title": "Grazie",
+      "success_default": "La sua richiesta è stata ricevuta.",
+      "another": "Invia un’altra risposta"
+    }
   }
 }

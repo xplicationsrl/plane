@@ -573,5 +573,55 @@
       "title": "删除自定义属性",
       "description": "删除 {name}？该属性在本项目所有工作项中的值都将被移除。此操作无法撤销。"
     }
+  },
+  "intake_forms": {
+    "title": "表单",
+    "description": "分享链接，让任何人（包括工作区以外的人）都能向此项目提交请求。启用 Intake 时，提交内容进入 Intake；否则直接成为工作项。",
+    "new": "新建表单",
+    "empty_title": "暂无表单",
+    "empty_description": "为错误报告、访问申请或其他任何事项创建表单，并分享其链接。",
+    "submissions": "{count, plural, one {# 次提交} other {# 次提交}}",
+    "paused": "不接受回复",
+    "open": "打开表单",
+    "accepting": "接受回复",
+    "link_copied": "表单链接已复制到剪贴板",
+    "save_error": "无法保存表单，请重试。",
+    "create_title": "新建表单",
+    "edit_title": "编辑表单",
+    "name": "表单名称",
+    "name_placeholder": "例如：报告错误",
+    "intro": "简介",
+    "intro_placeholder": "显示在问题上方",
+    "questions": "问题",
+    "always_required": "始终询问",
+    "required": "必填",
+    "question_label": "问题",
+    "question_label_placeholder": "问题文本（默认：{label}）",
+    "add_question": "添加问题",
+    "success_message": "确认消息",
+    "success_message_placeholder": "在有人提交表单后显示",
+    "create": "创建表单",
+    "delete_title": "删除表单",
+    "delete_description": "删除 {name}？其链接将失效，已创建的工作项会保留。",
+    "fields": {
+      "name": "标题",
+      "description": "描述",
+      "priority": "优先级",
+      "submitter_name": "您的姓名",
+      "submitter_email": "您的邮箱"
+    },
+    "public": {
+      "submit": "提交",
+      "submitting": "正在提交...",
+      "select_placeholder": "请选择",
+      "fix_errors": "请检查标出的字段。",
+      "error": "出现问题，请重试。",
+      "rate_limited": "您的网络提交次数过多，请稍后重试。",
+      "not_found_title": "此表单不可用",
+      "not_found_description": "链接可能有误，或该表单已不再接受回复。",
+      "success_title": "谢谢",
+      "success_default": "我们已收到您的请求。",
+      "another": "再提交一份"
+    }
   }
 }

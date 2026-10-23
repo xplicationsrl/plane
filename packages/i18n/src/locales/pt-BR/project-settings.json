@@ -573,5 +573,55 @@
       "title": "Excluir propriedade personalizada",
       "description": "Excluir {name}? O valor dela será removido de todos os itens de trabalho deste projeto. Esta ação não pode ser desfeita."
     }
+  },
+  "intake_forms": {
+    "title": "Formulários",
+    "description": "Compartilhe um link para que qualquer pessoa, inclusive de fora do seu espaço de trabalho, possa enviar solicitações para este projeto. Os envios vão para o Intake quando ele está ativado; caso contrário, viram itens de trabalho diretamente.",
+    "new": "Novo formulário",
+    "empty_title": "Ainda não há formulários",
+    "empty_description": "Crie um formulário para relatos de bugs, pedidos de acesso ou qualquer outra coisa e compartilhe o link.",
+    "submissions": "{count, plural, one {# envio} many {# envios} other {# envios}}",
+    "paused": "Não está aceitando respostas",
+    "open": "Abrir formulário",
+    "accepting": "Aceitando respostas",
+    "link_copied": "Link do formulário copiado para a área de transferência",
+    "save_error": "Não foi possível salvar o formulário. Tente novamente.",
+    "create_title": "Novo formulário",
+    "edit_title": "Editar formulário",
+    "name": "Nome do formulário",
+    "name_placeholder": "Por exemplo: Relatar um bug",
+    "intro": "Introdução",
+    "intro_placeholder": "Exibida acima das perguntas",
+    "questions": "Perguntas",
+    "always_required": "Sempre perguntado",
+    "required": "Obrigatório",
+    "question_label": "Pergunta",
+    "question_label_placeholder": "Texto da pergunta (padrão: {label})",
+    "add_question": "Adicionar pergunta",
+    "success_message": "Mensagem de confirmação",
+    "success_message_placeholder": "Exibida depois que alguém envia o formulário",
+    "create": "Criar formulário",
+    "delete_title": "Excluir formulário",
+    "delete_description": "Excluir {name}? O link dele deixará de funcionar. Os itens de trabalho já criados são mantidos.",
+    "fields": {
+      "name": "Título",
+      "description": "Descrição",
+      "priority": "Prioridade",
+      "submitter_name": "Seu nome",
+      "submitter_email": "Seu e-mail"
+    },
+    "public": {
+      "submit": "Enviar",
+      "submitting": "Enviando...",
+      "select_placeholder": "Selecione uma opção",
+      "fix_errors": "Verifique os campos destacados.",
+      "error": "Algo deu errado. Tente novamente.",
+      "rate_limited": "Muitos envios da sua rede. Tente novamente mais tarde.",
+      "not_found_title": "Este formulário não está disponível",
+      "not_found_description": "O link pode estar errado ou o formulário não está mais aceitando respostas.",
+      "success_title": "Obrigado",
+      "success_default": "Sua solicitação foi recebida.",
+      "another": "Enviar outra resposta"
+    }
   }
 }

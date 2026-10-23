@@ -573,5 +573,55 @@
       "title": "Aangepaste eigenschap verwijderen",
       "description": "{name} verwijderen? De waarde wordt uit elk werkitem in dit project verwijderd. Dit kan niet ongedaan worden gemaakt."
     }
+  },
+  "intake_forms": {
+    "title": "Formulieren",
+    "description": "Deel een link zodat iedereen, ook mensen buiten uw werkruimte, aanvragen naar dit project kan sturen. Inzendingen komen in Intake terecht als dat aanstaat, anders direct als werkitems.",
+    "new": "Nieuw formulier",
+    "empty_title": "Nog geen formulieren",
+    "empty_description": "Maak een formulier voor bugmeldingen, toegangsaanvragen of iets anders en deel de link.",
+    "submissions": "{count, plural, one {# inzending} other {# inzendingen}}",
+    "paused": "Accepteert geen reacties",
+    "open": "Formulier openen",
+    "accepting": "Accepteert reacties",
+    "link_copied": "Formulierlink naar klembord gekopieerd",
+    "save_error": "Het formulier kon niet worden opgeslagen. Probeer het opnieuw.",
+    "create_title": "Nieuw formulier",
+    "edit_title": "Formulier bewerken",
+    "name": "Formuliernaam",
+    "name_placeholder": "Bijvoorbeeld: Bug melden",
+    "intro": "Inleiding",
+    "intro_placeholder": "Wordt boven de vragen getoond",
+    "questions": "Vragen",
+    "always_required": "Wordt altijd gevraagd",
+    "required": "Verplicht",
+    "question_label": "Vraag",
+    "question_label_placeholder": "Vraagtekst (standaard: {label})",
+    "add_question": "Vraag toevoegen",
+    "success_message": "Bevestigingsbericht",
+    "success_message_placeholder": "Wordt getoond nadat iemand het formulier heeft verzonden",
+    "create": "Formulier maken",
+    "delete_title": "Formulier verwijderen",
+    "delete_description": "{name} verwijderen? De link werkt dan niet meer. Werkitems die al zijn aangemaakt, blijven behouden.",
+    "fields": {
+      "name": "Titel",
+      "description": "Omschrijving",
+      "priority": "Prioriteit",
+      "submitter_name": "Uw naam",
+      "submitter_email": "Uw e-mailadres"
+    },
+    "public": {
+      "submit": "Verzenden",
+      "submitting": "Bezig met verzenden...",
+      "select_placeholder": "Kies een optie",
+      "fix_errors": "Controleer de gemarkeerde velden.",
+      "error": "Er is iets misgegaan. Probeer het opnieuw.",
+      "rate_limited": "Te veel inzendingen vanaf uw netwerk. Probeer het later opnieuw.",
+      "not_found_title": "Dit formulier is niet beschikbaar",
+      "not_found_description": "De link is mogelijk onjuist of het formulier accepteert geen reacties meer.",
+      "success_title": "Bedankt",
+      "success_default": "Uw aanvraag is ontvangen.",
+      "another": "Nog een reactie verzenden"
+    }
   }
 }

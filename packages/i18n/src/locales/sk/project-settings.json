@@ -573,5 +573,55 @@
       "title": "Odstrániť vlastnú vlastnosť",
       "description": "Odstrániť {name}? Jej hodnota bude odstránená zo všetkých pracovných položiek v tomto projekte. Túto akciu nie je možné vrátiť späť."
     }
+  },
+  "intake_forms": {
+    "title": "Formuláre",
+    "description": "Zdieľajte odkaz, aby ktokoľvek, vrátane ľudí mimo vášho pracovného priestoru, mohol posielať požiadavky do tohto projektu. Odpovede idú do Intake, ak je zapnutý, inak priamo medzi pracovné položky.",
+    "new": "Nový formulár",
+    "empty_title": "Zatiaľ žiadne formuláre",
+    "empty_description": "Vytvorte formulár na hlásenie chýb, žiadosti o prístup alebo čokoľvek iné a zdieľajte jeho odkaz.",
+    "submissions": "{count, plural, one {# odpoveď} few {# odpovede} many {# odpovede} other {# odpovedí}}",
+    "paused": "Neprijíma odpovede",
+    "open": "Otvoriť formulár",
+    "accepting": "Prijíma odpovede",
+    "link_copied": "Odkaz na formulár bol skopírovaný",
+    "save_error": "Formulár sa nepodarilo uložiť. Skúste to znova.",
+    "create_title": "Nový formulár",
+    "edit_title": "Upraviť formulár",
+    "name": "Názov formulára",
+    "name_placeholder": "Napríklad: Nahlásiť chybu",
+    "intro": "Úvod",
+    "intro_placeholder": "Zobrazí sa nad otázkami",
+    "questions": "Otázky",
+    "always_required": "Vždy sa pýta",
+    "required": "Povinné",
+    "question_label": "Otázka",
+    "question_label_placeholder": "Text otázky (predvolené: {label})",
+    "add_question": "Pridať otázku",
+    "success_message": "Potvrdzujúca správa",
+    "success_message_placeholder": "Zobrazí sa po odoslaní formulára",
+    "create": "Vytvoriť formulár",
+    "delete_title": "Odstrániť formulár",
+    "delete_description": "Odstrániť {name}? Jeho odkaz prestane fungovať. Pracovné položky, ktoré už vytvoril, zostanú zachované.",
+    "fields": {
+      "name": "Názov",
+      "description": "Popis",
+      "priority": "Priorita",
+      "submitter_name": "Vaše meno",
+      "submitter_email": "Váš e-mail"
+    },
+    "public": {
+      "submit": "Odoslať",
+      "submitting": "Odosiela sa...",
+      "select_placeholder": "Vyberte možnosť",
+      "fix_errors": "Skontrolujte zvýraznené polia.",
+      "error": "Niečo sa pokazilo. Skúste to znova.",
+      "rate_limited": "Príliš veľa odoslaní z vašej siete. Skúste to neskôr.",
+      "not_found_title": "Tento formulár nie je k dispozícii",
+      "not_found_description": "Odkaz môže byť nesprávny alebo formulár už neprijíma odpovede.",
+      "success_title": "Ďakujeme",
+      "success_default": "Vaša požiadavka bola prijatá.",
+      "another": "Odoslať ďalšiu odpoveď"
+    }
   }
 }

@@ -10,6 +10,7 @@ from .custom_property import urlpatterns as custom_property_urls
 from .time_entry import urlpatterns as time_entry_urls
 from .recurrence import urlpatterns as recurrence_urls
 from .template import urlpatterns as template_urls
+from .intake_form import urlpatterns as intake_form_urls
 from .estimate import urlpatterns as estimate_urls
 from .external import urlpatterns as external_urls
 from .intake import urlpatterns as intake_urls
@@ -35,6 +36,7 @@ urlpatterns = [
     *time_entry_urls,
     *recurrence_urls,
     *template_urls,
+    *intake_form_urls,
     *estimate_urls,
     *external_urls,
     *intake_urls,

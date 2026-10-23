@@ -573,5 +573,55 @@
       "title": "刪除自訂屬性",
       "description": "刪除 {name}？此屬性在此專案所有工作事項中的值都將被移除。此操作無法復原。"
     }
+  },
+  "intake_forms": {
+    "title": "表單",
+    "description": "分享連結，讓任何人（包括工作區以外的人）都能向此專案提交請求。啟用 Intake 時，提交內容會進入 Intake；否則直接成為工作事項。",
+    "new": "新增表單",
+    "empty_title": "尚無表單",
+    "empty_description": "為錯誤回報、存取申請或其他任何事項建立表單，並分享其連結。",
+    "submissions": "{count, plural, one {# 次提交} other {# 次提交}}",
+    "paused": "不接受回覆",
+    "open": "開啟表單",
+    "accepting": "接受回覆",
+    "link_copied": "表單連結已複製到剪貼簿",
+    "save_error": "無法儲存表單，請再試一次。",
+    "create_title": "新增表單",
+    "edit_title": "編輯表單",
+    "name": "表單名稱",
+    "name_placeholder": "例如：回報錯誤",
+    "intro": "簡介",
+    "intro_placeholder": "顯示在問題上方",
+    "questions": "問題",
+    "always_required": "一律詢問",
+    "required": "必填",
+    "question_label": "問題",
+    "question_label_placeholder": "問題文字（預設：{label}）",
+    "add_question": "新增問題",
+    "success_message": "確認訊息",
+    "success_message_placeholder": "在有人提交表單後顯示",
+    "create": "建立表單",
+    "delete_title": "刪除表單",
+    "delete_description": "刪除 {name}？其連結將失效，已建立的工作事項會保留。",
+    "fields": {
+      "name": "標題",
+      "description": "描述",
+      "priority": "優先順序",
+      "submitter_name": "您的姓名",
+      "submitter_email": "您的電子郵件"
+    },
+    "public": {
+      "submit": "提交",
+      "submitting": "正在提交...",
+      "select_placeholder": "請選擇",
+      "fix_errors": "請檢查標示的欄位。",
+      "error": "發生問題，請再試一次。",
+      "rate_limited": "您的網路提交次數過多，請稍後再試。",
+      "not_found_title": "此表單無法使用",
+      "not_found_description": "連結可能有誤，或此表單已不再接受回覆。",
+      "success_title": "謝謝",
+      "success_default": "我們已收到您的請求。",
+      "another": "再提交一份"
+    }
   }
 }

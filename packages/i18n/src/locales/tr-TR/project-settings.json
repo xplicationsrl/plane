@@ -573,5 +573,55 @@
       "title": "Özel özelliği sil",
       "description": "{name} silinsin mi? Değeri bu projedeki tüm iş öğelerinden kaldırılır. Bu işlem geri alınamaz."
     }
+  },
+  "intake_forms": {
+    "title": "Formlar",
+    "description": "Çalışma alanınızın dışındakiler dahil herkesin bu projeye istek gönderebilmesi için bir bağlantı paylaşın. Gönderimler Intake açıksa Intake'e, değilse doğrudan iş öğesi olarak gider.",
+    "new": "Yeni form",
+    "empty_title": "Henüz form yok",
+    "empty_description": "Hata bildirimleri, erişim istekleri veya başka herhangi bir şey için form oluşturun ve bağlantısını paylaşın.",
+    "submissions": "{count, plural, one {# gönderim} other {# gönderim}}",
+    "paused": "Yanıt kabul etmiyor",
+    "open": "Formu aç",
+    "accepting": "Yanıt kabul ediyor",
+    "link_copied": "Form bağlantısı panoya kopyalandı",
+    "save_error": "Form kaydedilemedi. Lütfen tekrar deneyin.",
+    "create_title": "Yeni form",
+    "edit_title": "Formu düzenle",
+    "name": "Form adı",
+    "name_placeholder": "Örneğin: Hata bildir",
+    "intro": "Giriş",
+    "intro_placeholder": "Soruların üstünde gösterilir",
+    "questions": "Sorular",
+    "always_required": "Her zaman sorulur",
+    "required": "Zorunlu",
+    "question_label": "Soru",
+    "question_label_placeholder": "Soru metni (varsayılan: {label})",
+    "add_question": "Soru ekle",
+    "success_message": "Onay mesajı",
+    "success_message_placeholder": "Biri formu gönderdikten sonra gösterilir",
+    "create": "Form oluştur",
+    "delete_title": "Formu sil",
+    "delete_description": "{name} silinsin mi? Bağlantısı artık çalışmaz. Oluşturduğu iş öğeleri korunur.",
+    "fields": {
+      "name": "Başlık",
+      "description": "Açıklama",
+      "priority": "Öncelik",
+      "submitter_name": "Adınız",
+      "submitter_email": "E-postanız"
+    },
+    "public": {
+      "submit": "Gönder",
+      "submitting": "Gönderiliyor...",
+      "select_placeholder": "Bir seçenek seçin",
+      "fix_errors": "Lütfen vurgulanan alanları kontrol edin.",
+      "error": "Bir sorun oluştu. Lütfen tekrar deneyin.",
+      "rate_limited": "Ağınızdan çok fazla gönderim yapıldı. Lütfen daha sonra tekrar deneyin.",
+      "not_found_title": "Bu form kullanılamıyor",
+      "not_found_description": "Bağlantı yanlış olabilir veya form artık yanıt kabul etmiyor olabilir.",
+      "success_title": "Teşekkürler",
+      "success_default": "İsteğiniz alındı.",
+      "another": "Başka bir yanıt gönder"
+    }
   }
 }

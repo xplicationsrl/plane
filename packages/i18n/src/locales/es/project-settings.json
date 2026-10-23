@@ -573,5 +573,55 @@
       "title": "Eliminar propiedad personalizada",
       "description": "¿Eliminar {name}? Su valor se quitará de todos los elementos de trabajo de este proyecto. Esta acción no se puede deshacer."
     }
+  },
+  "intake_forms": {
+    "title": "Formularios",
+    "description": "Comparta un enlace para que cualquiera, incluidas personas fuera de su espacio de trabajo, pueda enviar solicitudes a este proyecto. Los envíos van a Intake si está activado; si no, directamente a elementos de trabajo.",
+    "new": "Nuevo formulario",
+    "empty_title": "Aún no hay formularios",
+    "empty_description": "Cree un formulario para informes de errores, solicitudes de acceso o cualquier otra cosa y comparta su enlace.",
+    "submissions": "{count, plural, one {# envío} other {# envíos}}",
+    "paused": "No acepta respuestas",
+    "open": "Abrir formulario",
+    "accepting": "Acepta respuestas",
+    "link_copied": "Enlace del formulario copiado al portapapeles",
+    "save_error": "No se pudo guardar el formulario. Inténtelo de nuevo.",
+    "create_title": "Nuevo formulario",
+    "edit_title": "Editar formulario",
+    "name": "Nombre del formulario",
+    "name_placeholder": "Por ejemplo: Informar de un error",
+    "intro": "Introducción",
+    "intro_placeholder": "Se muestra encima de las preguntas",
+    "questions": "Preguntas",
+    "always_required": "Siempre se pregunta",
+    "required": "Obligatorio",
+    "question_label": "Pregunta",
+    "question_label_placeholder": "Texto de la pregunta (predeterminado: {label})",
+    "add_question": "Agregar pregunta",
+    "success_message": "Mensaje de confirmación",
+    "success_message_placeholder": "Se muestra después de que alguien envíe el formulario",
+    "create": "Crear formulario",
+    "delete_title": "Eliminar formulario",
+    "delete_description": "¿Eliminar {name}? Su enlace dejará de funcionar. Los elementos de trabajo que ya creó se conservan.",
+    "fields": {
+      "name": "Título",
+      "description": "Descripción",
+      "priority": "Prioridad",
+      "submitter_name": "Su nombre",
+      "submitter_email": "Su correo electrónico"
+    },
+    "public": {
+      "submit": "Enviar",
+      "submitting": "Enviando...",
+      "select_placeholder": "Seleccione una opción",
+      "fix_errors": "Revise los campos resaltados.",
+      "error": "Algo salió mal. Inténtelo de nuevo.",
+      "rate_limited": "Demasiados envíos desde su red. Inténtelo de nuevo más tarde.",
+      "not_found_title": "Este formulario no está disponible",
+      "not_found_description": "Es posible que el enlace sea incorrecto o que el formulario ya no acepte respuestas.",
+      "success_title": "Gracias",
+      "success_default": "Hemos recibido su solicitud.",
+      "another": "Enviar otra respuesta"
+    }
   }
 }

@@ -573,5 +573,55 @@
       "title": "Șterge proprietatea personalizată",
       "description": "Ștergeți {name}? Valoarea sa va fi eliminată din toate activitățile din acest proiect. Această acțiune nu poate fi anulată."
     }
+  },
+  "intake_forms": {
+    "title": "Formulare",
+    "description": "Partajați un link pentru ca oricine, inclusiv persoane din afara spațiului de lucru, să poată trimite cereri către acest proiect. Trimiterile ajung în Intake când este activat, altfel direct ca activități.",
+    "new": "Formular nou",
+    "empty_title": "Încă nu există formulare",
+    "empty_description": "Creați un formular pentru raportarea erorilor, cereri de acces sau orice altceva și partajați linkul.",
+    "submissions": "{count, plural, one {# trimitere} few {# trimiteri} other {# de trimiteri}}",
+    "paused": "Nu acceptă răspunsuri",
+    "open": "Deschide formularul",
+    "accepting": "Acceptă răspunsuri",
+    "link_copied": "Linkul formularului a fost copiat",
+    "save_error": "Formularul nu a putut fi salvat. Vă rugăm să încercați din nou.",
+    "create_title": "Formular nou",
+    "edit_title": "Editează formularul",
+    "name": "Numele formularului",
+    "name_placeholder": "De exemplu: Raportează o eroare",
+    "intro": "Introducere",
+    "intro_placeholder": "Afișată deasupra întrebărilor",
+    "questions": "Întrebări",
+    "always_required": "Întotdeauna solicitat",
+    "required": "Obligatoriu",
+    "question_label": "Întrebare",
+    "question_label_placeholder": "Textul întrebării (implicit: {label})",
+    "add_question": "Adaugă întrebare",
+    "success_message": "Mesaj de confirmare",
+    "success_message_placeholder": "Afișat după ce cineva trimite formularul",
+    "create": "Creează formularul",
+    "delete_title": "Șterge formularul",
+    "delete_description": "Ștergeți {name}? Linkul său nu va mai funcționa. Activitățile deja create se păstrează.",
+    "fields": {
+      "name": "Titlu",
+      "description": "Descriere",
+      "priority": "Prioritate",
+      "submitter_name": "Numele dumneavoastră",
+      "submitter_email": "E-mailul dumneavoastră"
+    },
+    "public": {
+      "submit": "Trimite",
+      "submitting": "Se trimite...",
+      "select_placeholder": "Selectați o opțiune",
+      "fix_errors": "Vă rugăm să verificați câmpurile evidențiate.",
+      "error": "Ceva nu a funcționat. Vă rugăm să încercați din nou.",
+      "rate_limited": "Prea multe trimiteri din rețeaua dumneavoastră. Vă rugăm să încercați mai târziu.",
+      "not_found_title": "Acest formular nu este disponibil",
+      "not_found_description": "Linkul poate fi greșit sau formularul nu mai acceptă răspunsuri.",
+      "success_title": "Vă mulțumim",
+      "success_default": "Cererea dumneavoastră a fost primită.",
+      "another": "Trimite alt răspuns"
+    }
   }
 }

@@ -573,5 +573,55 @@
       "title": "Supprimer la propriété personnalisée",
       "description": "Supprimer {name} ? Sa valeur sera retirée de tous les éléments de travail de ce projet. Cette action est irréversible."
     }
+  },
+  "intake_forms": {
+    "title": "Formulaires",
+    "description": "Partagez un lien pour que n’importe qui, y compris des personnes extérieures à votre espace de travail, puisse envoyer des demandes à ce projet. Les réponses arrivent dans Intake s’il est activé, sinon directement en éléments de travail.",
+    "new": "Nouveau formulaire",
+    "empty_title": "Aucun formulaire pour le moment",
+    "empty_description": "Créez un formulaire pour les rapports de bug, les demandes d’accès ou autre, et partagez son lien.",
+    "submissions": "{count, plural, one {# réponse} many {# réponses} other {# réponses}}",
+    "paused": "N’accepte pas de réponses",
+    "open": "Ouvrir le formulaire",
+    "accepting": "Accepte les réponses",
+    "link_copied": "Lien du formulaire copié dans le presse-papiers",
+    "save_error": "Le formulaire n’a pas pu être enregistré. Veuillez réessayer.",
+    "create_title": "Nouveau formulaire",
+    "edit_title": "Modifier le formulaire",
+    "name": "Nom du formulaire",
+    "name_placeholder": "Par exemple : Signaler un bug",
+    "intro": "Introduction",
+    "intro_placeholder": "Affiché au-dessus des questions",
+    "questions": "Questions",
+    "always_required": "Toujours demandé",
+    "required": "Obligatoire",
+    "question_label": "Question",
+    "question_label_placeholder": "Texte de la question (par défaut : {label})",
+    "add_question": "Ajouter une question",
+    "success_message": "Message de confirmation",
+    "success_message_placeholder": "Affiché après l’envoi du formulaire",
+    "create": "Créer le formulaire",
+    "delete_title": "Supprimer le formulaire",
+    "delete_description": "Supprimer {name} ? Son lien ne fonctionnera plus. Les éléments de travail déjà créés sont conservés.",
+    "fields": {
+      "name": "Titre",
+      "description": "Description",
+      "priority": "Priorité",
+      "submitter_name": "Votre nom",
+      "submitter_email": "Votre e-mail"
+    },
+    "public": {
+      "submit": "Envoyer",
+      "submitting": "Envoi...",
+      "select_placeholder": "Sélectionnez une option",
+      "fix_errors": "Veuillez vérifier les champs en surbrillance.",
+      "error": "Un problème est survenu. Veuillez réessayer.",
+      "rate_limited": "Trop d’envois depuis votre réseau. Veuillez réessayer plus tard.",
+      "not_found_title": "Ce formulaire n’est pas disponible",
+      "not_found_description": "Le lien est peut-être erroné, ou le formulaire n’accepte plus de réponses.",
+      "success_title": "Merci",
+      "success_default": "Votre demande a bien été reçue.",
+      "another": "Envoyer une autre réponse"
+    }
   }
 }

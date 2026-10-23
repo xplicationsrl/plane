@@ -95,3 +95,4 @@ from .custom_property import CustomProperty, CustomPropertyType, IssueCustomProp
 from .time_entry import IssueTimeEntry
 from .recurrence import IssueRecurrence, RecurrenceFrequency
 from .template import ProjectTemplate, WorkItemTemplate
+from .intake_form import IntakeForm

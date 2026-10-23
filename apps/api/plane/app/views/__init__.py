@@ -262,3 +262,5 @@ from .template.base import (
     ProjectTemplateDetailEndpoint,
     ProjectTemplateApplyEndpoint,
 )
+
+from .intake_form.base import IntakeFormEndpoint, IntakeFormDetailEndpoint

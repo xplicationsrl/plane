@@ -573,5 +573,55 @@
       "title": "Delete custom property",
       "description": "Delete {name}? Its value is removed from every work item in this project. This can't be undone."
     }
+  },
+  "intake_forms": {
+    "title": "Forms",
+    "description": "Share a link so anyone, including people outside your workspace, can send requests to this project. Submissions go to Intake when it's on, otherwise straight to work items.",
+    "new": "New form",
+    "empty_title": "No forms yet",
+    "empty_description": "Create a form for bug reports, access requests or anything else, and share its link.",
+    "submissions": "{count, plural, one {# submission} other {# submissions}}",
+    "paused": "Not accepting responses",
+    "open": "Open form",
+    "accepting": "Accepting responses",
+    "link_copied": "Form link copied to clipboard",
+    "save_error": "The form couldn't be saved. Please try again.",
+    "create_title": "New form",
+    "edit_title": "Edit form",
+    "name": "Form name",
+    "name_placeholder": "For example, Report a bug",
+    "intro": "Introduction",
+    "intro_placeholder": "Shown above the questions",
+    "questions": "Questions",
+    "always_required": "Always asked",
+    "required": "Required",
+    "question_label": "Question",
+    "question_label_placeholder": "Question text (default: {label})",
+    "add_question": "Add question",
+    "success_message": "Confirmation message",
+    "success_message_placeholder": "Shown after someone submits the form",
+    "create": "Create form",
+    "delete_title": "Delete form",
+    "delete_description": "Delete {name}? Its link stops working. Work items it already created are kept.",
+    "fields": {
+      "name": "Title",
+      "description": "Description",
+      "priority": "Priority",
+      "submitter_name": "Your name",
+      "submitter_email": "Your email"
+    },
+    "public": {
+      "submit": "Submit",
+      "submitting": "Submitting...",
+      "select_placeholder": "Select an option",
+      "fix_errors": "Please check the highlighted fields.",
+      "error": "Something went wrong. Please try again.",
+      "rate_limited": "Too many submissions from your network. Please try again later.",
+      "not_found_title": "This form isn't available",
+      "not_found_description": "The link may be wrong, or the form is no longer accepting responses.",
+      "success_title": "Thank you",
+      "success_default": "Your request has been received.",
+      "another": "Submit another response"
+    }
   }
 }

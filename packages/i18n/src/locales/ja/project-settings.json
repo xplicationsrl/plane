@@ -573,5 +573,55 @@
       "title": "カスタムプロパティを削除",
       "description": "{name} を削除しますか？このプロジェクトのすべての作業項目からその値が削除されます。この操作は元に戻せません。"
     }
+  },
+  "intake_forms": {
+    "title": "フォーム",
+    "description": "リンクを共有すると、ワークスペース外の人も含め誰でもこのプロジェクトにリクエストを送信できます。送信内容は、Intake が有効な場合は Intake に、それ以外の場合は作業項目として直接追加されます。",
+    "new": "新しいフォーム",
+    "empty_title": "フォームはまだありません",
+    "empty_description": "バグ報告やアクセス申請などのフォームを作成し、そのリンクを共有しましょう。",
+    "submissions": "{count, plural, one {送信 # 件} other {送信 # 件}}",
+    "paused": "回答を受け付けていません",
+    "open": "フォームを開く",
+    "accepting": "回答を受け付ける",
+    "link_copied": "フォームのリンクをクリップボードにコピーしました",
+    "save_error": "フォームを保存できませんでした。もう一度お試しください。",
+    "create_title": "新しいフォーム",
+    "edit_title": "フォームを編集",
+    "name": "フォーム名",
+    "name_placeholder": "例：バグを報告",
+    "intro": "説明文",
+    "intro_placeholder": "質問の上に表示されます",
+    "questions": "質問",
+    "always_required": "常に表示",
+    "required": "必須",
+    "question_label": "質問",
+    "question_label_placeholder": "質問文（既定：{label}）",
+    "add_question": "質問を追加",
+    "success_message": "確認メッセージ",
+    "success_message_placeholder": "フォームの送信後に表示されます",
+    "create": "フォームを作成",
+    "delete_title": "フォームを削除",
+    "delete_description": "{name} を削除しますか？リンクは使用できなくなります。作成済みの作業項目は保持されます。",
+    "fields": {
+      "name": "タイトル",
+      "description": "説明",
+      "priority": "優先度",
+      "submitter_name": "お名前",
+      "submitter_email": "メールアドレス"
+    },
+    "public": {
+      "submit": "送信",
+      "submitting": "送信中...",
+      "select_placeholder": "オプションを選択",
+      "fix_errors": "強調表示された項目を確認してください。",
+      "error": "問題が発生しました。もう一度お試しください。",
+      "rate_limited": "お使いのネットワークからの送信が多すぎます。しばらくしてからもう一度お試しください。",
+      "not_found_title": "このフォームは利用できません",
+      "not_found_description": "リンクが間違っているか、フォームが回答の受け付けを終了しています。",
+      "success_title": "ありがとうございます",
+      "success_default": "リクエストを受け付けました。",
+      "another": "別の回答を送信"
+    }
   }
 }

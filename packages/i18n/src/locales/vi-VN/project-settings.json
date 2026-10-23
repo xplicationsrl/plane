@@ -573,5 +573,55 @@
       "title": "Xóa thuộc tính tùy chỉnh",
       "description": "Xóa {name}? Giá trị của thuộc tính này sẽ bị xóa khỏi mọi mục công việc trong dự án này. Không thể hoàn tác thao tác này."
     }
+  },
+  "intake_forms": {
+    "title": "Biểu mẫu",
+    "description": "Chia sẻ liên kết để bất kỳ ai, kể cả người ngoài không gian làm việc của bạn, có thể gửi yêu cầu đến dự án này. Nội dung gửi sẽ vào Intake nếu tính năng đang bật, nếu không sẽ trở thành mục công việc ngay.",
+    "new": "Biểu mẫu mới",
+    "empty_title": "Chưa có biểu mẫu",
+    "empty_description": "Tạo biểu mẫu để báo lỗi, yêu cầu quyền truy cập hoặc bất kỳ việc gì khác và chia sẻ liên kết.",
+    "submissions": "{count, plural, one {# lượt gửi} other {# lượt gửi}}",
+    "paused": "Không nhận phản hồi",
+    "open": "Mở biểu mẫu",
+    "accepting": "Đang nhận phản hồi",
+    "link_copied": "Đã sao chép liên kết biểu mẫu",
+    "save_error": "Không thể lưu biểu mẫu. Vui lòng thử lại.",
+    "create_title": "Biểu mẫu mới",
+    "edit_title": "Chỉnh sửa biểu mẫu",
+    "name": "Tên biểu mẫu",
+    "name_placeholder": "Ví dụ: Báo lỗi",
+    "intro": "Lời giới thiệu",
+    "intro_placeholder": "Hiển thị phía trên các câu hỏi",
+    "questions": "Câu hỏi",
+    "always_required": "Luôn được hỏi",
+    "required": "Bắt buộc",
+    "question_label": "Câu hỏi",
+    "question_label_placeholder": "Nội dung câu hỏi (mặc định: {label})",
+    "add_question": "Thêm câu hỏi",
+    "success_message": "Thông báo xác nhận",
+    "success_message_placeholder": "Hiển thị sau khi ai đó gửi biểu mẫu",
+    "create": "Tạo biểu mẫu",
+    "delete_title": "Xóa biểu mẫu",
+    "delete_description": "Xóa {name}? Liên kết của biểu mẫu sẽ ngừng hoạt động. Các mục công việc đã tạo vẫn được giữ lại.",
+    "fields": {
+      "name": "Tiêu đề",
+      "description": "Mô tả",
+      "priority": "Mức độ ưu tiên",
+      "submitter_name": "Tên của bạn",
+      "submitter_email": "Email của bạn"
+    },
+    "public": {
+      "submit": "Gửi",
+      "submitting": "Đang gửi...",
+      "select_placeholder": "Chọn một tùy chọn",
+      "fix_errors": "Vui lòng kiểm tra các trường được đánh dấu.",
+      "error": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "rate_limited": "Có quá nhiều lượt gửi từ mạng của bạn. Vui lòng thử lại sau.",
+      "not_found_title": "Biểu mẫu này không khả dụng",
+      "not_found_description": "Liên kết có thể không đúng hoặc biểu mẫu không còn nhận phản hồi.",
+      "success_title": "Cảm ơn bạn",
+      "success_default": "Yêu cầu của bạn đã được tiếp nhận.",
+      "another": "Gửi phản hồi khác"
+    }
   }
 }

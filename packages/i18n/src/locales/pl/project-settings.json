@@ -573,5 +573,55 @@
       "title": "Usuń właściwość niestandardową",
       "description": "Usunąć {name}? Jej wartość zostanie usunięta ze wszystkich elementów pracy w tym projekcie. Tej operacji nie można cofnąć."
     }
+  },
+  "intake_forms": {
+    "title": "Formularze",
+    "description": "Udostępnij link, aby każdy, także osoby spoza Twojej przestrzeni roboczej, mógł wysyłać prośby do tego projektu. Zgłoszenia trafiają do Intake, gdy jest włączony, a w przeciwnym razie bezpośrednio jako elementy pracy.",
+    "new": "Nowy formularz",
+    "empty_title": "Brak formularzy",
+    "empty_description": "Utwórz formularz do zgłaszania błędów, próśb o dostęp lub czegokolwiek innego i udostępnij jego link.",
+    "submissions": "{count, plural, one {# zgłoszenie} few {# zgłoszenia} many {# zgłoszeń} other {# zgłoszenia}}",
+    "paused": "Nie przyjmuje odpowiedzi",
+    "open": "Otwórz formularz",
+    "accepting": "Przyjmuje odpowiedzi",
+    "link_copied": "Link do formularza skopiowany do schowka",
+    "save_error": "Nie udało się zapisać formularza. Spróbuj ponownie.",
+    "create_title": "Nowy formularz",
+    "edit_title": "Edytuj formularz",
+    "name": "Nazwa formularza",
+    "name_placeholder": "Na przykład: Zgłoś błąd",
+    "intro": "Wprowadzenie",
+    "intro_placeholder": "Wyświetlane nad pytaniami",
+    "questions": "Pytania",
+    "always_required": "Zawsze wymagane",
+    "required": "Wymagane",
+    "question_label": "Pytanie",
+    "question_label_placeholder": "Treść pytania (domyślnie: {label})",
+    "add_question": "Dodaj pytanie",
+    "success_message": "Komunikat potwierdzenia",
+    "success_message_placeholder": "Wyświetlany po wysłaniu formularza",
+    "create": "Utwórz formularz",
+    "delete_title": "Usuń formularz",
+    "delete_description": "Usunąć {name}? Jego link przestanie działać. Utworzone już elementy pracy zostaną zachowane.",
+    "fields": {
+      "name": "Tytuł",
+      "description": "Opis",
+      "priority": "Priorytet",
+      "submitter_name": "Imię i nazwisko",
+      "submitter_email": "Adres e-mail"
+    },
+    "public": {
+      "submit": "Wyślij",
+      "submitting": "Wysyłanie...",
+      "select_placeholder": "Wybierz opcję",
+      "fix_errors": "Sprawdź wyróżnione pola.",
+      "error": "Coś poszło nie tak. Spróbuj ponownie.",
+      "rate_limited": "Zbyt wiele zgłoszeń z Twojej sieci. Spróbuj ponownie później.",
+      "not_found_title": "Ten formularz jest niedostępny",
+      "not_found_description": "Link może być nieprawidłowy albo formularz nie przyjmuje już odpowiedzi.",
+      "success_title": "Dziękujemy",
+      "success_default": "Twoje zgłoszenie zostało przyjęte.",
+      "another": "Wyślij kolejną odpowiedź"
+    }
   }
 }

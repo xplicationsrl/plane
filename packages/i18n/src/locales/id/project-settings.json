@@ -573,5 +573,55 @@
       "title": "Hapus properti kustom",
       "description": "Hapus {name}? Nilainya akan dihapus dari setiap item kerja dalam proyek ini. Tindakan ini tidak dapat dibatalkan."
     }
+  },
+  "intake_forms": {
+    "title": "Formulir",
+    "description": "Bagikan tautan agar siapa pun, termasuk orang di luar ruang kerja Anda, dapat mengirim permintaan ke proyek ini. Kiriman masuk ke Intake jika aktif, jika tidak langsung menjadi item kerja.",
+    "new": "Formulir baru",
+    "empty_title": "Belum ada formulir",
+    "empty_description": "Buat formulir untuk laporan bug, permintaan akses, atau apa pun, lalu bagikan tautannya.",
+    "submissions": "{count, plural, one {# kiriman} other {# kiriman}}",
+    "paused": "Tidak menerima tanggapan",
+    "open": "Buka formulir",
+    "accepting": "Menerima tanggapan",
+    "link_copied": "Tautan formulir disalin ke papan klip",
+    "save_error": "Formulir tidak dapat disimpan. Silakan coba lagi.",
+    "create_title": "Formulir baru",
+    "edit_title": "Edit formulir",
+    "name": "Nama formulir",
+    "name_placeholder": "Misalnya: Laporkan bug",
+    "intro": "Pengantar",
+    "intro_placeholder": "Ditampilkan di atas pertanyaan",
+    "questions": "Pertanyaan",
+    "always_required": "Selalu ditanyakan",
+    "required": "Wajib",
+    "question_label": "Pertanyaan",
+    "question_label_placeholder": "Teks pertanyaan (bawaan: {label})",
+    "add_question": "Tambah pertanyaan",
+    "success_message": "Pesan konfirmasi",
+    "success_message_placeholder": "Ditampilkan setelah seseorang mengirim formulir",
+    "create": "Buat formulir",
+    "delete_title": "Hapus formulir",
+    "delete_description": "Hapus {name}? Tautannya tidak akan berfungsi lagi. Item kerja yang sudah dibuat tetap disimpan.",
+    "fields": {
+      "name": "Judul",
+      "description": "Deskripsi",
+      "priority": "Prioritas",
+      "submitter_name": "Nama Anda",
+      "submitter_email": "Email Anda"
+    },
+    "public": {
+      "submit": "Kirim",
+      "submitting": "Mengirim...",
+      "select_placeholder": "Pilih opsi",
+      "fix_errors": "Silakan periksa kolom yang ditandai.",
+      "error": "Terjadi kesalahan. Silakan coba lagi.",
+      "rate_limited": "Terlalu banyak kiriman dari jaringan Anda. Silakan coba lagi nanti.",
+      "not_found_title": "Formulir ini tidak tersedia",
+      "not_found_description": "Tautan mungkin salah, atau formulir tidak lagi menerima tanggapan.",
+      "success_title": "Terima kasih",
+      "success_default": "Permintaan Anda telah diterima.",
+      "another": "Kirim tanggapan lain"
+    }
   }
 }

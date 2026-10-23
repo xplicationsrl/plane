@@ -37,6 +37,7 @@ export const PROJECT_SETTINGS_ICONS: Record<TProjectSettingsTabs, LucideIcon | R
   labels: LabelsOutline,
   custom_properties: PropertiesOutline,
   templates: TemplatesOutline,
+  forms: PagesOutline,
   estimates: EstimateOutline,
   automations: TriggerOutline,
 };
