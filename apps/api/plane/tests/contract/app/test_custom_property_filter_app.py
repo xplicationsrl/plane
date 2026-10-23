@@ -89,3 +89,27 @@ class TestCustomPropertyFilters:
     def test_malformed_key_is_rejected(self, issues):
         with pytest.raises(ValidationError):
             _filter(issues, {"customproperty_nope__in": "a"})
+
+
+@pytest.mark.contract
+class TestDateCustomPropertyFilters:
+    @pytest.fixture
+    def due(self, db, workspace, project):
+        prop = CustomProperty.objects.create(name="Review on", property_type="date", project=project)
+        for name, day in (("early", "2026-01-10"), ("mid", "2026-03-15"), ("late", "2026-06-01")):
+            issue = Issue.objects.create(name=name, project=project, workspace=workspace)
+            IssueCustomPropertyValue.objects.create(issue=issue, property=prop, value=day, project=project)
+        Issue.objects.create(name="none", project=project, workspace=workspace)
+        return prop, Issue.objects.filter(project=project)
+
+    def test_exact_date(self, due):
+        prop, issues = due
+        assert _filter(issues, {f"customproperty_{prop.id}__exact": "2026-03-15"}) == ["mid"]
+
+    def test_date_range_is_inclusive(self, due):
+        prop, issues = due
+        assert _filter(issues, {f"customproperty_{prop.id}__range": "2026-01-10,2026-03-15"}) == ["early", "mid"]
+
+    def test_invalid_dates_match_nothing(self, due):
+        prop, issues = due
+        assert _filter(issues, {f"customproperty_{prop.id}__range": "soon,later"}) == []

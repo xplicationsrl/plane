@@ -38,6 +38,7 @@ import {
   getAssigneeFilterConfig,
   getCreatedAtFilterConfig,
   getCreatedByFilterConfig,
+  getCustomPropertyDateFilterConfig,
   getCustomPropertyFilterConfig,
   getCycleFilterConfig,
   getFileURL,
@@ -150,7 +151,7 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceSlug, projectId]);
   const filterableProperties = getProjectProperties(projectId).filter((property) =>
-    ["select", "multi_select", "checkbox", "member"].includes(property.property_type)
+    ["select", "multi_select", "checkbox", "member", "date"].includes(property.property_type)
   );
 
   /**
@@ -382,6 +383,13 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
   const customPropertyFilterConfigs = useMemo(
     () =>
       filterableProperties.map((property) => {
+        if (property.property_type === "date")
+          return getCustomPropertyDateFilterConfig<TWorkItemFilterProperty>(`customproperty_${property.id}`)({
+            isEnabled: true,
+            label: property.name,
+            filterIcon: getCustomPropertyTypeIcon(property.property_type),
+            ...operatorConfigs,
+          });
         const options: TCustomPropertyFilterOption[] =
           property.property_type === "checkbox"
             ? [

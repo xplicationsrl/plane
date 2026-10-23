@@ -10,6 +10,7 @@ sends) with the chosen values, comma-separated or as a list:
 * select: option ids, matching items whose value is one of them
 * multi select / people: option or user ids, matching items whose value contains any
 * checkbox: "true" and/or "false"
+* date: ``__exact`` with one date, or ``__range`` with "start,end" (YYYY-MM-DD)
 """
 
 # Python imports
@@ -18,20 +19,27 @@ from functools import reduce
 from operator import or_
 
 # Django imports
-from django.db.models import Q
+from django.db.models import CharField, F, Func, Q
 from rest_framework.exceptions import ValidationError
 
 # Module imports
 from plane.db.models import CustomProperty, CustomPropertyType, IssueCustomPropertyValue
 
 PREFIX = "customproperty_"
-KEY_PATTERN = re.compile(r"^customproperty_([0-9a-fA-F-]{36})__(in|exact)$")
+KEY_PATTERN = re.compile(r"^customproperty_([0-9a-fA-F-]{36})__(in|exact|range)$")
+DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 FILTERABLE_TYPES = {
     CustomPropertyType.SELECT,
     CustomPropertyType.MULTI_SELECT,
     CustomPropertyType.MEMBER,
     CustomPropertyType.CHECKBOX,
+    CustomPropertyType.DATE,
 }
+
+
+def _json_text(field):
+    """A top-level JSON string as text (``"2026-10-23"`` -> ``2026-10-23``)."""
+    return Func(F(field), template="(%(expressions)s #>> '{}')", output_field=CharField())
 
 
 def is_custom_property_key(key):
@@ -53,21 +61,35 @@ def build_custom_property_q(conditions, project_ids=None):
     parsed = []
     for key, raw in conditions.items():
         validate_custom_property_key(key)
-        parsed.append((KEY_PATTERN.match(key).group(1).lower(), _values(raw)))
+        match = KEY_PATTERN.match(key)
+        parsed.append((match.group(1).lower(), match.group(2), _values(raw)))
 
-    properties = CustomProperty.objects.filter(id__in=[pid for pid, _ in parsed])
+    properties = CustomProperty.objects.filter(id__in=[pid for pid, _, _ in parsed])
     if project_ids is not None:
         properties = properties.filter(project_id__in=project_ids)
     properties = {str(p.id): p for p in properties}
 
     combined = Q()
-    for property_id, values in parsed:
+    for property_id, operator, values in parsed:
         prop = properties.get(property_id)
         if prop is None or prop.property_type not in FILTERABLE_TYPES or not values:
             # Unknown or unfilterable property: nothing can match
             combined &= Q(pk__in=[])
             continue
         rows = IssueCustomPropertyValue.objects.filter(property=prop)
+        if prop.property_type == CustomPropertyType.DATE:
+            dates = [value[:10] for value in values if DATE_PATTERN.match(value[:10])]
+            if not dates:
+                combined &= Q(pk__in=[])
+                continue
+            rows = rows.annotate(date_text=_json_text("value"))
+            if operator == "range":
+                start, end = (dates + dates)[:2] if len(dates) == 1 else sorted(dates[:2])
+                match = Q(date_text__gte=start, date_text__lte=end)
+            else:
+                match = Q(date_text__in=dates)
+            combined &= Q(id__in=rows.filter(match).values("issue_id"))
+            continue
         if prop.property_type == CustomPropertyType.CHECKBOX:
             wanted = {value.lower() in ("true", "1", "yes") for value in values}
             checked = rows.filter(value=True).values("issue_id")
