@@ -50,6 +50,7 @@ export * from "./settings";
 export * from "./state";
 export * from "./stickies";
 export * from "./time-entry";
+export * from "./template";
 export * from "./timezone";
 export * from "./users";
 export * from "./utils";

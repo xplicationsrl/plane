@@ -328,6 +328,39 @@
         "work_item": "找不到範本。",
         "project": "找不到範本。"
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "從已儲存的設定開始新增工作事項：在建立表單中選擇模板。",
+        "empty": "尚無模板。開啟任一工作事項，開啟其選單並選擇「另存為模板」。",
+        "sub_items": "{count, plural, one {# 個子工作事項} other {# 個子工作事項}}",
+        "none": "不使用模板",
+        "save_action": "另存為模板",
+        "save_title": "另存為模板",
+        "save_description": "儲存標題、描述、屬性、自訂屬性和子工作事項。日期和留言不會儲存。",
+        "save_submit": "儲存模板",
+        "saved_title": "模板已儲存",
+        "saved_message": "建立工作事項時即可使用 {name}。",
+        "apply_error": "無法新增模板中的子工作事項，請再試一次或手動新增。"
+      },
+      "project": {
+        "description": "建立新專案時重複使用此專案的狀態、標籤、自訂屬性和工作事項模板。",
+        "save_action": "將專案另存為模板",
+        "save_title": "將專案另存為模板",
+        "save_description": "儲存狀態、標籤、自訂屬性、工作事項模板和已啟用的功能。",
+        "include_work_items": "包含目前的工作事項",
+        "save_submit": "儲存模板",
+        "saved_title": "模板已儲存",
+        "saved_message": "建立專案時現在可以選擇 {name}。",
+        "summary": "狀態：{states} · 屬性：{properties} · 模板：{templates} · 工作事項：{items}",
+        "none": "不使用模板",
+        "apply_error": "專案已建立，但無法套用模板。"
+      },
+      "edit_title": "編輯模板",
+      "save_error": "無法儲存模板，請再試一次。",
+      "delete_title": "刪除模板",
+      "delete_description": "刪除 {name}？已根據此模板建立的工作事項和專案不受影響。",
+      "delete_error": "無法刪除模板，請再試一次。"
     }
   }
 }

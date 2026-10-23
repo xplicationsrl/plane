@@ -328,6 +328,39 @@
         "work_item": "Aucun modèle trouvé.",
         "project": "Aucun modèle trouvé."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Créez de nouveaux éléments de travail à partir d’une configuration enregistrée : choisissez un modèle dans le formulaire de création.",
+        "empty": "Aucun modèle pour le moment. Ouvrez un élément de travail, ouvrez son menu et choisissez « Enregistrer comme modèle ».",
+        "sub_items": "{count, plural, one {# sous-élément} many {# sous-éléments} other {# sous-éléments}}",
+        "none": "Aucun modèle",
+        "save_action": "Enregistrer comme modèle",
+        "save_title": "Enregistrer comme modèle",
+        "save_description": "Le titre, la description, les propriétés, les propriétés personnalisées et les sous-éléments sont enregistrés. Les dates et les commentaires ne le sont pas.",
+        "save_submit": "Enregistrer le modèle",
+        "saved_title": "Modèle enregistré",
+        "saved_message": "{name} est prêt à être utilisé lors de la création d’éléments de travail.",
+        "apply_error": "Les sous-éléments du modèle n’ont pas pu être ajoutés. Veuillez réessayer ou les ajouter manuellement."
+      },
+      "project": {
+        "description": "Réutilisez les états, libellés, propriétés personnalisées et modèles d’éléments de travail de ce projet lors de la création de nouveaux projets.",
+        "save_action": "Enregistrer le projet comme modèle",
+        "save_title": "Enregistrer le projet comme modèle",
+        "save_description": "Enregistre les états, libellés, propriétés personnalisées, modèles d’éléments de travail et fonctionnalités activées.",
+        "include_work_items": "Inclure les éléments de travail actuels",
+        "save_submit": "Enregistrer le modèle",
+        "saved_title": "Modèle enregistré",
+        "saved_message": "{name} apparaît désormais lors de la création d’un projet.",
+        "summary": "États : {states} · Propriétés : {properties} · Modèles : {templates} · Éléments de travail : {items}",
+        "none": "Aucun modèle",
+        "apply_error": "Le projet a été créé, mais le modèle n’a pas pu être appliqué."
+      },
+      "edit_title": "Modifier le modèle",
+      "save_error": "Le modèle n’a pas pu être enregistré. Veuillez réessayer.",
+      "delete_title": "Supprimer le modèle",
+      "delete_description": "Supprimer {name} ? Les éléments de travail et projets déjà créés à partir de ce modèle restent inchangés.",
+      "delete_error": "Le modèle n’a pas pu être supprimé. Veuillez réessayer."
     }
   }
 }

@@ -328,6 +328,39 @@
         "work_item": "Žiadne šablóny neboli nájdené.",
         "project": "Žiadne šablóny neboli nájdené."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Zakladajte nové pracovné položky z uloženého nastavenia: vyberte šablónu vo formulári na vytvorenie.",
+        "empty": "Zatiaľ žiadne šablóny. Otvorte ľubovoľnú pracovnú položku, otvorte jej ponuku a zvoľte „Uložiť ako šablónu“.",
+        "sub_items": "{count, plural, one {# podriadená položka} few {# podriadené položky} many {# podriadenej položky} other {# podriadených položiek}}",
+        "none": "Bez šablóny",
+        "save_action": "Uložiť ako šablónu",
+        "save_title": "Uložiť ako šablónu",
+        "save_description": "Uloží sa názov, popis, vlastnosti, vlastné vlastnosti a podriadené položky. Dátumy a komentáre sa neukladajú.",
+        "save_submit": "Uložiť šablónu",
+        "saved_title": "Šablóna uložená",
+        "saved_message": "Šablónu {name} môžete použiť pri vytváraní pracovných položiek.",
+        "apply_error": "Podriadené položky zo šablóny sa nepodarilo pridať. Skúste to znova alebo ich pridajte ručne."
+      },
+      "project": {
+        "description": "Znova použite stavy, štítky, vlastné vlastnosti a šablóny pracovných položiek tohto projektu pri vytváraní nových projektov.",
+        "save_action": "Uložiť projekt ako šablónu",
+        "save_title": "Uložiť projekt ako šablónu",
+        "save_description": "Uloží stavy, štítky, vlastné vlastnosti, šablóny pracovných položiek a zapnuté funkcie.",
+        "include_work_items": "Zahrnúť aktuálne pracovné položky",
+        "save_submit": "Uložiť šablónu",
+        "saved_title": "Šablóna uložená",
+        "saved_message": "Šablóna {name} sa teraz zobrazuje pri vytváraní projektu.",
+        "summary": "Stavy: {states} · Vlastnosti: {properties} · Šablóny: {templates} · Pracovné položky: {items}",
+        "none": "Bez šablóny",
+        "apply_error": "Projekt bol vytvorený, ale šablónu sa nepodarilo použiť."
+      },
+      "edit_title": "Upraviť šablónu",
+      "save_error": "Šablónu sa nepodarilo uložiť. Skúste to znova.",
+      "delete_title": "Odstrániť šablónu",
+      "delete_description": "Odstrániť {name}? Pracovné položky a projekty, ktoré z nej už boli vytvorené, zostanú bez zmeny.",
+      "delete_error": "Šablónu sa nepodarilo odstrániť. Skúste to znova."
     }
   }
 }

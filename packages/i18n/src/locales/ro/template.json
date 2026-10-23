@@ -328,6 +328,39 @@
         "work_item": "Nu s-au găsit șabloane.",
         "project": "Nu s-au găsit șabloane."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Creați activități noi pornind de la o configurație salvată: alegeți un șablon în formularul de creare.",
+        "empty": "Încă nu există șabloane. Deschideți o activitate, deschideți meniul acesteia și alegeți „Salvează ca șablon”.",
+        "sub_items": "{count, plural, one {# sub-activitate} few {# sub-activități} other {# de sub-activități}}",
+        "none": "Fără șablon",
+        "save_action": "Salvează ca șablon",
+        "save_title": "Salvează ca șablon",
+        "save_description": "Se salvează titlul, descrierea, proprietățile, proprietățile personalizate și sub-activitățile. Datele și comentariile nu sunt salvate.",
+        "save_submit": "Salvează șablonul",
+        "saved_title": "Șablon salvat",
+        "saved_message": "{name} poate fi folosit la crearea activităților.",
+        "apply_error": "Sub-activitățile din șablon nu au putut fi adăugate. Încercați din nou sau adăugați-le manual."
+      },
+      "project": {
+        "description": "Refolosiți stările, etichetele, proprietățile personalizate și șabloanele de activități ale acestui proiect atunci când creați proiecte noi.",
+        "save_action": "Salvează proiectul ca șablon",
+        "save_title": "Salvează proiectul ca șablon",
+        "save_description": "Salvează stările, etichetele, proprietățile personalizate, șabloanele de activități și funcțiile activate.",
+        "include_work_items": "Include activitățile curente",
+        "save_submit": "Salvează șablonul",
+        "saved_title": "Șablon salvat",
+        "saved_message": "{name} apare acum la crearea unui proiect.",
+        "summary": "Stări: {states} · Proprietăți: {properties} · Șabloane: {templates} · Activități: {items}",
+        "none": "Fără șablon",
+        "apply_error": "Proiectul a fost creat, dar șablonul nu a putut fi aplicat."
+      },
+      "edit_title": "Editează șablonul",
+      "save_error": "Șablonul nu a putut fi salvat. Vă rugăm să încercați din nou.",
+      "delete_title": "Șterge șablonul",
+      "delete_description": "Ștergeți {name}? Activitățile și proiectele deja create din acesta rămân neschimbate.",
+      "delete_error": "Șablonul nu a putut fi șters. Vă rugăm să încercați din nou."
     }
   }
 }

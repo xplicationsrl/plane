@@ -328,6 +328,39 @@
         "work_item": "Không tìm thấy mẫu.",
         "project": "Không tìm thấy mẫu."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Bắt đầu mục công việc mới từ cấu hình đã lưu: chọn một mẫu trong biểu mẫu tạo.",
+        "empty": "Chưa có mẫu nào. Mở một mục công việc bất kỳ, mở menu của mục đó và chọn Lưu làm mẫu.",
+        "sub_items": "{count, plural, one {# mục con} other {# mục con}}",
+        "none": "Không dùng mẫu",
+        "save_action": "Lưu làm mẫu",
+        "save_title": "Lưu làm mẫu",
+        "save_description": "Lưu tiêu đề, mô tả, thuộc tính, thuộc tính tùy chỉnh và các mục công việc con. Ngày và bình luận không được lưu.",
+        "save_submit": "Lưu mẫu",
+        "saved_title": "Đã lưu mẫu",
+        "saved_message": "{name} đã sẵn sàng để dùng khi tạo mục công việc.",
+        "apply_error": "Không thể thêm các mục công việc con của mẫu. Vui lòng thử lại hoặc thêm thủ công."
+      },
+      "project": {
+        "description": "Tái sử dụng trạng thái, nhãn, thuộc tính tùy chỉnh và mẫu mục công việc của dự án này khi tạo dự án mới.",
+        "save_action": "Lưu dự án làm mẫu",
+        "save_title": "Lưu dự án làm mẫu",
+        "save_description": "Lưu trạng thái, nhãn, thuộc tính tùy chỉnh, mẫu mục công việc và các tính năng đã bật.",
+        "include_work_items": "Bao gồm các mục công việc hiện tại",
+        "save_submit": "Lưu mẫu",
+        "saved_title": "Đã lưu mẫu",
+        "saved_message": "{name} giờ sẽ xuất hiện khi tạo dự án.",
+        "summary": "Trạng thái: {states} · Thuộc tính: {properties} · Mẫu: {templates} · Mục công việc: {items}",
+        "none": "Không dùng mẫu",
+        "apply_error": "Dự án đã được tạo nhưng không thể áp dụng mẫu."
+      },
+      "edit_title": "Chỉnh sửa mẫu",
+      "save_error": "Không thể lưu mẫu. Vui lòng thử lại.",
+      "delete_title": "Xóa mẫu",
+      "delete_description": "Xóa {name}? Các mục công việc và dự án đã tạo từ mẫu này vẫn giữ nguyên.",
+      "delete_error": "Không thể xóa mẫu. Vui lòng thử lại."
     }
   }
 }

@@ -253,3 +253,12 @@ from .time_entry.base import (
 
 
 from .recurrence.base import IssueRecurrenceEndpoint
+
+from .template.base import (
+    WorkItemTemplateEndpoint,
+    WorkItemTemplateDetailEndpoint,
+    WorkItemTemplateApplyEndpoint,
+    ProjectTemplateEndpoint,
+    ProjectTemplateDetailEndpoint,
+    ProjectTemplateApplyEndpoint,
+)

@@ -328,6 +328,39 @@
         "work_item": "No templates found.",
         "project": "No templates found."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Start new work items from a saved setup: pick a template in the create form.",
+        "empty": "No templates yet. Open any work item, open its menu and choose Save as template.",
+        "sub_items": "{count, plural, one {# sub-work item} other {# sub-work items}}",
+        "none": "No template",
+        "save_action": "Save as template",
+        "save_title": "Save as template",
+        "save_description": "Saves the title, description, properties, custom properties and sub-work items. Dates and comments aren't saved.",
+        "save_submit": "Save template",
+        "saved_title": "Template saved",
+        "saved_message": "{name} is ready to use when creating work items.",
+        "apply_error": "The template's sub-work items couldn't be added. Please try again or add them manually."
+      },
+      "project": {
+        "description": "Reuse this project's states, labels, custom properties and work item templates when creating new projects.",
+        "save_action": "Save project as template",
+        "save_title": "Save project as template",
+        "save_description": "Captures the states, labels, custom properties, work item templates and enabled features.",
+        "include_work_items": "Include current work items",
+        "save_submit": "Save template",
+        "saved_title": "Template saved",
+        "saved_message": "{name} now appears when creating a project.",
+        "summary": "States: {states} · Properties: {properties} · Templates: {templates} · Work items: {items}",
+        "none": "No template",
+        "apply_error": "The project was created, but the template couldn't be applied."
+      },
+      "edit_title": "Edit template",
+      "save_error": "The template couldn't be saved. Please try again.",
+      "delete_title": "Delete template",
+      "delete_description": "Delete {name}? Work items and projects already created from it stay as they are.",
+      "delete_error": "The template couldn't be deleted. Please try again."
     }
   }
 }

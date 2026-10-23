@@ -21,6 +21,8 @@ import { useProject } from "@/hooks/store/use-project";
 import { usePlatformOS } from "@/hooks/use-platform-os";
 // plane web types
 import type { TProject } from "@plane/types";
+import { ProjectTemplateSelect } from "@/components/templates/project-template-select";
+import { useTemplate } from "@/hooks/store/use-template";
 import { ProjectAttributes } from "./attributes";
 import { getProjectFormValues } from "./utils";
 
@@ -35,12 +37,14 @@ export type TCreateProjectFormProps = {
 };
 
 export const CreateProjectForm = observer(function CreateProjectForm(props: TCreateProjectFormProps) {
-  const { setToFavorite, workspaceSlug, data, onClose, handleNextStep, updateCoverImageStatus } = props;
+  const { setToFavorite, workspaceSlug, data, onClose, handleNextStep, updateCoverImageStatus, templateId } = props;
   // store
   const { t } = useTranslation();
-  const { addProjectToFavorites, createProject, updateProject } = useProject();
+  const { addProjectToFavorites, createProject, updateProject, fetchProjectDetails } = useProject();
+  const { applyProjectTemplate } = useTemplate();
   // states
   const [shouldAutoSyncIdentifier, setShouldAutoSyncIdentifier] = useState(true);
+  const [projectTemplateId, setProjectTemplateId] = useState<string | null>(templateId ?? null);
   // form info
   const methods = useForm<TProject>({
     defaultValues: { ...getProjectFormValues(), ...data },
@@ -109,6 +113,14 @@ export const CreateProjectForm = observer(function CreateProjectForm(props: TCre
 
         if (setToFavorite) {
           handleAddToFavorites(res.id);
+        }
+        if (projectTemplateId) {
+          try {
+            await applyProjectTemplate(workspaceSlug.toString(), projectTemplateId, res.id);
+            await fetchProjectDetails(workspaceSlug.toString(), res.id);
+          } catch {
+            setToast({ type: "error", title: t("toast.error"), message: t("templates.manage.project.apply_error") });
+          }
         }
         return handleNextStep(res.id);
       })
@@ -185,6 +197,11 @@ export const CreateProjectForm = observer(function CreateProjectForm(props: TCre
             setShouldAutoSyncIdentifier={setShouldAutoSyncIdentifier}
           />
           <ProjectAttributes isMobile={isMobile} />
+          <ProjectTemplateSelect
+            workspaceSlug={workspaceSlug.toString()}
+            value={projectTemplateId}
+            onChange={setProjectTemplateId}
+          />
         </div>
         <ProjectCreateButtons handleClose={handleClose} />
       </form>

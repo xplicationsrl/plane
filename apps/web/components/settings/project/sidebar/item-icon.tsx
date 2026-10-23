@@ -15,6 +15,7 @@ import {
   PagesOutline,
   PropertiesOutline,
   StateOutline,
+  TemplatesOutline,
   TriggerOutline,
   ViewsOutline,
 } from "@makeplane/propel/icons";
@@ -35,6 +36,7 @@ export const PROJECT_SETTINGS_ICONS: Record<TProjectSettingsTabs, LucideIcon | R
   states: StateOutline,
   labels: LabelsOutline,
   custom_properties: PropertiesOutline,
+  templates: TemplatesOutline,
   estimates: EstimateOutline,
   automations: TriggerOutline,
 };

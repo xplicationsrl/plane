@@ -328,6 +328,39 @@
         "work_item": "Geen sjablonen gevonden.",
         "project": "Geen sjablonen gevonden."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Begin nieuwe werkitems vanuit een opgeslagen opzet: kies een sjabloon in het aanmaakformulier.",
+        "empty": "Nog geen sjablonen. Open een werkitem, open het menu en kies Opslaan als sjabloon.",
+        "sub_items": "{count, plural, one {# subwerkitem} other {# subwerkitems}}",
+        "none": "Geen sjabloon",
+        "save_action": "Opslaan als sjabloon",
+        "save_title": "Opslaan als sjabloon",
+        "save_description": "Slaat de titel, beschrijving, eigenschappen, aangepaste eigenschappen en subwerkitems op. Datums en opmerkingen worden niet opgeslagen.",
+        "save_submit": "Sjabloon opslaan",
+        "saved_title": "Sjabloon opgeslagen",
+        "saved_message": "{name} is klaar voor gebruik bij het aanmaken van werkitems.",
+        "apply_error": "De subwerkitems van het sjabloon konden niet worden toegevoegd. Probeer het opnieuw of voeg ze handmatig toe."
+      },
+      "project": {
+        "description": "Hergebruik de statussen, labels, aangepaste eigenschappen en werkitemsjablonen van dit project bij het aanmaken van nieuwe projecten.",
+        "save_action": "Project opslaan als sjabloon",
+        "save_title": "Project opslaan als sjabloon",
+        "save_description": "Legt de statussen, labels, aangepaste eigenschappen, werkitemsjablonen en ingeschakelde functies vast.",
+        "include_work_items": "Huidige werkitems opnemen",
+        "save_submit": "Sjabloon opslaan",
+        "saved_title": "Sjabloon opgeslagen",
+        "saved_message": "{name} verschijnt nu bij het aanmaken van een project.",
+        "summary": "Statussen: {states} · Eigenschappen: {properties} · Sjablonen: {templates} · Werkitems: {items}",
+        "none": "Geen sjabloon",
+        "apply_error": "Het project is aangemaakt, maar het sjabloon kon niet worden toegepast."
+      },
+      "edit_title": "Sjabloon bewerken",
+      "save_error": "Het sjabloon kon niet worden opgeslagen. Probeer het opnieuw.",
+      "delete_title": "Sjabloon verwijderen",
+      "delete_description": "{name} verwijderen? Werkitems en projecten die er al mee zijn gemaakt, blijven ongewijzigd.",
+      "delete_error": "Het sjabloon kon niet worden verwijderd. Probeer het opnieuw."
     }
   }
 }

@@ -8,7 +8,7 @@ import { useState } from "react";
 import { omit } from "lodash-es";
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
-import { MoreHorizontalOutline } from "@makeplane/propel/icons";
+import { MoreHorizontalOutline, TemplatesOutline } from "@makeplane/propel/icons";
 // plane imports
 import { ARCHIVABLE_STATE_GROUPS, EUserPermissions, EUserPermissionsLevel } from "@plane/constants";
 import type { TIssue } from "@plane/types";
@@ -36,6 +36,7 @@ import { useUserPermissions } from "@/hooks/store/user";
 import { ArchiveIssueModal } from "../../archive-issue-modal";
 import { DeleteIssueModal } from "../../delete-issue-modal";
 import { CreateUpdateIssueModal } from "../../issue-modal/modal";
+import { SaveWorkItemTemplateModal } from "@/components/templates/save-work-item-template-modal";
 import type { IQuickActionProps } from "../list/list-view-types";
 import type { MenuItemFactoryProps } from "./helper";
 import { useWorkItemDetailMenuItems, quickActionTriggerGuard, stopQuickActionPropagation } from "./helper";
@@ -75,6 +76,7 @@ export const WorkItemDetailQuickActions = observer(function WorkItemDetailQuickA
   const [deleteIssueModal, setDeleteIssueModal] = useState(false);
   const [archiveIssueModal, setArchiveIssueModal] = useState(false);
   const [_, setDuplicateWorkItemModal] = useState(false);
+  const [isSaveTemplateModalOpen, setIsSaveTemplateModalOpen] = useState(false);
   // store hooks
   const { allowPermissions } = useUserPermissions();
   const { issuesFilter } = useIssues(EIssuesStoreType.PROJECT);
@@ -185,6 +187,21 @@ export const WorkItemDetailQuickActions = observer(function WorkItemDetailQuickA
       }
       return item;
     })
+    // Save as template sits just above delete
+    .flatMap((item) =>
+      item.key === "delete"
+        ? [
+            {
+              key: "save-as-template",
+              title: t("templates.manage.work_item.save_action"),
+              icon: TemplatesOutline,
+              action: () => setIsSaveTemplateModalOpen(true),
+              shouldRender: isEditingAllowed && !issue.archived_at,
+            },
+            item,
+          ]
+        : [item]
+    )
     .filter(function MENU_ITEMS(item) {
       return item.shouldRender !== false;
     });
@@ -233,6 +250,13 @@ export const WorkItemDetailQuickActions = observer(function WorkItemDetailQuickA
         }}
         storeType={EIssuesStoreType.PROJECT}
         fetchIssueDetails={false}
+      />
+
+      <SaveWorkItemTemplateModal
+        isOpen={isSaveTemplateModalOpen}
+        onClose={() => setIsSaveTemplateModalOpen(false)}
+        workspaceSlug={workspaceSlug?.toString() ?? ""}
+        issue={issue}
       />
 
       <ContextMenu parentRef={parentRef} items={CONTEXT_MENU_ITEMS} />

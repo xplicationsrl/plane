@@ -328,6 +328,39 @@
         "work_item": "Nenhum modelo encontrado.",
         "project": "Nenhum modelo encontrado."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Comece novos itens de trabalho a partir de uma configuração salva: escolha um modelo no formulário de criação.",
+        "empty": "Ainda não há modelos. Abra qualquer item de trabalho, abra o menu dele e escolha \"Salvar como modelo\".",
+        "sub_items": "{count, plural, one {# sub-item} many {# sub-itens} other {# sub-itens}}",
+        "none": "Sem modelo",
+        "save_action": "Salvar como modelo",
+        "save_title": "Salvar como modelo",
+        "save_description": "Salva o título, a descrição, as propriedades, as propriedades personalizadas e os sub-itens. Datas e comentários não são salvos.",
+        "save_submit": "Salvar modelo",
+        "saved_title": "Modelo salvo",
+        "saved_message": "{name} está pronto para uso ao criar itens de trabalho.",
+        "apply_error": "Não foi possível adicionar os sub-itens do modelo. Tente novamente ou adicione-os manualmente."
+      },
+      "project": {
+        "description": "Reutilize os estados, rótulos, propriedades personalizadas e modelos de itens de trabalho deste projeto ao criar novos projetos.",
+        "save_action": "Salvar projeto como modelo",
+        "save_title": "Salvar projeto como modelo",
+        "save_description": "Salva os estados, rótulos, propriedades personalizadas, modelos de itens de trabalho e recursos ativados.",
+        "include_work_items": "Incluir os itens de trabalho atuais",
+        "save_submit": "Salvar modelo",
+        "saved_title": "Modelo salvo",
+        "saved_message": "{name} agora aparece ao criar um projeto.",
+        "summary": "Estados: {states} · Propriedades: {properties} · Modelos: {templates} · Itens de trabalho: {items}",
+        "none": "Sem modelo",
+        "apply_error": "O projeto foi criado, mas não foi possível aplicar o modelo."
+      },
+      "edit_title": "Editar modelo",
+      "save_error": "Não foi possível salvar o modelo. Tente novamente.",
+      "delete_title": "Excluir modelo",
+      "delete_description": "Excluir {name}? Itens de trabalho e projetos já criados a partir dele permanecem como estão.",
+      "delete_error": "Não foi possível excluir o modelo. Tente novamente."
     }
   }
 }

@@ -328,6 +328,39 @@
         "work_item": "Nessun modello trovato.",
         "project": "Nessun modello trovato."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Crei nuovi elementi di lavoro da una configurazione salvata: scelga un modello nel modulo di creazione.",
+        "empty": "Ancora nessun modello. Apra un elemento di lavoro, apra il suo menu e scelga «Salva come modello».",
+        "sub_items": "{count, plural, one {# sotto-elemento} many {# sotto-elementi} other {# sotto-elementi}}",
+        "none": "Nessun modello",
+        "save_action": "Salva come modello",
+        "save_title": "Salva come modello",
+        "save_description": "Vengono salvati titolo, descrizione, proprietà, proprietà personalizzate e sotto-elementi. Date e commenti non vengono salvati.",
+        "save_submit": "Salva modello",
+        "saved_title": "Modello salvato",
+        "saved_message": "{name} è pronto per la creazione di elementi di lavoro.",
+        "apply_error": "Non è stato possibile aggiungere i sotto-elementi del modello. Riprovi o li aggiunga manualmente."
+      },
+      "project": {
+        "description": "Riutilizzi stati, etichette, proprietà personalizzate e modelli di elementi di lavoro di questo progetto quando crea nuovi progetti.",
+        "save_action": "Salva progetto come modello",
+        "save_title": "Salva progetto come modello",
+        "save_description": "Salva stati, etichette, proprietà personalizzate, modelli di elementi di lavoro e funzionalità attive.",
+        "include_work_items": "Includi gli elementi di lavoro attuali",
+        "save_submit": "Salva modello",
+        "saved_title": "Modello salvato",
+        "saved_message": "{name} ora compare quando si crea un progetto.",
+        "summary": "Stati: {states} · Proprietà: {properties} · Modelli: {templates} · Elementi di lavoro: {items}",
+        "none": "Nessun modello",
+        "apply_error": "Il progetto è stato creato, ma non è stato possibile applicare il modello."
+      },
+      "edit_title": "Modifica modello",
+      "save_error": "Non è stato possibile salvare il modello. Riprovi.",
+      "delete_title": "Elimina modello",
+      "delete_description": "Eliminare {name}? Gli elementi di lavoro e i progetti già creati da questo modello restano invariati.",
+      "delete_error": "Non è stato possibile eliminare il modello. Riprovi."
     }
   }
 }

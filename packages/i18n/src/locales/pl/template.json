@@ -328,6 +328,39 @@
         "work_item": "Nie znaleziono szablonów.",
         "project": "Nie znaleziono szablonów."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Twórz nowe elementy pracy na podstawie zapisanej konfiguracji: wybierz szablon w formularzu tworzenia.",
+        "empty": "Brak szablonów. Otwórz dowolny element pracy, otwórz jego menu i wybierz „Zapisz jako szablon”.",
+        "sub_items": "{count, plural, one {# element podrzędny} few {# elementy podrzędne} many {# elementów podrzędnych} other {# elementu podrzędnego}}",
+        "none": "Bez szablonu",
+        "save_action": "Zapisz jako szablon",
+        "save_title": "Zapisz jako szablon",
+        "save_description": "Zapisywane są tytuł, opis, właściwości, właściwości niestandardowe i elementy podrzędne. Daty i komentarze nie są zapisywane.",
+        "save_submit": "Zapisz szablon",
+        "saved_title": "Szablon zapisany",
+        "saved_message": "Szablon {name} jest gotowy do użycia przy tworzeniu elementów pracy.",
+        "apply_error": "Nie udało się dodać elementów podrzędnych z szablonu. Spróbuj ponownie lub dodaj je ręcznie."
+      },
+      "project": {
+        "description": "Używaj ponownie stanów, etykiet, właściwości niestandardowych i szablonów elementów pracy tego projektu podczas tworzenia nowych projektów.",
+        "save_action": "Zapisz projekt jako szablon",
+        "save_title": "Zapisz projekt jako szablon",
+        "save_description": "Zapisuje stany, etykiety, właściwości niestandardowe, szablony elementów pracy i włączone funkcje.",
+        "include_work_items": "Uwzględnij bieżące elementy pracy",
+        "save_submit": "Zapisz szablon",
+        "saved_title": "Szablon zapisany",
+        "saved_message": "Szablon {name} jest teraz dostępny podczas tworzenia projektu.",
+        "summary": "Stany: {states} · Właściwości: {properties} · Szablony: {templates} · Elementy pracy: {items}",
+        "none": "Bez szablonu",
+        "apply_error": "Projekt został utworzony, ale nie udało się zastosować szablonu."
+      },
+      "edit_title": "Edytuj szablon",
+      "save_error": "Nie udało się zapisać szablonu. Spróbuj ponownie.",
+      "delete_title": "Usuń szablon",
+      "delete_description": "Usunąć {name}? Elementy pracy i projekty już utworzone z tego szablonu pozostaną bez zmian.",
+      "delete_error": "Nie udało się usunąć szablonu. Spróbuj ponownie."
     }
   }
 }

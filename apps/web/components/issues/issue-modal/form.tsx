@@ -43,6 +43,7 @@ import {
   IssueProjectSelect,
   IssueTitleInput,
 } from "@/components/issues/issue-modal/components";
+import { WorkItemTemplateSelect } from "@/components/issues/issue-modal/components/template-select";
 // helpers
 // hooks
 import { useIssueModal } from "@/hooks/context/use-issue-modal";
@@ -373,6 +374,9 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
                     disabled={!!data?.id || !!data?.sourceIssueId || isProjectSelectionDisabled}
                     handleFormChange={handleFormChange}
                   />
+                  {!data?.id && !data?.sourceIssueId && (
+                    <WorkItemTemplateSelect workspaceSlug={workspaceSlug?.toString()} projectId={projectId} />
+                  )}
                 </div>
               </div>
               {watch("parent_id") && selectedParentIssue && (

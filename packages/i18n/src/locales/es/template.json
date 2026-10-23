@@ -328,6 +328,39 @@
         "work_item": "No se encontraron plantillas.",
         "project": "No se encontraron plantillas."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Cree nuevos elementos de trabajo a partir de una configuración guardada: elija una plantilla en el formulario de creación.",
+        "empty": "Aún no hay plantillas. Abra cualquier elemento de trabajo, abra su menú y elija «Guardar como plantilla».",
+        "sub_items": "{count, plural, one {# sub-elemento} other {# sub-elementos}}",
+        "none": "Sin plantilla",
+        "save_action": "Guardar como plantilla",
+        "save_title": "Guardar como plantilla",
+        "save_description": "Se guardan el título, la descripción, las propiedades, las propiedades personalizadas y los sub-elementos. No se guardan las fechas ni los comentarios.",
+        "save_submit": "Guardar plantilla",
+        "saved_title": "Plantilla guardada",
+        "saved_message": "{name} está lista para usarse al crear elementos de trabajo.",
+        "apply_error": "No se pudieron agregar los sub-elementos de la plantilla. Inténtelo de nuevo o agréguelos manualmente."
+      },
+      "project": {
+        "description": "Reutilice los estados, las etiquetas, las propiedades personalizadas y las plantillas de elementos de trabajo de este proyecto al crear proyectos nuevos.",
+        "save_action": "Guardar proyecto como plantilla",
+        "save_title": "Guardar proyecto como plantilla",
+        "save_description": "Guarda los estados, las etiquetas, las propiedades personalizadas, las plantillas de elementos de trabajo y las funciones activadas.",
+        "include_work_items": "Incluir los elementos de trabajo actuales",
+        "save_submit": "Guardar plantilla",
+        "saved_title": "Plantilla guardada",
+        "saved_message": "{name} ahora aparece al crear un proyecto.",
+        "summary": "Estados: {states} · Propiedades: {properties} · Plantillas: {templates} · Elementos de trabajo: {items}",
+        "none": "Sin plantilla",
+        "apply_error": "El proyecto se creó, pero no se pudo aplicar la plantilla."
+      },
+      "edit_title": "Editar plantilla",
+      "save_error": "No se pudo guardar la plantilla. Inténtelo de nuevo.",
+      "delete_title": "Eliminar plantilla",
+      "delete_description": "¿Eliminar {name}? Los elementos de trabajo y proyectos ya creados a partir de ella no cambian.",
+      "delete_error": "No se pudo eliminar la plantilla. Inténtelo de nuevo."
     }
   }
 }

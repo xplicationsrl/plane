@@ -328,6 +328,39 @@
         "work_item": "Nebyly nalezeny žádné šablony.",
         "project": "Nebyly nalezeny žádné šablony."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Zakládejte nové pracovní položky z uloženého nastavení: vyberte šablonu ve formuláři pro vytvoření.",
+        "empty": "Zatím žádné šablony. Otevřete libovolnou pracovní položku, otevřete její nabídku a zvolte „Uložit jako šablonu“.",
+        "sub_items": "{count, plural, one {# podřízená položka} few {# podřízené položky} many {# podřízené položky} other {# podřízených položek}}",
+        "none": "Bez šablony",
+        "save_action": "Uložit jako šablonu",
+        "save_title": "Uložit jako šablonu",
+        "save_description": "Uloží se název, popis, vlastnosti, vlastní vlastnosti a podřízené položky. Data a komentáře se neukládají.",
+        "save_submit": "Uložit šablonu",
+        "saved_title": "Šablona uložena",
+        "saved_message": "Šablonu {name} můžete použít při vytváření pracovních položek.",
+        "apply_error": "Podřízené položky ze šablony se nepodařilo přidat. Zkuste to znovu nebo je přidejte ručně."
+      },
+      "project": {
+        "description": "Znovu použijte stavy, štítky, vlastní vlastnosti a šablony pracovních položek tohoto projektu při vytváření nových projektů.",
+        "save_action": "Uložit projekt jako šablonu",
+        "save_title": "Uložit projekt jako šablonu",
+        "save_description": "Uloží stavy, štítky, vlastní vlastnosti, šablony pracovních položek a zapnuté funkce.",
+        "include_work_items": "Zahrnout aktuální pracovní položky",
+        "save_submit": "Uložit šablonu",
+        "saved_title": "Šablona uložena",
+        "saved_message": "Šablona {name} se nyní zobrazuje při vytváření projektu.",
+        "summary": "Stavy: {states} · Vlastnosti: {properties} · Šablony: {templates} · Pracovní položky: {items}",
+        "none": "Bez šablony",
+        "apply_error": "Projekt byl vytvořen, ale šablonu se nepodařilo použít."
+      },
+      "edit_title": "Upravit šablonu",
+      "save_error": "Šablonu se nepodařilo uložit. Zkuste to prosím znovu.",
+      "delete_title": "Smazat šablonu",
+      "delete_description": "Smazat {name}? Pracovní položky a projekty, které z ní již byly vytvořeny, zůstanou beze změny.",
+      "delete_error": "Šablonu se nepodařilo smazat. Zkuste to prosím znovu."
     }
   }
 }

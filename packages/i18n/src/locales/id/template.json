@@ -328,6 +328,39 @@
         "work_item": "Tidak ada template ditemukan.",
         "project": "Tidak ada template ditemukan."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Buat item kerja baru dari pengaturan tersimpan: pilih template di formulir pembuatan.",
+        "empty": "Belum ada template. Buka item kerja mana pun, buka menunya, lalu pilih Simpan sebagai template.",
+        "sub_items": "{count, plural, one {# sub-item} other {# sub-item}}",
+        "none": "Tanpa template",
+        "save_action": "Simpan sebagai template",
+        "save_title": "Simpan sebagai template",
+        "save_description": "Menyimpan judul, deskripsi, properti, properti kustom, dan sub-item kerja. Tanggal dan komentar tidak disimpan.",
+        "save_submit": "Simpan template",
+        "saved_title": "Template disimpan",
+        "saved_message": "{name} siap digunakan saat membuat item kerja.",
+        "apply_error": "Sub-item kerja dari template tidak dapat ditambahkan. Silakan coba lagi atau tambahkan secara manual."
+      },
+      "project": {
+        "description": "Gunakan kembali status, label, properti kustom, dan template item kerja proyek ini saat membuat proyek baru.",
+        "save_action": "Simpan proyek sebagai template",
+        "save_title": "Simpan proyek sebagai template",
+        "save_description": "Menyimpan status, label, properti kustom, template item kerja, dan fitur yang diaktifkan.",
+        "include_work_items": "Sertakan item kerja saat ini",
+        "save_submit": "Simpan template",
+        "saved_title": "Template disimpan",
+        "saved_message": "{name} kini muncul saat membuat proyek.",
+        "summary": "Status: {states} · Properti: {properties} · Template: {templates} · Item kerja: {items}",
+        "none": "Tanpa template",
+        "apply_error": "Proyek telah dibuat, tetapi template tidak dapat diterapkan."
+      },
+      "edit_title": "Edit template",
+      "save_error": "Template tidak dapat disimpan. Silakan coba lagi.",
+      "delete_title": "Hapus template",
+      "delete_description": "Hapus {name}? Item kerja dan proyek yang sudah dibuat darinya tetap seperti semula.",
+      "delete_error": "Template tidak dapat dihapus. Silakan coba lagi."
     }
   }
 }

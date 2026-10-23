@@ -328,6 +328,39 @@
         "work_item": "Şablon bulunamadı.",
         "project": "Şablon bulunamadı."
       }
+    },
+    "manage": {
+      "work_item": {
+        "description": "Yeni iş öğelerini kayıtlı bir yapılandırmadan başlatın: oluşturma formunda bir şablon seçin.",
+        "empty": "Henüz şablon yok. Herhangi bir iş öğesini açın, menüsünü açın ve \"Şablon olarak kaydet\"i seçin.",
+        "sub_items": "{count, plural, one {# alt iş öğesi} other {# alt iş öğesi}}",
+        "none": "Şablon yok",
+        "save_action": "Şablon olarak kaydet",
+        "save_title": "Şablon olarak kaydet",
+        "save_description": "Başlık, açıklama, özellikler, özel özellikler ve alt iş öğeleri kaydedilir. Tarihler ve yorumlar kaydedilmez.",
+        "save_submit": "Şablonu kaydet",
+        "saved_title": "Şablon kaydedildi",
+        "saved_message": "{name}, iş öğeleri oluştururken kullanılabilir.",
+        "apply_error": "Şablonun alt iş öğeleri eklenemedi. Lütfen tekrar deneyin veya elle ekleyin."
+      },
+      "project": {
+        "description": "Yeni projeler oluştururken bu projenin durumlarını, etiketlerini, özel özelliklerini ve iş öğesi şablonlarını yeniden kullanın.",
+        "save_action": "Projeyi şablon olarak kaydet",
+        "save_title": "Projeyi şablon olarak kaydet",
+        "save_description": "Durumları, etiketleri, özel özellikleri, iş öğesi şablonlarını ve etkin özellikleri kaydeder.",
+        "include_work_items": "Mevcut iş öğelerini dahil et",
+        "save_submit": "Şablonu kaydet",
+        "saved_title": "Şablon kaydedildi",
+        "saved_message": "{name} artık proje oluştururken görünüyor.",
+        "summary": "Durumlar: {states} · Özellikler: {properties} · Şablonlar: {templates} · İş öğeleri: {items}",
+        "none": "Şablon yok",
+        "apply_error": "Proje oluşturuldu ancak şablon uygulanamadı."
+      },
+      "edit_title": "Şablonu düzenle",
+      "save_error": "Şablon kaydedilemedi. Lütfen tekrar deneyin.",
+      "delete_title": "Şablonu sil",
+      "delete_description": "{name} silinsin mi? Bu şablondan önceden oluşturulmuş iş öğeleri ve projeler olduğu gibi kalır.",
+      "delete_error": "Şablon silinemedi. Lütfen tekrar deneyin."
     }
   }
 }
