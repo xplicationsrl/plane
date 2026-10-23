@@ -33,6 +33,7 @@ import useIssuePeekOverviewRedirection from "@/hooks/use-issue-peek-overview-red
 import { usePlatformOS } from "@/hooks/use-platform-os";
 // components
 import { IssueIdentifier } from "@/components/issues/issue-detail/issue-identifier";
+import { WorkItemCompletionCheckbox } from "@/components/issues/completion";
 // local components
 import { SubIssuesListItemProperties } from "./properties";
 import { SubIssuesListRoot } from "./root";
@@ -97,7 +98,7 @@ export const SubIssuesListItem = observer(function SubIssuesListItem(props: Prop
   const displayProperties = subIssueFilters?.displayProperties ?? {};
 
   //
-  const handleIssuePeekOverview = (issue: TIssue) => handleRedirection(workspaceSlug, issue, isMobile);
+  const handleIssuePeekOverview = (workItem: TIssue) => handleRedirection(workspaceSlug, workItem, isMobile);
 
   if (!issue) return <></>;
 
@@ -134,8 +135,15 @@ export const SubIssuesListItem = observer(function SubIssuesListItem(props: Prop
                       <LinkOutline width={14} height={14} className="animate-spin" />
                     </div>
                   ) : (
-                    <div
+                    <button
+                      type="button"
+                      aria-expanded={subIssueHelpers.issue_visibility.includes(issue.id)}
+                      aria-label={issue.name}
                       className="flex h-full w-full cursor-pointer items-center justify-center text-placeholder hover:text-tertiary"
+                      onKeyDown={(e) => {
+                        // The row is a link activated by Enter/Space; keep those keys here.
+                        if (e.key === "Enter" || e.key === " ") e.stopPropagation();
+                      }}
                       onClick={async (e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -152,13 +160,31 @@ export const SubIssuesListItem = observer(function SubIssuesListItem(props: Prop
                           "rotate-90": subIssueHelpers.issue_visibility.includes(issue.id),
                         })}
                       />
-                    </div>
+                    </button>
                   )}
                 </>
               )}
             </div>
 
-            <div className="flex w-full cursor-pointer items-center gap-3 truncate">
+            <WorkItemCompletionCheckbox
+              projectId={issue.project_id}
+              stateId={issue.state_id}
+              disabled={!canEdit}
+              onChange={(stateId) =>
+                issue.project_id
+                  ? subIssueOperations.updateSubIssue(
+                      workspaceSlug,
+                      issue.project_id,
+                      parentIssueId,
+                      issue.id,
+                      { state_id: stateId },
+                      { ...issue }
+                    )
+                  : undefined
+              }
+            />
+
+            <div className="ml-1.5 flex w-full cursor-pointer items-center gap-3 truncate">
               <WithDisplayPropertiesHOC displayProperties={displayProperties || {}} displayPropertyKey="key">
                 <div className="flex-shrink-0">
                   {projectDetail && (
@@ -179,10 +205,14 @@ export const SubIssuesListItem = observer(function SubIssuesListItem(props: Prop
             </div>
 
             <div
+              role="presentation"
               className="flex-shrink-0 text-13"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") e.stopPropagation();
               }}
             >
               <SubIssuesListItemProperties

@@ -147,7 +147,9 @@
               "message": "Verwijderen van antwoord mislukt"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {# antwoord tonen} other {# antwoorden tonen}}",
+        "hide": "Antwoorden verbergen"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Klik om omlaag te stemmen",
       "click_to_view_upvotes": "Klik om positieve stemmen te bekijken",
       "click_to_view_downvotes": "Klik om negatieve stemmen te bekijken"
+    },
+    "completion": {
+      "mark_complete": "Markeren als voltooid",
+      "reopen": "Markeren als niet voltooid",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Wis alle toegepaste filters om alle werkitems te zien.",
         "action": "Filters wissen"
       }
+    },
+    "quick_add": {
+      "button": "Subwerkitem toevoegen",
+      "placeholder": "Typ een titel en druk op Enter",
+      "error": "Het subwerkitem kon niet worden toegevoegd. Probeer het opnieuw."
     }
   },
   "issue_relation": {

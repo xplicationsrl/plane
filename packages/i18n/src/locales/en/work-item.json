@@ -147,7 +147,9 @@
               "message": "Failed to delete reply"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Show # reply} other {Show # replies}}",
+        "hide": "Hide replies"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Click to downvote",
       "click_to_view_upvotes": "Click to view upvotes",
       "click_to_view_downvotes": "Click to view downvotes"
+    },
+    "completion": {
+      "mark_complete": "Mark complete",
+      "reopen": "Mark incomplete",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "To see all work items, clear all applied filters.",
         "action": "Clear filters"
       }
+    },
+    "quick_add": {
+      "button": "Add sub-work item",
+      "placeholder": "Type a title and press Enter",
+      "error": "The sub-work item couldn't be added. Please try again."
     }
   },
   "issue_relation": {

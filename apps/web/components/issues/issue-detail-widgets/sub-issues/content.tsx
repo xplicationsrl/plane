@@ -16,6 +16,7 @@ import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { CreateUpdateIssueModal } from "../../issue-modal/modal";
 import { useSubIssueOperations } from "./helper";
 import { SubIssuesListRoot } from "./issues-list/root";
+import { SubIssueQuickAdd } from "./quick-add";
 
 type Props = {
   workspaceSlug: string;
@@ -137,6 +138,15 @@ export const SubIssuesCollapsibleContent = observer(function SubIssuesCollapsibl
           canEdit={!disabled}
           handleIssueCrudState={handleIssueCrudState}
           subIssueOperations={subIssueOperations}
+          issueServiceType={issueServiceType}
+        />
+      )}
+
+      {!disabled && issueServiceType === EIssueServiceType.ISSUES && (
+        <SubIssueQuickAdd
+          workspaceSlug={workspaceSlug}
+          projectId={projectId}
+          parentIssueId={parentIssueId}
           issueServiceType={issueServiceType}
         />
       )}

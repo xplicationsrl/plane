@@ -147,7 +147,9 @@
               "message": "返信の削除に失敗しました"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {#件の返信を表示} other {#件の返信を表示}}",
+        "hide": "返信を非表示"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "クリックして反対票を投じる",
       "click_to_view_upvotes": "クリックして賛成票を表示",
       "click_to_view_downvotes": "クリックして反対票を表示"
+    },
+    "completion": {
+      "mark_complete": "完了にする",
+      "reopen": "未完了に戻す",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "すべての作業項目を表示するには、すべての適用されたフィルターをクリアしてください。",
         "action": "フィルターをクリア"
       }
+    },
+    "quick_add": {
+      "button": "サブ作業項目を追加",
+      "placeholder": "タイトルを入力して Enter キーを押してください",
+      "error": "サブ作業項目を追加できませんでした。もう一度お試しください。"
     }
   },
   "issue_relation": {

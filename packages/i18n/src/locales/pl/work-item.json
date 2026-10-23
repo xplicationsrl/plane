@@ -147,7 +147,9 @@
               "message": "Nie udało się usunąć odpowiedzi"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Pokaż # odpowiedź} few {Pokaż # odpowiedzi} many {Pokaż # odpowiedzi} other {Pokaż # odpowiedzi}}",
+        "hide": "Ukryj odpowiedzi"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Kliknij, aby zagłosować przeciw",
       "click_to_view_upvotes": "Kliknij, aby zobaczyć głosy za",
       "click_to_view_downvotes": "Kliknij, aby zobaczyć głosy przeciw"
+    },
+    "completion": {
+      "mark_complete": "Oznacz jako zakończone",
+      "reopen": "Oznacz jako niezakończone",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Aby zobaczyć wszystkie elementy pracy, wyczyść wszystkie zastosowane filtry.",
         "action": "Wyczyść filtry"
       }
+    },
+    "quick_add": {
+      "button": "Dodaj podrzędny element pracy",
+      "placeholder": "Wpisz tytuł i naciśnij Enter",
+      "error": "Nie udało się dodać podrzędnego elementu pracy. Spróbuj ponownie."
     }
   },
   "issue_relation": {

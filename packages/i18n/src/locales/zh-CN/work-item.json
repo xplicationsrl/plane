@@ -147,7 +147,9 @@
               "message": "删除回复失败"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {显示 # 条回复} other {显示 # 条回复}}",
+        "hide": "隐藏回复"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "点击反对",
       "click_to_view_upvotes": "点击查看赞成票",
       "click_to_view_downvotes": "点击查看反对票"
+    },
+    "completion": {
+      "mark_complete": "标记为已完成",
+      "reopen": "标记为未完成",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "要查看所有工作项，请清除所有应用的过滤器。",
         "action": "清除过滤器"
       }
+    },
+    "quick_add": {
+      "button": "添加子工作项",
+      "placeholder": "输入标题并按 Enter",
+      "error": "无法添加子工作项，请重试。"
     }
   },
   "issue_relation": {

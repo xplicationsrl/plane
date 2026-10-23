@@ -147,7 +147,9 @@
               "message": "Odstránenie odpovede zlyhalo"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Zobraziť # odpoveď} few {Zobraziť # odpovede} many {Zobraziť # odpovede} other {Zobraziť # odpovedí}}",
+        "hide": "Skryť odpovede"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Kliknite pre hlasovanie dole",
       "click_to_view_upvotes": "Kliknite pre zobrazenie hlasov hore",
       "click_to_view_downvotes": "Kliknite pre zobrazenie hlasov dole"
+    },
+    "completion": {
+      "mark_complete": "Označiť ako dokončené",
+      "reopen": "Označiť ako nedokončené",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Pre zobrazenie všetkých pracovných položiek vymažte všetky použité filtre.",
         "action": "Vymazať filtre"
       }
+    },
+    "quick_add": {
+      "button": "Pridať podriadenú pracovnú položku",
+      "placeholder": "Zadajte názov a stlačte Enter",
+      "error": "Podriadenú pracovnú položku sa nepodarilo pridať. Skúste to znova."
     }
   },
   "issue_relation": {

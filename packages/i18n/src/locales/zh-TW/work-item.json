@@ -147,7 +147,9 @@
               "message": "刪除回覆失敗"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {顯示 # 則回覆} other {顯示 # 則回覆}}",
+        "hide": "隱藏回覆"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "點擊反對",
       "click_to_view_upvotes": "點擊查看贊成票",
       "click_to_view_downvotes": "點擊查看反對票"
+    },
+    "completion": {
+      "mark_complete": "標記為已完成",
+      "reopen": "標記為未完成",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "要查看所有工作事項，請清除所有應用過的過濾器。",
         "action": "清除過濾器"
       }
+    },
+    "quick_add": {
+      "button": "新增子工作事項",
+      "placeholder": "輸入標題並按 Enter",
+      "error": "無法新增子工作事項，請再試一次。"
     }
   },
   "issue_relation": {

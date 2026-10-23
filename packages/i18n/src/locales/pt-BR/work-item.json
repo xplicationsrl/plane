@@ -147,7 +147,9 @@
               "message": "Falha ao excluir a resposta"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Mostrar # resposta} many {Mostrar # respostas} other {Mostrar # respostas}}",
+        "hide": "Ocultar respostas"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Clique para votar contra",
       "click_to_view_upvotes": "Clique para ver os votos a favor",
       "click_to_view_downvotes": "Clique para ver os votos contra"
+    },
+    "completion": {
+      "mark_complete": "Marcar como concluído",
+      "reopen": "Marcar como não concluído",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Para ver todos os itens de trabalho, limpe todos os filtros aplicados.",
         "action": "Limpar filtros"
       }
+    },
+    "quick_add": {
+      "button": "Adicionar sub-item de trabalho",
+      "placeholder": "Digite um título e pressione Enter",
+      "error": "Não foi possível adicionar o sub-item de trabalho. Tente novamente."
     }
   },
   "issue_relation": {

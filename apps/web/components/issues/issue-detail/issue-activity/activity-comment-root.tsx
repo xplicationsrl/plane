@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 // plane imports
 import type { E_SORT_ORDER, TActivityFilters, EActivityFilterType } from "@plane/constants";
 import { BASE_ACTIVITY_FILTER_TYPES, filterActivityOnSelectedFilters } from "@plane/constants";
-import type { TCommentsOperations } from "@plane/types";
+import type { TCommentsOperations, TIssueComment } from "@plane/types";
 // components
 import { CommentCard } from "@/components/comments/card/root";
 // hooks
@@ -44,7 +44,7 @@ export const IssueActivityCommentRoot = observer(function IssueActivityCommentRo
   // store hooks
   const {
     activity: { getActivityAndCommentsByIssueId },
-    comment: { getCommentById },
+    comment: { getCommentById, getCommentsByIssueId },
   } = useIssueDetail();
   // derived values
   const activityAndComments = getActivityAndCommentsByIssueId(issueId, sortOrder);
@@ -54,6 +54,17 @@ export const IssueActivityCommentRoot = observer(function IssueActivityCommentRo
   if (activityAndComments.length <= 0) return null;
 
   const filteredActivityAndComments = filterActivityOnSelectedFilters(activityAndComments, selectedFilters);
+
+  // Replies are threaded under their root comment, oldest first
+  const repliesByParentId: Record<string, TIssueComment[]> = {};
+  (getCommentsByIssueId(issueId) ?? []).forEach((commentId) => {
+    const reply = getCommentById(commentId);
+    if (!reply?.parent) return;
+    (repliesByParentId[reply.parent] ??= []).push(reply);
+  });
+  Object.values(repliesByParentId).forEach((replies) =>
+    replies.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+  );
 
   return (
     <div>
@@ -72,6 +83,7 @@ export const IssueActivityCommentRoot = observer(function IssueActivityCommentRo
             disabled={disabled}
             projectId={projectId}
             enableReplies
+            replies={repliesByParentId[activityComment.id]}
           />
         ) : BASE_ACTIVITY_FILTER_TYPES.includes(activityComment.activity_type as EActivityFilterType) ? (
           <IssueActivityItem

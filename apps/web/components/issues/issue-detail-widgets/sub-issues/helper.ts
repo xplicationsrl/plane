@@ -95,12 +95,8 @@ export const useSubIssueOperations = (issueServiceType: TIssueServiceType): TSub
       ) => {
         try {
           setSubIssueHelpers(parentIssueId, "issue_loader", issueId);
+          // No success toast: inline edits show their result in place.
           await updateSubIssue(workspaceSlug, projectId, parentIssueId, issueId, issueData, oldIssue, fromModal);
-          setToast({
-            type: "success",
-            title: t("toast.success"),
-            message: t("sub_work_item.update.success"),
-          });
           setSubIssueHelpers(parentIssueId, "issue_loader", issueId);
         } catch (_error) {
           setToast({

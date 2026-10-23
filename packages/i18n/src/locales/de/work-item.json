@@ -147,7 +147,9 @@
               "message": "Antwort konnte nicht gelöscht werden"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {# Antwort anzeigen} other {# Antworten anzeigen}}",
+        "hide": "Antworten ausblenden"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Klicken zum Runterstimmen",
       "click_to_view_upvotes": "Klicken um Hochstimmen anzuzeigen",
       "click_to_view_downvotes": "Klicken um Runterstimmen anzuzeigen"
+    },
+    "completion": {
+      "mark_complete": "Als abgeschlossen markieren",
+      "reopen": "Als nicht abgeschlossen markieren",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Um alle Arbeitselemente anzuzeigen, entfernen Sie alle angewendeten Filter.",
         "action": "Filter entfernen"
       }
+    },
+    "quick_add": {
+      "button": "Untergeordnetes Arbeitselement hinzufügen",
+      "placeholder": "Titel eingeben und Enter drücken",
+      "error": "Das untergeordnete Arbeitselement konnte nicht hinzugefügt werden. Bitte erneut versuchen."
     }
   },
   "issue_relation": {

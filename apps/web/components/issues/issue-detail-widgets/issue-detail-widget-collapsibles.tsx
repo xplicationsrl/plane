@@ -34,6 +34,7 @@ export const IssueDetailWidgetCollapsibles = observer(function IssueDetailWidget
     subIssues: { subIssuesByIssueId },
     attachment: { getAttachmentsCountByIssueId, getAttachmentsUploadStatusByIssueId },
     relation: { getRelationCountByIssueId },
+    subIssueQuickAddParentId,
   } = useIssueDetail(issueServiceType);
   // derived values
   const issue = getIssueById(issueId);
@@ -41,7 +42,9 @@ export const IssueDetailWidgetCollapsibles = observer(function IssueDetailWidget
   const ISSUE_RELATION_OPTIONS = useTimeLineRelationOptions();
   const issueRelationsCount = getRelationCountByIssueId(issueId, ISSUE_RELATION_OPTIONS);
   // render conditions
-  const shouldRenderSubIssues = !!subIssues && subIssues.length > 0 && !hideWidgets?.includes("sub-work-items");
+  const shouldRenderSubIssues =
+    ((!!subIssues && subIssues.length > 0) || subIssueQuickAddParentId === issueId) &&
+    !hideWidgets?.includes("sub-work-items");
   const shouldRenderRelations = issueRelationsCount > 0 && !hideWidgets?.includes("relations");
   const shouldRenderLinks = !!issue?.link_count && issue?.link_count > 0 && !hideWidgets?.includes("links");
   const attachmentUploads = getAttachmentsUploadStatusByIssueId(issueId);

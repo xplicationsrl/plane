@@ -147,7 +147,9 @@
               "message": "Gagal menghapus balasan"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Tampilkan # balasan} other {Tampilkan # balasan}}",
+        "hide": "Sembunyikan balasan"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Klik untuk memberi suara turun",
       "click_to_view_upvotes": "Klik untuk melihat suara naik",
       "click_to_view_downvotes": "Klik untuk melihat suara turun"
+    },
+    "completion": {
+      "mark_complete": "Tandai selesai",
+      "reopen": "Tandai belum selesai",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Untuk melihat semua item kerja, hapus semua filter yang diterapkan.",
         "action": "Hapus filter"
       }
+    },
+    "quick_add": {
+      "button": "Tambah sub-item kerja",
+      "placeholder": "Ketik judul lalu tekan Enter",
+      "error": "Sub-item kerja tidak dapat ditambahkan. Silakan coba lagi."
     }
   },
   "issue_relation": {

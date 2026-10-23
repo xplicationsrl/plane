@@ -10,6 +10,7 @@ import { observer } from "mobx-react";
 import { useTranslation } from "@plane/i18n";
 import { AddOutline, WorkItemsOutline } from "@makeplane/propel/icons";
 import type { TIssue, TIssueServiceType } from "@plane/types";
+import { EIssueServiceType } from "@plane/types";
 import { Menu, MenuContent, MenuItem, MenuTrigger } from "@makeplane/propel/components/menu";
 // components
 import { handleTriggerClick, handleTriggerKeyDown } from "@/components/common/trigger-guard";
@@ -35,6 +36,7 @@ export const SubIssuesActionButton = observer(function SubIssuesActionButton(pro
     toggleSubIssuesModal,
     setIssueCrudOperationState,
     issueCrudOperationState,
+    setSubIssueQuickAddParentId,
   } = useIssueDetail(issueServiceType);
 
   // derived values
@@ -46,19 +48,24 @@ export const SubIssuesActionButton = observer(function SubIssuesActionButton(pro
   const handleIssueCrudState = (
     key: "create" | "existing",
     _parentIssueId: string | null,
-    issue: TIssue | null = null
+    workItem: TIssue | null = null
   ) => {
     setIssueCrudOperationState({
       ...issueCrudOperationState,
       [key]: {
         toggle: !issueCrudOperationState[key].toggle,
         parentIssueId: _parentIssueId,
-        issue: issue,
+        issue: workItem,
       },
     });
   };
 
   const handleCreateNew = () => {
+    // Sub-work items are added inline; epics keep the full form for their work item type
+    if (issueServiceType === EIssueServiceType.ISSUES) {
+      setSubIssueQuickAddParentId(issueId);
+      return;
+    }
     handleIssueCrudState("create", issueId, null);
     toggleCreateIssueModal(true);
   };

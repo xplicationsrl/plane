@@ -147,7 +147,9 @@
               "message": "Impossibile eliminare la risposta"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Mostra # risposta} many {Mostra # risposte} other {Mostra # risposte}}",
+        "hide": "Nascondi risposte"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Clicca per votare contro",
       "click_to_view_upvotes": "Clicca per vedere i voti a favore",
       "click_to_view_downvotes": "Clicca per vedere i voti contro"
+    },
+    "completion": {
+      "mark_complete": "Segna come completato",
+      "reopen": "Segna come non completato",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Per vedere tutti gli elementi di lavoro, cancella tutti i filtri applicati.",
         "action": "Cancella filtri"
       }
+    },
+    "quick_add": {
+      "button": "Aggiungi sotto-elemento di lavoro",
+      "placeholder": "Digiti un titolo e prema Enter",
+      "error": "Non è stato possibile aggiungere il sotto-elemento di lavoro. Riprovi."
     }
   },
   "issue_relation": {

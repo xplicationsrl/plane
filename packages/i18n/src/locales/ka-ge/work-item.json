@@ -147,7 +147,9 @@
               "message": "Failed to delete reply"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {# პასუხის ჩვენება} other {# პასუხის ჩვენება}}",
+        "hide": "პასუხების დამალვა"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Click to downvote",
       "click_to_view_upvotes": "Click to view upvotes",
       "click_to_view_downvotes": "Click to view downvotes"
+    },
+    "completion": {
+      "mark_complete": "დასრულებულად მონიშვნა",
+      "reopen": "დაუსრულებლად მონიშვნა",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "ყველა სამუშაო ელემენტის სანახავად, გაასუფთავეთ ყველა გამოყენებული ფილტრი.",
         "action": "ფილტრების გასუფთავება"
       }
+    },
+    "quick_add": {
+      "button": "ქვე-სამუშაო ელემენტის დამატება",
+      "placeholder": "შეიყვანეთ სათაური და დააჭირეთ Enter-ს",
+      "error": "ქვე-სამუშაო ელემენტის დამატება ვერ მოხერხდა. გთხოვთ, სცადოთ ხელახლა."
     }
   },
   "issue_relation": {

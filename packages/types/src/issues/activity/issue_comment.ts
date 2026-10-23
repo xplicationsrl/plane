@@ -45,6 +45,10 @@ export type TIssueComment = {
   external_id: string | undefined;
   external_source: string | undefined;
   access: EIssueCommentAccessSpecifier;
+  /** Thread root this comment replies to; null for top-level comments. */
+  parent?: string | null;
+  /** Write-only: set on create to post the comment as a reply. */
+  parent_id?: string;
 };
 
 export type TCommentsOperations = {

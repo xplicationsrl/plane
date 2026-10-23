@@ -147,7 +147,9 @@
               "message": "답글 삭제에 실패했습니다"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {답글 #개 보기} other {답글 #개 보기}}",
+        "hide": "답글 숨기기"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "클릭하여 비추천",
       "click_to_view_upvotes": "클릭하여 추천 목록 보기",
       "click_to_view_downvotes": "클릭하여 비추천 목록 보기"
+    },
+    "completion": {
+      "mark_complete": "완료로 표시",
+      "reopen": "미완료로 표시",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "모든 작업 항목을 보려면 모든 적용된 필터를 지우세요.",
         "action": "필터 지우기"
       }
+    },
+    "quick_add": {
+      "button": "하위 작업 항목 추가",
+      "placeholder": "제목을 입력하고 Enter 키를 누르세요",
+      "error": "하위 작업 항목을 추가하지 못했습니다. 다시 시도해 주십시오."
     }
   },
   "issue_relation": {

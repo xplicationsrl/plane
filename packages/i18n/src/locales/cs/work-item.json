@@ -147,7 +147,9 @@
               "message": "Smazání odpovědi se nezdařilo"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Zobrazit # odpověď} few {Zobrazit # odpovědi} many {Zobrazit # odpovědi} other {Zobrazit # odpovědí}}",
+        "hide": "Skrýt odpovědi"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Klikněte pro hlasování dolů",
       "click_to_view_upvotes": "Klikněte pro zobrazení hlasů nahoru",
       "click_to_view_downvotes": "Klikněte pro zobrazení hlasů dolů"
+    },
+    "completion": {
+      "mark_complete": "Označit jako dokončené",
+      "reopen": "Označit jako nedokončené",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Chcete-li zobrazit všechny pracovní položky, odstraňte všechny použité filtry.",
         "action": "Odstranit filtry"
       }
+    },
+    "quick_add": {
+      "button": "Přidat podřízenou pracovní položku",
+      "placeholder": "Zadejte název a stiskněte Enter",
+      "error": "Podřízenou pracovní položku se nepodařilo přidat. Zkuste to prosím znovu."
     }
   },
   "issue_relation": {

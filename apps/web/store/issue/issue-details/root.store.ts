@@ -87,6 +87,8 @@ export interface IIssueDetail
   isRelationModalOpen: TIssueRelationModal | null;
   isSubIssuesModalOpen: string | null;
   attachmentDeleteModalId: string | null;
+  /** Parent work item whose inline "add sub-work item" input is open. */
+  subIssueQuickAddParentId: string | null;
   // computed
   isAnyModalOpen: boolean;
   isPeekOpen: boolean;
@@ -108,6 +110,7 @@ export interface IIssueDetail
   toggleOpenWidget: (state: TWorkItemWidgets) => void;
   setRelationKey: (relationKey: TIssueRelationTypes | null) => void;
   setIssueCrudOperationState: (state: TIssueCrudOperationState) => void;
+  setSubIssueQuickAddParentId: (parentIssueId: string | null) => void;
   // store
   rootIssueStore: IIssueRootStore;
   issue: IIssueStore;
@@ -141,6 +144,7 @@ export class IssueDetail implements IIssueDetail {
   };
   openWidgets: TWorkItemWidgets[] = ["sub-work-items", "links", "attachments"];
   lastWidgetAction: TWorkItemWidgets | null = null;
+  subIssueQuickAddParentId: string | null = null;
   isCreateIssueModalOpen: boolean = false;
   isIssueLinkModalOpen: boolean = false;
   isParentIssueModalOpen: string | null = null;
@@ -181,6 +185,7 @@ export class IssueDetail implements IIssueDetail {
       attachmentDeleteModalId: observable.ref,
       openWidgets: observable.ref,
       lastWidgetAction: observable.ref,
+      subIssueQuickAddParentId: observable.ref,
       // computed
       isAnyModalOpen: computed,
       isPeekOpen: computed,
@@ -200,6 +205,7 @@ export class IssueDetail implements IIssueDetail {
       toggleOpenWidget: action,
       setRelationKey: action,
       setIssueCrudOperationState: action,
+      setSubIssueQuickAddParentId: action,
     });
 
     // store
@@ -255,8 +261,8 @@ export class IssueDetail implements IIssueDetail {
     this.openWidgets = state;
     if (this.lastWidgetAction) this.lastWidgetAction = null;
   };
-  setLastWidgetAction = (action: TWorkItemWidgets) => {
-    this.openWidgets = [action];
+  setLastWidgetAction = (widget: TWorkItemWidgets) => {
+    this.openWidgets = [widget];
   };
   toggleOpenWidget = (state: TWorkItemWidgets) => {
     if (this.openWidgets && this.openWidgets.includes(state))
@@ -264,6 +270,11 @@ export class IssueDetail implements IIssueDetail {
     else this.openWidgets = [state, ...this.openWidgets];
   };
   setIssueLinkData = (issueLinkData: TIssueLink | null) => (this.issueLinkData = issueLinkData);
+  setSubIssueQuickAddParentId = (parentIssueId: string | null) => {
+    this.subIssueQuickAddParentId = parentIssueId;
+    if (parentIssueId && !this.openWidgets.includes("sub-work-items"))
+      this.openWidgets = ["sub-work-items", ...this.openWidgets];
+  };
 
   // issue
   fetchIssue = async (workspaceSlug: string, projectId: string, issueId: string) =>

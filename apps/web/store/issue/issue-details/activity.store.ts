@@ -116,7 +116,8 @@ export class IssueActivityStore implements IIssueActivityStore {
 
     comments.forEach((commentId) => {
       const comment = currentStore.comment.getCommentById(commentId);
-      if (!comment) return;
+      // Replies render inside their thread, not in the timeline
+      if (!comment || comment.parent) return;
       activityComments.push({
         id: comment.id,
         activity_type: EActivityFilterType.COMMENT,

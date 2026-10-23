@@ -147,7 +147,9 @@
               "message": "Ștergerea răspunsului a eșuat"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Afișează # răspuns} few {Afișează # răspunsuri} other {Afișează # de răspunsuri}}",
+        "hide": "Ascunde răspunsurile"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Clic pentru a vota negativ",
       "click_to_view_upvotes": "Clic pentru a vedea voturile pozitive",
       "click_to_view_downvotes": "Clic pentru a vedea voturile negative"
+    },
+    "completion": {
+      "mark_complete": "Marchează ca finalizat",
+      "reopen": "Marchează ca nefinalizat",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Pentru a vedea toate elementele de lucru, șterge toate filtrele aplicate.",
         "action": "Șterge filtrele"
       }
+    },
+    "quick_add": {
+      "button": "Adaugă sub-activitate",
+      "placeholder": "Introduceți un titlu și apăsați Enter",
+      "error": "Sub-activitatea nu a putut fi adăugată. Vă rugăm să încercați din nou."
     }
   },
   "issue_relation": {

@@ -4,7 +4,7 @@
  * See the LICENSE file for details.
  */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react";
 import { useForm, Controller } from "react-hook-form";
 // plane imports
@@ -26,6 +26,11 @@ type TCommentCreate = {
   showToolbarInitially?: boolean;
   projectId?: string;
   onSubmitCallback?: (elementId: string) => void;
+  /** Posts the comment as a reply in this thread. */
+  parentId?: string;
+  focusOnMount?: boolean;
+  /** Called on Escape while the composer is empty, e.g. to close an inline reply box. */
+  onCancel?: () => void;
 };
 
 // services
@@ -39,6 +44,9 @@ export const CommentCreate = observer(function CommentCreate(props: TCommentCrea
     showToolbarInitially = false,
     projectId,
     onSubmitCallback,
+    parentId,
+    focusOnMount = false,
+    onCancel,
   } = props;
   // states
   const [uploadedAssetIds, setUploadedAssetIds] = useState<string[]>([]);
@@ -63,7 +71,9 @@ export const CommentCreate = observer(function CommentCreate(props: TCommentCrea
 
   const onSubmit = async (formData: Partial<TIssueComment>) => {
     try {
-      const comment = await activityOperations.createComment(formData);
+      const comment = await activityOperations.createComment(
+        parentId ? { ...formData, parent_id: parentId } : formData
+      );
       if (comment?.id) onSubmitCallback?.(comment.id);
       if (uploadedAssetIds.length > 0) {
         if (projectId) {
@@ -90,10 +100,23 @@ export const CommentCreate = observer(function CommentCreate(props: TCommentCrea
   const commentHTML = watch("comment_html");
   const isEmpty = isCommentEmpty(commentHTML ?? undefined);
 
+  useEffect(() => {
+    if (!focusOnMount) return;
+    // The editor mounts asynchronously; focus once it is in the DOM.
+    const timeout = setTimeout(() => editorRef.current?.focus("end"), 50);
+    return () => clearTimeout(timeout);
+  }, [focusOnMount]);
+
   return (
     <div
+      role="presentation"
       className={cn("sticky bottom-0 z-[4] bg-surface-1 sm:static")}
       onKeyDown={(e) => {
+        if (e.key === "Escape" && onCancel && isEmpty) {
+          e.stopPropagation();
+          onCancel();
+          return;
+        }
         if (
           e.key === "Enter" &&
           !e.shiftKey &&
@@ -117,7 +140,7 @@ export const CommentCreate = observer(function CommentCreate(props: TCommentCrea
               <LiteTextEditor
                 editable
                 workspaceId={workspaceId}
-                id={"add_comment_" + entityId}
+                id={"add_comment_" + (parentId ?? entityId)}
                 value={"<p></p>"}
                 workspaceSlug={workspaceSlug}
                 projectId={projectId}

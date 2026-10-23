@@ -147,7 +147,9 @@
               "message": "Yanıt silinemedi"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {# yanıtı göster} other {# yanıtı göster}}",
+        "hide": "Yanıtları gizle"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Olumsuz oy vermek için tıklayın",
       "click_to_view_upvotes": "Olumlu oyları görüntülemek için tıklayın",
       "click_to_view_downvotes": "Olumsuz oyları görüntülemek için tıklayın"
+    },
+    "completion": {
+      "mark_complete": "Tamamlandı olarak işaretle",
+      "reopen": "Tamamlanmadı olarak işaretle",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Tüm iş öğelerini görmek için tüm uygulanan filtreleri temizleyin.",
         "action": "Filtreleri temizle"
       }
+    },
+    "quick_add": {
+      "button": "Alt iş öğesi ekle",
+      "placeholder": "Bir başlık yazın ve Enter'a basın",
+      "error": "Alt iş öğesi eklenemedi. Lütfen tekrar deneyin."
     }
   },
   "issue_relation": {

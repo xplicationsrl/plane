@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.db.models import Exists
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
 
 # Third Party imports
 from rest_framework.response import Response
@@ -28,6 +29,18 @@ from .relation import issue_in_project
 # Only the content and visibility are client-writable; actor, parent and the
 # other relations are set by the server.
 COMMENT_WRITABLE_FIELDS = ("comment_html", "comment_json", "access")
+
+
+def resolve_reply_parent(parent_id, issue_id):
+    """Return the thread root a reply belongs to, or None when it is not a reply.
+
+    Threads are one level deep: replying to a reply attaches to that reply's root.
+    Raises IssueComment.DoesNotExist when the parent is not a comment on this issue.
+    """
+    if not parent_id:
+        return None
+    parent = IssueComment.objects.get(pk=parent_id, issue_id=issue_id)
+    return parent.parent_id or parent.id
 
 
 class IssueCommentViewSet(BaseViewSet):
@@ -98,10 +111,14 @@ class IssueCommentViewSet(BaseViewSet):
                 {"error": "You are not allowed to comment on the issue"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        try:
+            parent_id = resolve_reply_parent(request.data.get("parent_id"), issue.id)
+        except (IssueComment.DoesNotExist, ValidationError):
+            return Response({"error": "Parent comment not found"}, status=status.HTTP_400_BAD_REQUEST)
         data = {key: request.data[key] for key in COMMENT_WRITABLE_FIELDS if key in request.data}
         serializer = IssueCommentSerializer(data=data)
         if serializer.is_valid():
-            serializer.save(project_id=project_id, issue_id=issue_id, actor=request.user)
+            serializer.save(project_id=project_id, issue_id=issue_id, actor=request.user, parent_id=parent_id)
             issue_activity.delay(
                 type="comment.activity.created",
                 requested_data=json.dumps(serializer.data, cls=DjangoJSONEncoder),
@@ -170,6 +187,9 @@ class IssueCommentViewSet(BaseViewSet):
             workspace__slug=slug, project_id=project_id, issue_id=issue_id, issue__project_id=project_id, pk=pk
         )
         current_instance = json.dumps(IssueCommentSerializer(issue_comment).data, cls=DjangoJSONEncoder)
+        # Soft delete does not cascade, so a thread's replies go with it explicitly.
+        for reply in IssueComment.objects.filter(parent_id=issue_comment.id):
+            reply.delete()
         issue_comment.delete()
         issue_activity.delay(
             type="comment.activity.deleted",

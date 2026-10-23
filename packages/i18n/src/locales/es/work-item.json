@@ -147,7 +147,9 @@
               "message": "Error al eliminar la respuesta"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Mostrar # respuesta} other {Mostrar # respuestas}}",
+        "hide": "Ocultar respuestas"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Haz clic para votar en contra",
       "click_to_view_upvotes": "Haz clic para ver los votos a favor",
       "click_to_view_downvotes": "Haz clic para ver los votos en contra"
+    },
+    "completion": {
+      "mark_complete": "Marcar como completado",
+      "reopen": "Marcar como no completado",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Para ver todos los elementos de trabajo, elimina todos los filtros aplicados.",
         "action": "Eliminar filtros"
       }
+    },
+    "quick_add": {
+      "button": "Agregar sub-elemento de trabajo",
+      "placeholder": "Escriba un título y presione Enter",
+      "error": "No se pudo agregar el sub-elemento de trabajo. Inténtelo de nuevo."
     }
   },
   "issue_relation": {

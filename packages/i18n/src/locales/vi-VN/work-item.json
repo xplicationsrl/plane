@@ -147,7 +147,9 @@
               "message": "Không thể xóa trả lời"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Hiển thị # câu trả lời} other {Hiển thị # câu trả lời}}",
+        "hide": "Ẩn câu trả lời"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Nhấp để bỏ phiếu chống",
       "click_to_view_upvotes": "Nhấp để xem phiếu thuận",
       "click_to_view_downvotes": "Nhấp để xem phiếu chống"
+    },
+    "completion": {
+      "mark_complete": "Đánh dấu hoàn thành",
+      "reopen": "Đánh dấu chưa hoàn thành",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Để xem tất cả các mục công việc, hãy xóa tất cả các bộ lọc đã áp dụng.",
         "action": "Xóa bộ lọc"
       }
+    },
+    "quick_add": {
+      "button": "Thêm mục công việc con",
+      "placeholder": "Nhập tiêu đề và nhấn Enter",
+      "error": "Không thể thêm mục công việc con. Vui lòng thử lại."
     }
   },
   "issue_relation": {

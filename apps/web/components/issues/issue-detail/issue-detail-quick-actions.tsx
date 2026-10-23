@@ -7,6 +7,7 @@
 import { useRef } from "react";
 import { observer } from "mobx-react";
 // plane imports
+import { EUserPermissions, EUserPermissionsLevel } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
 import { LinkOutline } from "@makeplane/propel/icons";
 import { IconButton } from "@makeplane/propel/components/icon-button";
@@ -19,11 +20,12 @@ import { generateWorkItemLink, copyTextToClipboard } from "@plane/utils";
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useIssues } from "@/hooks/store/use-issues";
 import { useProject } from "@/hooks/store/use-project";
-import { useUser } from "@/hooks/store/user";
+import { useUser, useUserPermissions } from "@/hooks/store/user";
 import { useAppRouter } from "@/hooks/use-app-router";
 import { usePlatformOS } from "@/hooks/use-platform-os";
 // local imports
 import { WorkItemDetailQuickActions } from "../issue-layouts/quick-action-dropdowns";
+import { WorkItemHeaderCompletion } from "../completion";
 import { IssueSubscription } from "./subscription";
 
 type Props = {
@@ -44,6 +46,7 @@ export const IssueDetailQuickActions = observer(function IssueDetailQuickActions
 
   // hooks
   const { data: currentUser } = useUser();
+  const { allowPermissions } = useUserPermissions();
   const { isMobile } = usePlatformOS();
   const { getProjectIdentifierById } = useProject();
   const {
@@ -140,10 +143,23 @@ export const IssueDetailQuickActions = observer(function IssueDetailQuickActions
     }
   };
 
+  const isEditable = allowPermissions(
+    [EUserPermissions.ADMIN, EUserPermissions.MEMBER],
+    EUserPermissionsLevel.PROJECT,
+    workspaceSlug,
+    projectId
+  );
+
   return (
     <>
       <div className="flex flex-shrink-0 items-center justify-end">
         <div className="flex flex-wrap items-center gap-2">
+          <WorkItemHeaderCompletion
+            workspaceSlug={workspaceSlug}
+            projectId={projectId}
+            issueId={issueId}
+            disabled={!isEditable}
+          />
           {currentUser && !issue?.archived_at && (
             <IssueSubscription workspaceSlug={workspaceSlug} projectId={projectId} issueId={issueId} />
           )}

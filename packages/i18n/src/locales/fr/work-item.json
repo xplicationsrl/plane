@@ -147,7 +147,9 @@
               "message": "Échec de la suppression de la réponse"
             }
           }
-        }
+        },
+        "count": "{count, plural, one {Afficher # réponse} many {Afficher # réponses} other {Afficher # réponses}}",
+        "hide": "Masquer les réponses"
       }
     },
     "empty_state": {
@@ -268,6 +270,11 @@
       "click_to_downvote": "Cliquez pour voter contre",
       "click_to_view_upvotes": "Cliquez pour voir les votes pour",
       "click_to_view_downvotes": "Cliquez pour voir les votes contre"
+    },
+    "completion": {
+      "mark_complete": "Marquer comme terminé",
+      "reopen": "Marquer comme non terminé",
+      "completed": null
     }
   },
   "sub_work_item": {
@@ -290,6 +297,11 @@
         "description": "Pour voir tous les éléments de travail, effacer tous les filtres appliqués.",
         "action": "Effacer les filtres"
       }
+    },
+    "quick_add": {
+      "button": "Ajouter un sous-élément de travail",
+      "placeholder": "Saisissez un titre et appuyez sur Enter",
+      "error": "Le sous-élément de travail n’a pas pu être ajouté. Veuillez réessayer."
     }
   },
   "issue_relation": {
