@@ -30,6 +30,7 @@ Migrations: `0126`–`0131` (all new tables, no changes to existing ones). New b
 - `ffda8bab6` Real visitor IPs for rate limits (see item 2).
 - `67b874509` Custom properties as spreadsheet columns (project-level layouts), editable in place.
 - Custom property filters (single/multi select, checkbox, people, and dates on a day or in a range) in project filters, evaluated server-side via `customproperty_<id>__in|exact|range` keys. Text/URL ("contains") and number ("is" / "between", open-ended ranges allowed) filters added on top, with new `text`, `number` and `number_range` filter inputs and a `contains` operator in the rich-filter system.
+- Backend correctness pass (`7f27a931c`): worker and public-form rows keep their creator (`save(created_by_id=...)`); recurrences skip archived work items and archived/deleted projects, and a rule is deactivated after 5 failed spawns in a row (Redis counter, no migration); the "next due" preview uses the same helper as the spawn; template apply drops stale select values and doesn't duplicate sub-items on a second apply; project templates no longer hard-delete states used by trashed work items and always leave a default state; custom property names match case-insensitively; hidden properties can't be written; custom property filters are scoped to the view's project/workspace and skip non-numeric rows.
 - Merged into `production` at `0edc95971` and deployed. Migrations `0126`–`0131` and the beat task are confirmed on the live database.
 
 ## Left to do
