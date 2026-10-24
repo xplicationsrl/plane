@@ -19,9 +19,9 @@ from plane.utils.filters import ComplexFilterBackend, IssueFilterSet
 VIEW = SimpleNamespace(filterset_class=IssueFilterSet)
 
 
-def _filter(queryset, expression):
+def _filter(queryset, expression, view=VIEW):
     request = Request(APIRequestFactory().get("/", {"filters": json.dumps(expression)}))
-    names = ComplexFilterBackend().filter_queryset(request, queryset, VIEW).values_list("name", flat=True)
+    names = ComplexFilterBackend().filter_queryset(request, queryset, view).values_list("name", flat=True)
     return sorted(names)
 
 
@@ -85,6 +85,20 @@ class TestCustomPropertyFilters:
     def test_unfilterable_or_unknown_property_matches_nothing(self, issues, props):
         assert _filter(issues, {key(props["notes"]): "x"}) == []
         assert _filter(issues, {f"customproperty_{uuid4()}__in": "a"}) == []
+
+    def test_properties_are_scoped_to_the_view_project(self, issues, props, workspace, create_user):
+        other = Project.objects.create(
+            name="Elsewhere", identifier=f"E{uuid4().hex[:4].upper()}", workspace=workspace, created_by=create_user
+        )
+        expression = {key(props["tier"]): "a"}
+
+        def view(**kwargs):
+            return SimpleNamespace(filterset_class=IssueFilterSet, kwargs=kwargs)
+
+        assert _filter(issues, expression, view(slug=workspace.slug, project_id=props["tier"].project_id)) == ["one"]
+        assert _filter(issues, expression, view(slug=workspace.slug)) == ["one"]
+        assert _filter(issues, expression, view(slug=workspace.slug, project_id=other.id)) == []
+        assert _filter(issues, expression, view(slug="another-workspace")) == []
 
     def test_malformed_key_is_rejected(self, issues):
         with pytest.raises(ValidationError):
@@ -152,3 +166,11 @@ class TestTextAndNumberCustomPropertyFilters:
     def test_unreadable_number_matches_nothing(self, data):
         _, _, budget, issues = data
         assert _filter(issues, {f"customproperty_{budget.id}__exact": "lots"}) == []
+
+    def test_non_numeric_rows_do_not_break_number_filters(self, data, workspace, project):
+        _, _, budget, issues = data
+        odd = Issue.objects.create(name="odd", project=project, workspace=workspace)
+        # Bypasses normalization, like a row written before validation existed
+        IssueCustomPropertyValue.objects.create(issue=odd, property=budget, value="lots", project=project)
+
+        assert _filter(issues, {f"customproperty_{budget.id}__range": "50,1000"}) == ["alpha"]

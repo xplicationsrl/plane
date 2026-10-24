@@ -72,7 +72,8 @@ def copy_issue(source, *, actor_id, start_date=_UNSET, target_date=_UNSET, paren
         created_by_id=actor_id,
         updated_by_id=actor_id,
     )
-    issue.save()
+    # Without a request user BaseModel.save() blanks created_by unless it is passed in
+    issue.save(created_by_id=actor_id)
 
     add_issue_relations(
         issue,

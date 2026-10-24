@@ -133,8 +133,8 @@ class WorkItemTemplateApplyEndpoint(BaseAPIView):
             return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
         # Re-check against the project as it is now: ids may have been deleted since saving
         data = sanitize_work_item_template(project_id, template.template)
-        apply_work_item_template_extras(issue, data, request.user.id)
-        return Response({"sub_issues": len(data["sub_issues"])}, status=status.HTTP_200_OK)
+        created = apply_work_item_template_extras(issue, data, request.user.id)
+        return Response({"sub_issues": created}, status=status.HTTP_200_OK)
 
 
 class ProjectTemplateEndpoint(BaseAPIView):

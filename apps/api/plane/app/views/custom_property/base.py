@@ -105,7 +105,9 @@ def set_issue_custom_values(issue, changes, actor):
     """
     properties = {
         str(prop.id): prop
-        for prop in CustomProperty.objects.filter(project_id=issue.project_id, id__in=valid_uuids(changes))
+        for prop in CustomProperty.objects.filter(
+            project_id=issue.project_id, id__in=valid_uuids(changes), is_active=True
+        )
     }
     errors, normalized = {}, {}
     for property_id, value in changes.items():

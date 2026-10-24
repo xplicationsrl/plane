@@ -17,6 +17,7 @@ from plane.db.models import (
     IntakeForm,
     IntakeIssue,
     Issue,
+    IssueAssignee,
     IssueCustomPropertyValue,
     Project,
     ProjectMember,
@@ -159,6 +160,18 @@ class TestPublicForm:
         assert not IntakeIssue.objects.filter(issue=issue).exists()
         form.refresh_from_db()
         assert form.submission_count == 1
+
+    def test_anonymous_submission_is_created_by_the_form_owner(self, form, project, create_user):
+        project.intake_view = True
+        project.default_assignee = create_user
+        project.save()
+
+        _submit(form.anchor, {"name": "Owned", "description": "x", "submitter_email": "a@example.com"})
+
+        issue = Issue.objects.get(project=project, name="Owned")
+        assert issue.created_by_id == create_user.id
+        assert IssueAssignee.objects.get(issue=issue).created_by_id == create_user.id
+        assert IntakeIssue.objects.get(issue=issue).created_by_id == create_user.id
 
     def test_submission_goes_to_intake_when_enabled(self, form, project):
         project.intake_view = True

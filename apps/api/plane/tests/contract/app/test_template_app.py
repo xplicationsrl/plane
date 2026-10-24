@@ -7,6 +7,7 @@
 from uuid import uuid4
 
 import pytest
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -25,6 +26,7 @@ from plane.db.models import (
     WorkItemTemplate,
     WorkspaceMember,
 )
+from plane.utils.templates import apply_work_item_template_extras
 
 
 def templates_url(slug, project_id, pk=None, apply=False):
@@ -130,6 +132,66 @@ class TestWorkItemTemplates:
         ]
         assert IssueCustomPropertyValue.objects.get(issue=new_issue).value == "s1"
 
+    def _save_and_apply_twice(self, session_client, workspace, project, rich_issue):
+        template_id = session_client.post(
+            templates_url(workspace.slug, project.id),
+            {"name": "Incident", "issue_id": str(rich_issue.id)},
+            format="json",
+        ).data["id"]
+        new_issue = Issue.objects.create(name="New incident", project=project, workspace=workspace)
+        url = templates_url(workspace.slug, project.id, template_id, apply=True)
+        first = session_client.post(url, {"issue_id": str(new_issue.id)}, format="json")
+        second = session_client.post(url, {"issue_id": str(new_issue.id)}, format="json")
+        return new_issue, first, second
+
+    def test_applying_twice_does_not_duplicate_sub_work_items(self, session_client, workspace, project, rich_issue):
+        new_issue, first, second = self._save_and_apply_twice(session_client, workspace, project, rich_issue)
+
+        assert first.data["sub_issues"] == 2
+        assert second.status_code == status.HTTP_200_OK
+        assert second.data["sub_issues"] == 0
+        assert Issue.objects.filter(parent=new_issue).count() == 2
+        assert IssueCustomPropertyValue.objects.filter(issue=new_issue).count() == 1
+
+    def test_apply_drops_values_for_removed_select_options(self, session_client, workspace, project, rich_issue):
+        template_id = session_client.post(
+            templates_url(workspace.slug, project.id),
+            {"name": "Incident", "issue_id": str(rich_issue.id)},
+            format="json",
+        ).data["id"]
+        CustomProperty.objects.filter(project=project, name="Severity").update(
+            options=[{"id": "s2", "name": "Low", "color": "#00ff00"}]
+        )
+        new_issue = Issue.objects.create(name="New incident", project=project, workspace=workspace)
+
+        response = session_client.post(
+            templates_url(workspace.slug, project.id, template_id, apply=True),
+            {"issue_id": str(new_issue.id)},
+            format="json",
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        assert not IssueCustomPropertyValue.objects.filter(issue=new_issue).exists()
+        assert Issue.objects.filter(parent=new_issue).count() == 2
+
+    def test_sub_work_items_are_created_by_the_actor_without_a_request_user(self, workspace, project, create_user):
+        parent = Issue.objects.create(name="Parent", project=project, workspace=workspace)
+        data = {
+            "sub_issues": [
+                {
+                    "name": "Child",
+                    "description_html": "<p></p>",
+                    "priority": "none",
+                    "assignee_ids": [],
+                    "label_ids": [],
+                }
+            ]
+        }
+
+        apply_work_item_template_extras(parent, data, create_user.id)
+
+        assert Issue.objects.get(parent=parent).created_by_id == create_user.id
+
     def test_ids_from_other_projects_are_dropped(self, session_client, workspace, project, create_user):
         other = _project(workspace, create_user, name="Other")
         foreign_label = Label.objects.create(name="x", project=other, workspace=workspace)
@@ -234,3 +296,60 @@ class TestProjectTemplates:
 
         names = set(State.objects.filter(project=project).values_list("name", flat=True))
         assert {"Todo", "Review", "Done", "Only"} <= names
+
+    def _apply(self, session_client, workspace, project, data):
+        template = ProjectTemplate.objects.create(name="T", workspace=workspace, data=data)
+        return session_client.post(
+            project_templates_url(workspace.slug, template.id, apply=True),
+            {"project_id": str(project.id)},
+            format="json",
+        )
+
+    def test_trashed_work_items_keep_their_states(self, session_client, workspace, project):
+        trashed = Issue.objects.create(name="Trashed", project=project, workspace=workspace)
+        Issue.all_objects.filter(pk=trashed.pk).update(deleted_at=timezone.now())
+
+        self._apply(
+            session_client, workspace, project, {"states": [{"name": "Only", "group": "unstarted", "default": True}]}
+        )
+
+        assert Issue.all_objects.filter(pk=trashed.pk).exists()
+        names = set(State.objects.filter(project=project).values_list("name", flat=True))
+        assert {"Todo", "Review", "Done", "Only"} <= names
+
+    def test_project_keeps_a_default_state(self, session_client, workspace, create_user):
+        target = _project(workspace, create_user, name="Target")
+        State.objects.create(name="Backlog", group="backlog", project=target, default=True)
+
+        response = self._apply(
+            session_client,
+            workspace,
+            target,
+            {"states": [{"name": "Open", "group": "unstarted"}, {"name": "Closed", "group": "completed"}]},
+        )
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert sorted(State.objects.filter(project=target).values_list("name", flat=True)) == ["Closed", "Open"]
+        assert State.objects.filter(project=target, default=True).count() == 1
+
+    def test_custom_property_names_match_case_insensitively(self, session_client, workspace, project):
+        existing = CustomProperty.objects.create(
+            name="severity",
+            property_type="select",
+            options=[{"id": "s1", "name": "High", "color": "#ff0000"}],
+            project=project,
+        )
+
+        self._apply(
+            session_client,
+            workspace,
+            project,
+            {
+                "custom_properties": [{"name": "Severity", "property_type": "text"}],
+                "work_items": [{"name": "Starter", "custom_properties": {"Severity": "s1"}}],
+            },
+        )
+
+        assert list(CustomProperty.objects.filter(project=project, name__iexact="severity")) == [existing]
+        starter = Issue.objects.get(project=project, name="Starter")
+        assert IssueCustomPropertyValue.objects.get(issue=starter).property_id == existing.id

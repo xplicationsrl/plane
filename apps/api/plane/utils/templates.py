@@ -113,7 +113,11 @@ def sanitize_work_item_template(project_id, data):
         prop = properties.get(str(property_id))
         if prop is None:
             continue
-        normalized = normalize_value(prop, value)
+        try:
+            normalized = normalize_value(prop, value)
+        except ValidationError:
+            # e.g. a select option removed since the template was saved
+            continue
         if normalized is not None:
             cleaned["custom_properties"][str(prop.id)] = normalized
 
@@ -128,9 +132,18 @@ def apply_work_item_template_extras(issue, data, actor_id):
     """Add a template's sub-work items and custom property values to a new work item.
 
     The create form already sent the template's own fields; these are the parts it can't.
+    Applying again is harmless: sub-work items whose name the work item already has as a
+    child, and custom properties it already has a value for, are skipped. Returns the
+    number of sub-work items created.
     """
+    created = 0
     with transaction.atomic():
+        # Serialize concurrent applies (double submit) on the same work item
+        Issue.objects.select_for_update().filter(pk=issue.pk).first()
+        existing_children = set(Issue.objects.filter(parent=issue).values_list("name", flat=True))
         for item in data.get("sub_issues", []):
+            if item["name"] in existing_children:
+                continue
             child = Issue(
                 project_id=issue.project_id,
                 workspace_id=issue.workspace_id,
@@ -141,11 +154,12 @@ def apply_work_item_template_extras(issue, data, actor_id):
                 created_by_id=actor_id,
                 updated_by_id=actor_id,
             )
-            child.save()
+            child.save(created_by_id=actor_id)
             add_issue_relations(
                 child, actor_id=actor_id, assignee_ids=item["assignee_ids"], label_ids=item["label_ids"]
             )
             record_created_activity(child, actor_id)
+            created += 1
 
         existing = set(IssueCustomPropertyValue.objects.filter(issue=issue).values_list("property_id", flat=True))
         IssueCustomPropertyValue.objects.bulk_create(
@@ -163,6 +177,7 @@ def apply_work_item_template_extras(issue, data, actor_id):
                 if property_id not in {str(p) for p in existing}
             ]
         )
+    return created
 
 
 # --- project templates ---------------------------------------------------------------
@@ -245,7 +260,7 @@ def _named_template_to_ids(template, states, labels, properties):
     """Inverse of ``portable``: resolve names against the target project."""
     custom = {}
     for name, value in (template.get("custom_properties") or {}).items():
-        prop = properties.get(name)
+        prop = properties.get(str(name).strip().lower())
         if prop is None:
             continue
         try:
@@ -313,12 +328,18 @@ def apply_project_template(project, data, actor_id):
         if default_name in states:
             State.objects.filter(project=project).exclude(pk=states[default_name].pk).update(default=False)
             State.objects.filter(pk=states[default_name].pk).update(default=True)
-        if template_states and not Issue.objects.filter(project=project).exists():
+        # Issue.state cascades, so trashed (soft-deleted) work items count too
+        if template_states and not Issue.all_objects.filter(project=project).exists():
             keep = {s["name"] for s in template_states}
             for name, state in list(states.items()):
                 if name not in keep and not state.is_triage:
                     state.delete(soft=False)
                     del states[name]
+        project_states = State.objects.filter(project=project, is_triage=False)
+        if not project_states.filter(default=True).exists():
+            fallback = project_states.order_by("sequence").first()
+            if fallback:
+                State.objects.filter(pk=fallback.pk).update(default=True)
 
         # Labels, parents after children exist
         labels = {lbl.name: lbl for lbl in Label.objects.filter(project=project)}
@@ -333,19 +354,20 @@ def apply_project_template(project, data, actor_id):
                 Label.objects.filter(pk=labels[item["name"]].pk).update(parent=parent)
 
         # Custom properties
-        properties = {p.name: p for p in CustomProperty.objects.filter(project=project)}
+        # Keyed case-insensitively, like the serializer's uniqueness check
+        properties = {p.name.lower(): p for p in CustomProperty.objects.filter(project=project)}
         for item in data.get("custom_properties", []):
             name = str(item.get("name", "")).strip()[:255]
             if (
                 not name
-                or name in properties
+                or name.lower() in properties
                 or item.get("property_type") not in dict(CustomProperty._meta.get_field("property_type").choices)
             ):
                 continue
             options = item.get("options") or []
             if item["property_type"] in ("select", "multi_select"):
                 options = normalize_options(options)
-            properties[name] = CustomProperty.objects.create(
+            properties[name.lower()] = CustomProperty.objects.create(
                 project=project,
                 name=name,
                 description=str(item.get("description", "")),
@@ -382,7 +404,7 @@ def apply_project_template(project, data, actor_id):
                 state_id=resolved["state_id"],
                 **audit,
             )
-            issue.save()
+            issue.save(created_by_id=actor_id)
             add_issue_relations(issue, actor_id=actor_id, label_ids=resolved["label_ids"])
             record_created_activity(issue, actor_id)
             apply_work_item_template_extras(issue, resolved, actor_id)

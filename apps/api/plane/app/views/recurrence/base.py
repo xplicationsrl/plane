@@ -14,7 +14,7 @@ from plane.app.permissions import ROLE, allow_permission
 from plane.app.views.base import BaseAPIView
 from plane.app.views.issue.access import get_accessible_issue
 from plane.db.models import IssueRecurrence, RecurrenceFrequency
-from plane.utils.recurrence import next_occurrence
+from plane.utils.recurrence import next_due_date
 
 MAX_INTERVAL = 365
 
@@ -55,14 +55,8 @@ class IssueRecurrenceSerializer(serializers.ModelSerializer):
 
     def get_next_due_on(self, recurrence):
         """When the next occurrence will be due, as a preview for the UI."""
-        issue = recurrence.issue
-        base = issue.target_date or issue.start_date or timezone.localdate()
-        following = next_occurrence(
-            base, recurrence.frequency, recurrence.interval, recurrence.weekdays, recurrence.anchor_day
-        )
-        if recurrence.ends_on and following > recurrence.ends_on:
-            return None
-        return following.isoformat()
+        following = next_due_date(recurrence, recurrence.issue, timezone.localdate())
+        return following.isoformat() if following else None
 
 
 class IssueRecurrenceEndpoint(BaseAPIView):

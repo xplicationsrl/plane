@@ -232,11 +232,12 @@ def submit_form(form, cleaned):
             created_by_id=actor_id,
             updated_by_id=actor_id,
         )
-        issue.save()
+        # Public submissions have no request user: pass the creator to save() so it isn't blanked
+        issue.save(created_by_id=actor_id)
         if project.default_assignee_id:
-            IssueAssignee.objects.create(
-                issue=issue, assignee_id=project.default_assignee_id, project=project, created_by_id=actor_id
-            )
+            IssueAssignee(
+                issue=issue, assignee_id=project.default_assignee_id, project=project, updated_by_id=actor_id
+            ).save(created_by_id=actor_id)
         IssueCustomPropertyValue.objects.bulk_create(
             [
                 IssueCustomPropertyValue(
@@ -254,7 +255,7 @@ def submit_form(form, cleaned):
             intake = Intake.objects.filter(project=project).first() or Intake.objects.create(
                 name=f"{project.name} Intake", project=project, is_default=True
             )
-            IntakeIssue.objects.create(
+            IntakeIssue(
                 intake=intake,
                 issue=issue,
                 project=project,
@@ -266,8 +267,8 @@ def submit_form(form, cleaned):
                     "form_name": form.name,
                     "submitter_name": cleaned.get("submitter_name", ""),
                 },
-                created_by_id=actor_id,
-            )
+                updated_by_id=actor_id,
+            ).save(created_by_id=actor_id)
         record_created_activity(issue, actor_id, comment=f"created the work item from the {form.name} form")
         IntakeForm.objects.filter(pk=form.pk).update(submission_count=F("submission_count") + 1)
     return issue

@@ -9,6 +9,7 @@ import logging
 from celery import shared_task
 
 # Django imports
+from django.core.cache import cache
 from django.db import transaction
 from django.utils import timezone
 
@@ -16,26 +17,19 @@ from django.utils import timezone
 from plane.db.models import Issue, IssueRecurrence, State, StateGroup
 from plane.utils.exception_logger import log_exception
 from plane.utils.issue_copy import copy_issue
-from plane.utils.recurrence import next_occurrence
+from plane.utils.recurrence import next_due_date
 
 logger = logging.getLogger("plane.worker")
 
+# A rule whose spawn keeps failing is switched off instead of retried every sweep forever
+MAX_CONSECUTIVE_FAILURES = 5
+FAILURE_WINDOW = 60 * 60 * 24
+
 
 def _next_dates(issue, recurrence, today):
-    """New (start_date, target_date) for the next occurrence, or None when the rule has ended.
-
-    The schedule follows the due date (or the start date when there is none) and skips
-    ahead past today, so a task completed late doesn't come back already overdue.
-    """
-    base = issue.target_date or issue.start_date or today
-    following = next_occurrence(
-        base, recurrence.frequency, recurrence.interval, recurrence.weekdays, recurrence.anchor_day
-    )
-    while following < today:
-        following = next_occurrence(
-            following, recurrence.frequency, recurrence.interval, recurrence.weekdays, recurrence.anchor_day
-        )
-    if recurrence.ends_on and following > recurrence.ends_on:
+    """New (start_date, target_date) for the next occurrence, or None when the rule has ended."""
+    following = next_due_date(recurrence, issue, today)
+    if following is None:
         return None
     if issue.target_date:
         start = issue.start_date + (following - issue.target_date) if issue.start_date else None
@@ -60,13 +54,15 @@ def spawn_for_recurrence(recurrence_id):
         recurrence = (
             IssueRecurrence.objects.select_for_update(of=("self",))
             .filter(pk=recurrence_id, is_active=True)
-            .select_related("issue", "issue__state")
+            .select_related("issue", "issue__state", "issue__project")
             .first()
         )
         if recurrence is None:
             return None
         issue = recurrence.issue
-        if issue.deleted_at or issue.state is None or issue.state.group != StateGroup.COMPLETED.value:
+        if issue.deleted_at or issue.archived_at or issue.project.archived_at or issue.project.deleted_at:
+            return None
+        if issue.state is None or issue.state.group != StateGroup.COMPLETED.value:
             return None
 
         dates = _next_dates(issue, recurrence, timezone.localdate())
@@ -91,24 +87,59 @@ def spawn_for_recurrence(recurrence_id):
         return new_issue
 
 
+def _failure_key(recurrence_id):
+    return f"recurrence_spawn_failures:{recurrence_id}"
+
+
+def _record_failure(recurrence_id):
+    """Count a failed spawn; deactivate the rule after too many in a row."""
+    try:
+        key = _failure_key(recurrence_id)
+        cache.add(key, 0, timeout=FAILURE_WINDOW)
+        failures = cache.incr(key)
+        if failures >= MAX_CONSECUTIVE_FAILURES:
+            IssueRecurrence.objects.filter(pk=recurrence_id).update(is_active=False, updated_at=timezone.now())
+            cache.delete(key)
+            logger.warning("Deactivated recurrence %s after %s consecutive failed spawns", recurrence_id, failures)
+    except Exception as e:
+        log_exception(e)
+
+
+def spawn_safely(recurrence_id):
+    """``spawn_for_recurrence`` that logs failures and stops retrying a rule that keeps failing."""
+    try:
+        spawn_for_recurrence(recurrence_id)
+    except Exception as e:
+        log_exception(e)
+        _record_failure(recurrence_id)
+        return
+    try:
+        cache.delete(_failure_key(recurrence_id))
+    except Exception as e:
+        log_exception(e)
+
+
 @shared_task
 def spawn_next_occurrence(issue_id):
     try:
         recurrence = IssueRecurrence.objects.filter(issue_id=issue_id, is_active=True).first()
-        if recurrence:
-            spawn_for_recurrence(recurrence.id)
     except Exception as e:
         log_exception(e)
+        return
+    if recurrence:
+        spawn_safely(recurrence.id)
 
 
 @shared_task
 def spawn_due_recurrences():
     """Catch completions that skipped the save signal (bulk updates, imports)."""
     due = IssueRecurrence.objects.filter(
-        is_active=True, issue__state__group=StateGroup.COMPLETED.value, issue__deleted_at__isnull=True
+        is_active=True,
+        issue__state__group=StateGroup.COMPLETED.value,
+        issue__deleted_at__isnull=True,
+        issue__archived_at__isnull=True,
+        issue__project__archived_at__isnull=True,
+        issue__project__deleted_at__isnull=True,
     ).values_list("id", flat=True)
     for recurrence_id in due:
-        try:
-            spawn_for_recurrence(recurrence_id)
-        except Exception as e:
-            log_exception(e)
+        spawn_safely(recurrence_id)

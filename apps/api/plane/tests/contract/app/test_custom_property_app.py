@@ -200,6 +200,17 @@ class TestIssueCustomPropertyValues:
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
+    def test_hidden_field_cannot_be_written(self, session_client, workspace, project, issue):
+        prop = _create(session_client, workspace, project, name="Hidden", property_type="text").data
+        CustomProperty.objects.filter(pk=prop["id"]).update(is_active=False)
+
+        response = session_client.patch(
+            values_url(workspace.slug, project.id, issue.id), {str(prop["id"]): "x"}, format="json"
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert not IssueCustomPropertyValue.objects.filter(issue=issue).exists()
+
     def test_guest_cannot_read_values_of_others_work_items(self, session_client, workspace, project, issue):
         prop = _create(session_client, workspace, project, name="Secret", property_type="text").data
         session_client.patch(values_url(workspace.slug, project.id, issue.id), {str(prop["id"]): "x"}, format="json")

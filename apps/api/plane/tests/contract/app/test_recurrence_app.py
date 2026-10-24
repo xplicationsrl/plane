@@ -9,10 +9,11 @@ from unittest import mock
 from uuid import uuid4
 
 import pytest
+from django.core.cache import cache
 from django.utils import timezone
 from rest_framework import status
 
-from plane.bgtasks.recurring_issue_task import spawn_due_recurrences, spawn_for_recurrence
+from plane.bgtasks.recurring_issue_task import MAX_CONSECUTIVE_FAILURES, spawn_due_recurrences, spawn_for_recurrence
 from plane.db.models import (
     CustomProperty,
     Issue,
@@ -36,6 +37,13 @@ def _no_broker():
     # The save signal queues the spawn on commit; tests call it directly instead.
     with mock.patch("plane.bgtasks.recurring_issue_task.spawn_next_occurrence.delay"):
         yield
+
+
+@pytest.fixture(autouse=True)
+def _fresh_failure_counters():
+    cache.clear()
+    yield
+    cache.clear()
 
 
 @pytest.fixture
@@ -107,18 +115,31 @@ class TestRecurrenceApi:
         )
         assert response.data["next_due_on"] == (issue.target_date + timedelta(days=2)).isoformat()
 
+    def test_next_due_on_preview_skips_past_today_like_the_spawn(self, session_client, workspace, project, issue):
+        issue.start_date = None
+        issue.target_date = timezone.localdate() - timedelta(days=10)
+        issue.save()
+
+        response = session_client.put(
+            recurrence_url(workspace.slug, project.id, issue.id), {"frequency": "daily"}, format="json"
+        )
+
+        assert response.data["next_due_on"] == timezone.localdate().isoformat()
+
 
 @pytest.mark.contract
 class TestNextOccurrence:
     def _rule(self, issue, create_user, **kwargs):
-        return IssueRecurrence.objects.create(
+        rule = IssueRecurrence(
             issue=issue,
             project=issue.project,
             frequency=kwargs.pop("frequency", "weekly"),
             anchor_day=issue.target_date.day,
-            created_by=create_user,
             **kwargs,
         )
+        # objects.create(created_by=...) would be blanked without a request user
+        rule.save(created_by_id=create_user.id)
+        return rule
 
     def test_completing_creates_the_next_occurrence_with_shifted_dates(self, issue, create_user, project, workspace):
         label = Label.objects.create(name="ops", project=project, workspace=workspace)
@@ -192,3 +213,65 @@ class TestNextOccurrence:
         ):
             _complete(issue)
         delay.assert_called_once_with(str(issue.id))
+
+    def test_copies_are_created_by_the_rule_owner(self, issue, create_user, project, workspace):
+        Issue.objects.create(name="Gather numbers", parent=issue, project=project, workspace=workspace)
+        rule = self._rule(issue, create_user)
+        _complete(issue)
+
+        # Runs in the worker: there is no request user
+        new_issue = spawn_for_recurrence(rule.id)
+
+        assert new_issue.created_by_id == create_user.id
+        assert Issue.objects.get(parent=new_issue).created_by_id == create_user.id
+
+    def test_archived_work_items_do_not_spawn(self, issue, create_user, project):
+        rule = self._rule(issue, create_user)
+        _complete(issue)
+        Issue.objects.filter(pk=issue.pk).update(archived_at=timezone.localdate())
+
+        spawn_due_recurrences()
+
+        assert spawn_for_recurrence(rule.id) is None
+        assert Issue.objects.filter(project=project, name=issue.name).count() == 1
+
+    def test_work_items_in_archived_projects_do_not_spawn(self, issue, create_user, project):
+        rule = self._rule(issue, create_user)
+        _complete(issue)
+        Project.objects.filter(pk=project.pk).update(archived_at=timezone.now())
+
+        spawn_due_recurrences()
+
+        assert spawn_for_recurrence(rule.id) is None
+        assert Issue.objects.filter(project=project, name=issue.name).count() == 1
+
+    def test_rule_that_keeps_failing_is_deactivated(self, issue, create_user):
+        rule = self._rule(issue, create_user)
+        _complete(issue)
+
+        with mock.patch("plane.bgtasks.recurring_issue_task.spawn_for_recurrence", side_effect=RuntimeError("boom")):
+            for _ in range(MAX_CONSECUTIVE_FAILURES - 1):
+                spawn_due_recurrences()
+            rule.refresh_from_db()
+            assert rule.is_active is True
+
+            spawn_due_recurrences()
+
+        rule.refresh_from_db()
+        assert rule.is_active is False
+
+    def test_a_success_resets_the_failure_count(self, issue, create_user):
+        rule = self._rule(issue, create_user)
+        _complete(issue)
+
+        with mock.patch("plane.bgtasks.recurring_issue_task.spawn_for_recurrence") as spawn:
+            spawn.side_effect = RuntimeError("boom")
+            for _ in range(MAX_CONSECUTIVE_FAILURES - 1):
+                spawn_due_recurrences()
+            spawn.side_effect = None
+            spawn_due_recurrences()
+            spawn.side_effect = RuntimeError("boom")
+            spawn_due_recurrences()
+
+        rule.refresh_from_db()
+        assert rule.is_active is True

@@ -23,7 +23,6 @@ from operator import or_
 
 # Django imports
 from django.db.models import CharField, DecimalField, F, Func, Q
-from django.db.models.functions import Cast
 from rest_framework.exceptions import ValidationError
 
 # Module imports
@@ -47,6 +46,18 @@ FILTERABLE_TYPES = {
 def _json_text(field):
     """A top-level JSON string as text (``"2026-10-23"`` -> ``2026-10-23``)."""
     return Func(F(field), template="(%(expressions)s #>> '{}')", output_field=CharField())
+
+
+def _json_number(field):
+    """A JSON number (or numeric string) as numeric; NULL for anything else, so the cast can't fail."""
+    return Func(
+        F(field),
+        template=(
+            "(CASE WHEN (%(expressions)s #>> '{}') ~ '^\\s*-?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?\\s*$' "
+            "THEN (%(expressions)s #>> '{}')::numeric END)"
+        ),
+        output_field=DecimalField(),
+    )
 
 
 def is_custom_property_key(key):
@@ -111,7 +122,7 @@ def build_custom_property_q(conditions, project_ids=None):
             if low is None and high is None:
                 combined &= Q(pk__in=[])
                 continue
-            rows = rows.annotate(value_number=Cast(_json_text("value"), DecimalField(max_digits=40, decimal_places=10)))
+            rows = rows.annotate(value_number=_json_number("value"))
             match = Q()
             if low is not None:
                 match &= Q(value_number__gte=low)

@@ -3,10 +3,11 @@
 # See the LICENSE file for details.
 
 from datetime import date
+from types import SimpleNamespace
 
 import pytest
 
-from plane.utils.recurrence import add_months, next_occurrence
+from plane.utils.recurrence import add_months, next_due_date, next_occurrence
 
 
 @pytest.mark.unit
@@ -55,3 +56,34 @@ class TestNextOccurrence:
     def test_unknown_frequency(self):
         with pytest.raises(ValueError):
             next_occurrence(date(2026, 1, 1), "hourly")
+
+
+def _rule(**kwargs):
+    return SimpleNamespace(
+        **{"frequency": "daily", "interval": 1, "weekdays": [], "anchor_day": None, "ends_on": None, **kwargs}
+    )
+
+
+@pytest.mark.unit
+class TestNextDueDate:
+    TODAY = date(2026, 10, 24)
+
+    def test_follows_the_due_date(self):
+        issue = SimpleNamespace(target_date=date(2026, 10, 25), start_date=date(2026, 10, 20))
+        assert next_due_date(_rule(interval=2), issue, self.TODAY) == date(2026, 10, 27)
+
+    def test_falls_back_to_start_date_then_today(self):
+        assert next_due_date(_rule(), SimpleNamespace(target_date=None, start_date=date(2026, 10, 25)), self.TODAY) == (
+            date(2026, 10, 26)
+        )
+        assert next_due_date(_rule(), SimpleNamespace(target_date=None, start_date=None), self.TODAY) == date(
+            2026, 10, 25
+        )
+
+    def test_skips_past_today(self):
+        issue = SimpleNamespace(target_date=date(2026, 9, 1), start_date=None)
+        assert next_due_date(_rule(frequency="weekly"), issue, self.TODAY) == date(2026, 10, 27)
+
+    def test_none_after_the_end_date(self):
+        issue = SimpleNamespace(target_date=date(2026, 10, 25), start_date=None)
+        assert next_due_date(_rule(ends_on=date(2026, 10, 25)), issue, self.TODAY) is None

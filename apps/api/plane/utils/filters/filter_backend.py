@@ -14,6 +14,7 @@ from django_filters.utils import translate_validation
 from rest_framework import filters
 from rest_framework.exceptions import ValidationError as DRFValidationError
 
+from plane.db.models import Project
 from plane.utils.exception_logger import log_exception
 
 from plane.utils.filters.custom_property import (
@@ -258,7 +259,7 @@ class ComplexFilterBackend(filters.BaseFilterBackend):
         custom_conditions = {k: v for k, v in leaf_conditions.items() if is_custom_property_key(k)}
         if custom_conditions:
             leaf_conditions = {k: v for k, v in leaf_conditions.items() if not is_custom_property_key(k)}
-            custom_q = build_custom_property_q(custom_conditions)
+            custom_q = build_custom_property_q(custom_conditions, self._custom_property_project_ids(view))
             if not leaf_conditions:
                 return custom_q
             return custom_q & self._build_leaf_q(leaf_conditions, view, queryset)
@@ -313,6 +314,20 @@ class ComplexFilterBackend(filters.BaseFilterBackend):
             )
 
         return fs.build_combined_q()
+
+    def _custom_property_project_ids(self, view):
+        """Projects whose custom properties may be filtered on, from the view's URL kwargs.
+
+        A project-level view allows only that project's properties, a workspace-level one
+        only properties of projects in that workspace. None (no scoping) when the view has
+        neither, e.g. when called outside a request.
+        """
+        kwargs = getattr(view, "kwargs", None) or {}
+        if kwargs.get("project_id"):
+            return [kwargs["project_id"]]
+        if kwargs.get("slug"):
+            return Project.objects.filter(workspace__slug=kwargs["slug"]).values("id")
+        return None
 
     def _get_max_depth(self, view):
         """Return the maximum allowed nesting depth for complex filters.

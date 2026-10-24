@@ -48,3 +48,18 @@ def next_occurrence(after, frequency, interval=1, weekdays=None, anchor_day=None
         return moved
 
     raise ValueError(f"Unknown frequency: {frequency}")
+
+
+def next_due_date(recurrence, issue, today):
+    """When the occurrence after ``issue`` is due, or None once ``recurrence`` has ended.
+
+    The schedule follows the due date (or the start date when there is none) and skips
+    ahead past ``today``, so a task completed late doesn't come back already overdue.
+    """
+    rule = (recurrence.frequency, recurrence.interval, recurrence.weekdays, recurrence.anchor_day)
+    following = next_occurrence(issue.target_date or issue.start_date or today, *rule)
+    while following < today:
+        following = next_occurrence(following, *rule)
+    if recurrence.ends_on and following > recurrence.ends_on:
+        return None
+    return following
