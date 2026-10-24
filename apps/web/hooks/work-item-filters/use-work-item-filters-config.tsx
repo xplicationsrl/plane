@@ -40,6 +40,8 @@ import {
   getCreatedByFilterConfig,
   getCustomPropertyDateFilterConfig,
   getCustomPropertyFilterConfig,
+  getCustomPropertyNumberFilterConfig,
+  getCustomPropertyTextFilterConfig,
   getCycleFilterConfig,
   getFileURL,
   getLabelFilterConfig,
@@ -151,7 +153,7 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceSlug, projectId]);
   const filterableProperties = getProjectProperties(projectId).filter((property) =>
-    ["select", "multi_select", "checkbox", "member", "date"].includes(property.property_type)
+    ["select", "multi_select", "checkbox", "member", "date", "text", "url", "number"].includes(property.property_type)
   );
 
   /**
@@ -383,6 +385,16 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
   const customPropertyFilterConfigs = useMemo(
     () =>
       filterableProperties.map((property) => {
+        const base = {
+          isEnabled: true,
+          label: property.name,
+          filterIcon: getCustomPropertyTypeIcon(property.property_type),
+          ...operatorConfigs,
+        };
+        if (property.property_type === "text" || property.property_type === "url")
+          return getCustomPropertyTextFilterConfig<TWorkItemFilterProperty>(`customproperty_${property.id}`)(base);
+        if (property.property_type === "number")
+          return getCustomPropertyNumberFilterConfig<TWorkItemFilterProperty>(`customproperty_${property.id}`)(base);
         if (property.property_type === "date")
           return getCustomPropertyDateFilterConfig<TWorkItemFilterProperty>(`customproperty_${property.id}`)({
             isEnabled: true,

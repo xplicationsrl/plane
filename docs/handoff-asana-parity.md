@@ -1,6 +1,6 @@
 # Handoff: Asana-parity work item features (`feat/asana-parity`)
 
-Branch `feat/asana-parity`, based on `production` at `57de31e21`. Not merged and not deployed.
+Branch `feat/asana-parity`. Merged into `production` at `0edc95971` (deployed); later commits on the branch are not merged yet.
 
 ## Done (one commit per feature)
 
@@ -29,7 +29,7 @@ Migrations: `0126`–`0131` (all new tables, no changes to existing ones). New b
 - `a27b2cf32` Work item templates can be edited: prefilled title and priority, plus the sub-work items list.
 - `ffda8bab6` Real visitor IPs for rate limits (see item 2).
 - `67b874509` Custom properties as spreadsheet columns (project-level layouts), editable in place.
-- Custom property filters (single/multi select, checkbox, people, and dates on a day or in a range) in project filters, evaluated server-side via `customproperty_<id>__in|exact|range` keys. Text and number filters need input field types the rich-filter UI doesn't have yet.
+- Custom property filters (single/multi select, checkbox, people, and dates on a day or in a range) in project filters, evaluated server-side via `customproperty_<id>__in|exact|range` keys. Text/URL ("contains") and number ("is" / "between", open-ended ranges allowed) filters added on top, with new `text`, `number` and `number_range` filter inputs and a `contains` operator in the rich-filter system.
 - Merged into `production` at `0edc95971` and deployed. Migrations `0126`–`0131` and the beat task are confirmed on the live database.
 
 ## Left to do

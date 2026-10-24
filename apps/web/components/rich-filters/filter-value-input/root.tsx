@@ -25,6 +25,7 @@ import { DateRangeFilterValueInput } from "./date/range";
 import { SingleDateFilterValueInput } from "./date/single";
 import { MultiSelectFilterValueInput } from "./select/multi";
 import { SingleSelectFilterValueInput } from "./select/single";
+import { NumberRangeFilterValueInput, SingleInputFilterValueInput } from "./input/text-number";
 
 export const FilterValueInput = observer(function FilterValueInput<P extends TFilterProperty, V extends TFilterValue>(
   props: TFilterValueInputProps<P, V>
@@ -72,6 +73,30 @@ export const FilterValueInput = observer(function FilterValueInput<P extends TFi
     return (
       <DateRangeFilterValueInput<P>
         config={filterFieldConfig as TDateRangeFilterFieldConfig<string>}
+        condition={condition as TFilterConditionNodeForDisplay<P, string>}
+        isDisabled={isDisabled}
+        onChange={(value) => onChange(value as SingleOrArray<V>)}
+      />
+    );
+  }
+
+  // Text and number inputs
+  if (filterFieldConfig?.type === FILTER_FIELD_TYPE.TEXT || filterFieldConfig?.type === FILTER_FIELD_TYPE.NUMBER) {
+    return (
+      <SingleInputFilterValueInput<P>
+        type={filterFieldConfig.type === FILTER_FIELD_TYPE.TEXT ? "text" : "number"}
+        placeholder={filterFieldConfig.type === FILTER_FIELD_TYPE.TEXT ? filterFieldConfig.placeholder : undefined}
+        condition={condition as TFilterConditionNodeForDisplay<P, string>}
+        isDisabled={isDisabled}
+        onChange={(value) => onChange(value as SingleOrArray<V>)}
+      />
+    );
+  }
+
+  // Number range input
+  if (filterFieldConfig?.type === FILTER_FIELD_TYPE.NUMBER_RANGE) {
+    return (
+      <NumberRangeFilterValueInput<P>
         condition={condition as TFilterConditionNodeForDisplay<P, string>}
         isDisabled={isDisabled}
         onChange={(value) => onChange(value as SingleOrArray<V>)}

@@ -6,7 +6,7 @@
 
 // plane imports
 import type { TFilterProperty } from "@plane/types";
-import { COLLECTION_OPERATOR, EQUALITY_OPERATOR } from "@plane/types";
+import { COLLECTION_OPERATOR, COMPARISON_OPERATOR, EQUALITY_OPERATOR } from "@plane/types";
 // local imports
 import type {
   TCreateDateFilterParams,
@@ -19,6 +19,9 @@ import {
   getMultiSelectConfig,
   createOperatorConfigEntry,
   getSupportedDateOperators,
+  getNumberInputConfig,
+  getNumberRangeInputConfig,
+  getTextInputConfig,
 } from "../../../rich-filters";
 
 /** A choice of a custom property: a select option, a person, or yes/no for checkboxes. */
@@ -74,4 +77,40 @@ export const getCustomPropertyDateFilterConfig =
       icon: params.filterIcon,
       allowMultipleFilters: true,
       supportedOperatorConfigsMap: getSupportedDateOperators(params),
+    });
+
+type TCreateCustomPropertyInputFilterParams = TCreateFilterConfigParams & IFilterIconConfig & { label: string };
+
+/** Filter config for a text or URL custom property: value contains the typed text. */
+export const getCustomPropertyTextFilterConfig =
+  <P extends TFilterProperty>(key: P): TCreateFilterConfig<P, TCreateCustomPropertyInputFilterParams> =>
+  (params: TCreateCustomPropertyInputFilterParams) =>
+    createFilterConfig<P>({
+      id: key,
+      ...params,
+      icon: params.filterIcon,
+      supportedOperatorConfigsMap: new Map([
+        createOperatorConfigEntry(EQUALITY_OPERATOR.CONTAINS, params, (updatedParams) =>
+          getTextInputConfig(updatedParams)
+        ),
+      ]),
+    });
+
+/** Filter config for a number custom property: equal to, or between two numbers. */
+export const getCustomPropertyNumberFilterConfig =
+  <P extends TFilterProperty>(key: P): TCreateFilterConfig<P, TCreateCustomPropertyInputFilterParams> =>
+  (params: TCreateCustomPropertyInputFilterParams) =>
+    createFilterConfig<P>({
+      id: key,
+      ...params,
+      icon: params.filterIcon,
+      allowMultipleFilters: true,
+      supportedOperatorConfigsMap: new Map([
+        createOperatorConfigEntry(EQUALITY_OPERATOR.EXACT, params, (updatedParams) =>
+          getNumberInputConfig(updatedParams)
+        ),
+        createOperatorConfigEntry(COMPARISON_OPERATOR.RANGE, params, (updatedParams) =>
+          getNumberRangeInputConfig(updatedParams)
+        ),
+      ]),
     });

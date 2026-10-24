@@ -113,3 +113,42 @@ class TestDateCustomPropertyFilters:
     def test_invalid_dates_match_nothing(self, due):
         prop, issues = due
         assert _filter(issues, {f"customproperty_{prop.id}__range": "soon,later"}) == []
+
+
+@pytest.mark.contract
+class TestTextAndNumberCustomPropertyFilters:
+    @pytest.fixture
+    def data(self, db, workspace, project):
+        notes = CustomProperty.objects.create(name="Notes", property_type="text", project=project)
+        site = CustomProperty.objects.create(name="Site", property_type="url", project=project)
+        budget = CustomProperty.objects.create(name="Budget", property_type="number", project=project)
+        rows = (
+            ("alpha", "Call the Customer, then ship", "https://acme.example/a", 100),
+            ("beta", "internal only", "https://other.example", 2.5),
+            ("gamma", None, None, 5000),
+        )
+        for name, text, url, number in rows:
+            issue = Issue.objects.create(name=name, project=project, workspace=workspace)
+            for prop, value in ((notes, text), (site, url), (budget, number)):
+                if value is not None:
+                    IssueCustomPropertyValue.objects.create(issue=issue, property=prop, value=value, project=project)
+        return notes, site, budget, Issue.objects.filter(project=project)
+
+    def test_text_contains_is_case_insensitive_and_keeps_commas(self, data):
+        notes, _, _, issues = data
+        assert _filter(issues, {f"customproperty_{notes.id}__icontains": "customer, then"}) == ["alpha"]
+
+    def test_url_contains(self, data):
+        _, site, _, issues = data
+        assert _filter(issues, {f"customproperty_{site.id}__icontains": "acme"}) == ["alpha"]
+
+    def test_number_exact_and_ranges(self, data):
+        _, _, budget, issues = data
+        assert _filter(issues, {f"customproperty_{budget.id}__exact": "2.5"}) == ["beta"]
+        assert _filter(issues, {f"customproperty_{budget.id}__range": "50,1000"}) == ["alpha"]
+        assert _filter(issues, {f"customproperty_{budget.id}__range": ",100"}) == ["alpha", "beta"]
+        assert _filter(issues, {f"customproperty_{budget.id}__range": "1000,"}) == ["gamma"]
+
+    def test_unreadable_number_matches_nothing(self, data):
+        _, _, budget, issues = data
+        assert _filter(issues, {f"customproperty_{budget.id}__exact": "lots"}) == []

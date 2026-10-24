@@ -12,7 +12,10 @@ export const EXTENDED_LOGICAL_OPERATOR = {} as const;
 /**
  * Extended equality operators
  */
-export const EXTENDED_EQUALITY_OPERATOR = {} as const;
+export const EXTENDED_EQUALITY_OPERATOR = {
+  /** Case-insensitive substring match, for text values. */
+  CONTAINS: "icontains",
+} as const;
 
 /**
  * Extended collection operators

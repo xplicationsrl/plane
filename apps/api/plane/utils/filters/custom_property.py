@@ -11,22 +11,26 @@ sends) with the chosen values, comma-separated or as a list:
 * multi select / people: option or user ids, matching items whose value contains any
 * checkbox: "true" and/or "false"
 * date: ``__exact`` with one date, or ``__range`` with "start,end" (YYYY-MM-DD)
+* number: ``__exact`` with one number, or ``__range`` with "min,max" (either side may be empty)
+* text / URL: ``__icontains`` with the text to look for
 """
 
 # Python imports
 import re
+from decimal import Decimal, InvalidOperation
 from functools import reduce
 from operator import or_
 
 # Django imports
-from django.db.models import CharField, F, Func, Q
+from django.db.models import CharField, DecimalField, F, Func, Q
+from django.db.models.functions import Cast
 from rest_framework.exceptions import ValidationError
 
 # Module imports
 from plane.db.models import CustomProperty, CustomPropertyType, IssueCustomPropertyValue
 
 PREFIX = "customproperty_"
-KEY_PATTERN = re.compile(r"^customproperty_([0-9a-fA-F-]{36})__(in|exact|range)$")
+KEY_PATTERN = re.compile(r"^customproperty_([0-9a-fA-F-]{36})__(in|exact|range|icontains)$")
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 FILTERABLE_TYPES = {
     CustomPropertyType.SELECT,
@@ -34,6 +38,9 @@ FILTERABLE_TYPES = {
     CustomPropertyType.MEMBER,
     CustomPropertyType.CHECKBOX,
     CustomPropertyType.DATE,
+    CustomPropertyType.NUMBER,
+    CustomPropertyType.TEXT,
+    CustomPropertyType.URL,
 }
 
 
@@ -56,13 +63,26 @@ def _values(raw):
     return [str(item).strip() for item in items if str(item).strip()]
 
 
+def _numbers(raw):
+    """Positional numbers ("10,", ",20", "5"), None for an empty or unreadable side."""
+    items = raw if isinstance(raw, (list, tuple)) else str(raw).split(",")
+    numbers = []
+    for item in list(items)[:2]:
+        text = str(item).strip()
+        try:
+            numbers.append(Decimal(text) if text else None)
+        except InvalidOperation:
+            numbers.append(None)
+    return numbers
+
+
 def build_custom_property_q(conditions, project_ids=None):
     """AND of the given custom property conditions, as a Q on Issue."""
     parsed = []
     for key, raw in conditions.items():
         validate_custom_property_key(key)
         match = KEY_PATTERN.match(key)
-        parsed.append((match.group(1).lower(), match.group(2), _values(raw)))
+        parsed.append((match.group(1).lower(), match.group(2), raw))
 
     properties = CustomProperty.objects.filter(id__in=[pid for pid, _, _ in parsed])
     if project_ids is not None:
@@ -70,13 +90,35 @@ def build_custom_property_q(conditions, project_ids=None):
     properties = {str(p.id): p for p in properties}
 
     combined = Q()
-    for property_id, operator, values in parsed:
+    for property_id, operator, raw in parsed:
+        values = _values(raw)
         prop = properties.get(property_id)
         if prop is None or prop.property_type not in FILTERABLE_TYPES or not values:
             # Unknown or unfilterable property: nothing can match
             combined &= Q(pk__in=[])
             continue
         rows = IssueCustomPropertyValue.objects.filter(property=prop)
+        if prop.property_type in (CustomPropertyType.TEXT, CustomPropertyType.URL):
+            # Text may contain commas, so it is taken whole rather than split
+            text = str(raw[0] if isinstance(raw, (list, tuple)) else raw).strip()
+            rows = rows.annotate(value_text=_json_text("value"))
+            combined &= Q(id__in=rows.filter(value_text__icontains=text).values("issue_id"))
+            continue
+        if prop.property_type == CustomPropertyType.NUMBER:
+            low, high = (_numbers(raw) + [None, None])[:2]
+            if operator != "range":
+                high = low
+            if low is None and high is None:
+                combined &= Q(pk__in=[])
+                continue
+            rows = rows.annotate(value_number=Cast(_json_text("value"), DecimalField(max_digits=40, decimal_places=10)))
+            match = Q()
+            if low is not None:
+                match &= Q(value_number__gte=low)
+            if high is not None:
+                match &= Q(value_number__lte=high)
+            combined &= Q(id__in=rows.filter(match).values("issue_id"))
+            continue
         if prop.property_type == CustomPropertyType.DATE:
             dates = [value[:10] for value in values if DATE_PATTERN.match(value[:10])]
             if not dates:
