@@ -72,7 +72,7 @@ function InlineTextInput(props: {
           }
         }}
       />
-      {type === "url" && value && (
+      {type === "url" && isSafeLink(value) && (
         <a
           href={value}
           target="_blank"
@@ -86,6 +86,17 @@ function InlineTextInput(props: {
     </div>
   );
 }
+
+/** Only http(s) values become links; anything else (e.g. `javascript:`) stays plain text. */
+const isSafeLink = (value: string | undefined) => {
+  if (!value) return false;
+  try {
+    const { protocol } = new URL(value);
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
+};
 
 /** Editor for one custom field value; the control matches the field type. */
 export const CustomPropertyValueInput = observer(function CustomPropertyValueInput(props: Props) {

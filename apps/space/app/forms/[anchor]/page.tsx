@@ -17,7 +17,7 @@ import { PoweredBy } from "@/components/common/powered-by";
 import type { Route } from "./+types/page";
 
 type TValue = string | number | boolean | string[];
-type TStatus = "loading" | "ready" | "not_found" | "submitted";
+type TStatus = "loading" | "ready" | "not_found" | "error" | "submitted";
 
 const PRIORITIES = ["urgent", "high", "medium", "low", "none"] as const;
 // Validate before using the anchor in a request (same rule as published boards)
@@ -125,23 +125,39 @@ function PublicFormPage() {
 
   const url = `${API_BASE_URL}/api/public/forms/${anchor}/`;
 
+  const [loadAttempt, setLoadAttempt] = useState(0);
+
   useEffect(() => {
     if (!anchor || !ANCHOR_REGEX.test(anchor)) {
       setStatus("not_found");
       return;
     }
+    // Ignore a response that lands after unmount or after a newer load started
+    let isCurrent = true;
     const load = async () => {
+      setStatus("loading");
       try {
         const response = await fetch(url);
+        if (!isCurrent) return;
+        // Only a 404 means the form is gone; anything else (5xx, network) can be retried
+        if (response.status === 404) {
+          setStatus("not_found");
+          return;
+        }
         if (!response.ok) throw new Error(String(response.status));
-        setForm((await response.json()) as TPublicIntakeForm);
+        const data = (await response.json()) as TPublicIntakeForm;
+        if (!isCurrent) return;
+        setForm(data);
         setStatus("ready");
       } catch {
-        setStatus("not_found");
+        if (isCurrent) setStatus("error");
       }
     };
     void load();
-  }, [anchor, url]);
+    return () => {
+      isCurrent = false;
+    };
+  }, [anchor, url, loadAttempt]);
 
   const labelOf = (field: TPublicIntakeFormField) => field.label || t(`intake_forms.fields.${field.key}`);
 
@@ -197,6 +213,20 @@ function PublicFormPage() {
           <div className="rounded-xl border border-subtle bg-surface-1 px-6 py-10 text-center shadow-raised-100">
             <h1 className="text-h5-medium text-primary">{t("intake_forms.public.not_found_title")}</h1>
             <p className="mt-2 text-body-sm-regular text-tertiary">{t("intake_forms.public.not_found_description")}</p>
+          </div>
+        )}
+
+        {status === "error" && (
+          <div className="rounded-xl border border-subtle bg-surface-1 px-6 py-10 text-center shadow-raised-100">
+            <h1 className="text-h5-medium text-primary">{t("intake_forms.public.load_error_title")}</h1>
+            <p className="mt-2 text-body-sm-regular text-tertiary">{t("intake_forms.public.load_error_description")}</p>
+            <button
+              type="button"
+              onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+              className="mt-6 text-body-sm-medium text-accent-primary hover:underline"
+            >
+              {t("intake_forms.public.retry")}
+            </button>
           </div>
         )}
 

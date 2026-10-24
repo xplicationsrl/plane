@@ -18,6 +18,8 @@ import type {
   THandleTemplateChangeProps,
 } from "@/components/issues/issue-modal/context/issue-modal-context";
 // hooks
+import { useCustomProperty } from "@/hooks/store/use-custom-property";
+import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useTemplate } from "@/hooks/store/use-template";
 import { useUser } from "@/hooks/store/user/user-user";
 
@@ -38,6 +40,8 @@ export const IssueModalProvider = observer(function IssueModalProvider(props: TI
   // store hooks
   const { projectsWithCreatePermissions } = useUser();
   const { workItemTemplates, applyWorkItemTemplate } = useTemplate();
+  const { fetchIssueValues } = useCustomProperty();
+  const { fetchSubIssues } = useIssueDetail();
   // derived values
   const projectIdsWithCreatePermissions = Object.keys(projectsWithCreatePermissions ?? {});
 
@@ -73,6 +77,16 @@ export const IssueModalProvider = observer(function IssueModalProvider(props: TI
     setIsApplyingTemplate(true);
     try {
       await applyWorkItemTemplate(workspaceSlug, projectId, template.id, parentId);
+      // The apply runs server side: reload what it added so cached (e.g. empty) values don't linger
+      const { custom_properties: customProperties, sub_issues: subIssues } = template.template;
+      await Promise.all([
+        Object.keys(customProperties ?? {}).length > 0
+          ? fetchIssueValues(workspaceSlug, projectId, parentId).catch(() => undefined)
+          : undefined,
+        (subIssues ?? []).length > 0
+          ? fetchSubIssues(workspaceSlug, projectId, parentId).catch(() => undefined)
+          : undefined,
+      ]);
     } catch {
       setToast({ type: "error", title: t("toast.error"), message: t("templates.manage.work_item.apply_error") });
     } finally {

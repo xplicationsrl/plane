@@ -54,7 +54,7 @@ export const IntakeFormEditorModal = observer(function IntakeFormEditorModal(pro
   const { isOpen, onClose, workspaceSlug, projectId, form } = props;
   const { t } = useTranslation();
   const { createForm, updateForm } = useIntakeForm();
-  const { getProjectProperties, fetchedProjectIds, fetchProjectProperties } = useCustomProperty();
+  const { getProjectProperties, ensureProjectProperties } = useCustomProperty();
   // states
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -73,7 +73,7 @@ export const IntakeFormEditorModal = observer(function IntakeFormEditorModal(pro
         { key: "submitter_email", label: "", help_text: "", required: true },
       ]
     );
-    if (!fetchedProjectIds[projectId]) void fetchProjectProperties(workspaceSlug, projectId).catch(() => undefined);
+    void ensureProjectProperties(workspaceSlug, projectId).catch(() => undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, form]);
 

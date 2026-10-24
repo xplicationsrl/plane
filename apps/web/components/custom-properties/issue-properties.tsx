@@ -29,20 +29,13 @@ type Props = {
 export const IssueCustomProperties = observer(function IssueCustomProperties(props: Props) {
   const { workspaceSlug, projectId, issueId, disabled } = props;
   const { t } = useTranslation();
-  const {
-    fetchedProjectIds,
-    getProjectProperties,
-    getIssueValues,
-    fetchProjectProperties,
-    fetchIssueValues,
-    updateIssueValue,
-  } = useCustomProperty();
+  const { getProjectProperties, getIssueValues, ensureProjectProperties, fetchIssueValues, updateIssueValue } =
+    useCustomProperty();
 
   useEffect(() => {
     if (!workspaceSlug || !projectId) return;
-    if (!fetchedProjectIds[projectId]) void fetchProjectProperties(workspaceSlug, projectId).catch(() => undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workspaceSlug, projectId]);
+    void ensureProjectProperties(workspaceSlug, projectId).catch(() => undefined);
+  }, [workspaceSlug, projectId, ensureProjectProperties]);
 
   useEffect(() => {
     if (!workspaceSlug || !projectId || !issueId) return;

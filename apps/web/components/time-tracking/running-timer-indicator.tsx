@@ -10,14 +10,13 @@ import Link from "next/link";
 // plane imports
 import { Tooltip } from "@makeplane/propel/components/tooltip";
 import { StopCircleFilled } from "@makeplane/propel/icons";
-import { formatTimerClock } from "@plane/blocks/utils";
 import { setToast } from "@plane/blocks/toast";
 import { useTranslation } from "@plane/i18n";
 import { generateWorkItemLink } from "@plane/utils";
 // hooks
 import { useTimeEntry } from "@/hooks/store/use-time-entry";
 // local imports
-import { useElapsed } from "./issue-time-tracking";
+import { TimerClock } from "./timer-clock";
 
 type Props = {
   workspaceSlug: string;
@@ -28,7 +27,6 @@ export const RunningTimerIndicator = observer(function RunningTimerIndicator(pro
   const { workspaceSlug } = props;
   const { t } = useTranslation();
   const { running, fetchRunning, stopTimer } = useTimeEntry();
-  const elapsed = useElapsed(running?.started_at);
 
   useEffect(() => {
     if (workspaceSlug) void fetchRunning(workspaceSlug).catch(() => undefined);
@@ -59,13 +57,13 @@ export const RunningTimerIndicator = observer(function RunningTimerIndicator(pro
         {href ? (
           <Link href={href} className="flex items-center gap-1.5 text-primary hover:underline">
             <span className="size-1.5 animate-pulse rounded-full bg-danger-primary" aria-hidden />
-            <span className="font-mono tabular-nums">{formatTimerClock(elapsed)}</span>
+            <TimerClock startedAt={running.started_at} className="font-mono tabular-nums" />
             <span className="max-w-24 truncate text-tertiary">{label}</span>
           </Link>
         ) : (
           <span className="flex items-center gap-1.5 text-primary">
             <span className="size-1.5 animate-pulse rounded-full bg-danger-primary" aria-hidden />
-            <span className="font-mono tabular-nums">{formatTimerClock(elapsed)}</span>
+            <TimerClock startedAt={running.started_at} className="font-mono tabular-nums" />
           </span>
         )}
       </Tooltip>

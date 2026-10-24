@@ -12,6 +12,10 @@ import type { TCustomProperty, TCustomPropertyValue, TIssueCustomPropertyValues 
 // services
 import { CustomPropertyService } from "@/services/custom-property.service";
 
+/** A cleared value: the store keeps no key for it. */
+const isEmptyValue = (value: TCustomPropertyValue | undefined) =>
+  value === undefined || value === null || value === "" || (Array.isArray(value) && value.length === 0);
+
 export interface ICustomPropertyStore {
   // observables
   propertyMap: Record<string, TCustomProperty>;
@@ -22,7 +26,10 @@ export interface ICustomPropertyStore {
   getPropertyById: (propertyId: string) => TCustomProperty | undefined;
   getIssueValues: (issueId: string) => TIssueCustomPropertyValues | undefined;
   // actions
+  /** Always hits the API; use where fresh data is required (e.g. settings). */
   fetchProjectProperties: (workspaceSlug: string, projectId: string) => Promise<TCustomProperty[]>;
+  /** Loads a project's properties once; concurrent callers share the in-flight request. */
+  ensureProjectProperties: (workspaceSlug: string, projectId: string) => Promise<TCustomProperty[]>;
   createProperty: (
     workspaceSlug: string,
     projectId: string,
@@ -51,6 +58,9 @@ export class CustomPropertyStore implements ICustomPropertyStore {
   propertyMap: Record<string, TCustomProperty> = {};
   fetchedProjectIds: Record<string, boolean> = {};
   issueValues: Record<string, TIssueCustomPropertyValues> = {};
+  // in-flight requests, keyed by project id / work item id (not observable)
+  private pendingProjectFetches = new Map<string, Promise<TCustomProperty[]>>();
+  private pendingIssueValueIds = new Map<string, Promise<void>>();
   // services
   service: CustomPropertyService;
 
@@ -60,6 +70,7 @@ export class CustomPropertyStore implements ICustomPropertyStore {
       fetchedProjectIds: observable,
       issueValues: observable,
       fetchProjectProperties: action,
+      ensureProjectProperties: action,
       createProperty: action,
       updateProperty: action,
       deleteProperty: action,
@@ -83,15 +94,27 @@ export class CustomPropertyStore implements ICustomPropertyStore {
   getIssueValues = (issueId: string) => this.issueValues[issueId];
 
   fetchProjectProperties = async (workspaceSlug: string, projectId: string) => {
-    const properties = await this.service.list(workspaceSlug, projectId);
-    runInAction(() => {
-      Object.values(this.propertyMap)
-        .filter((property) => property.project === projectId)
-        .forEach((property) => delete this.propertyMap[property.id]);
-      properties.forEach((property) => set(this.propertyMap, [property.id], property));
-      this.fetchedProjectIds[projectId] = true;
+    const request = this.service.list(workspaceSlug, projectId).then((properties) => {
+      runInAction(() => {
+        Object.values(this.propertyMap)
+          .filter((property) => property.project === projectId)
+          .forEach((property) => delete this.propertyMap[property.id]);
+        properties.forEach((property) => set(this.propertyMap, [property.id], property));
+        this.fetchedProjectIds[projectId] = true;
+      });
+      return properties;
     });
-    return properties;
+    this.pendingProjectFetches.set(projectId, request);
+    try {
+      return await request;
+    } finally {
+      if (this.pendingProjectFetches.get(projectId) === request) this.pendingProjectFetches.delete(projectId);
+    }
+  };
+
+  ensureProjectProperties = (workspaceSlug: string, projectId: string) => {
+    if (this.fetchedProjectIds[projectId]) return Promise.resolve(this.getProjectProperties(projectId, true));
+    return this.pendingProjectFetches.get(projectId) ?? this.fetchProjectProperties(workspaceSlug, projectId);
   };
 
   createProperty = async (workspaceSlug: string, projectId: string, data: Partial<TCustomProperty>) => {
@@ -126,18 +149,35 @@ export class CustomPropertyStore implements ICustomPropertyStore {
   };
 
   fetchBulkIssueValues = async (workspaceSlug: string, projectId: string, issueIds: string[]) => {
-    const missing = issueIds.filter((id) => !this.issueValues[id]);
-    // The API takes up to 500 ids per request
-    const chunks: string[][] = [];
-    for (let start = 0; start < missing.length; start += 500) chunks.push(missing.slice(start, start + 500));
-    const responses = await Promise.all(
-      chunks.map((chunk) => this.service.getBulkIssueValues(workspaceSlug, projectId, chunk))
-    );
-    runInAction(() =>
-      responses.forEach((values) =>
-        Object.entries(values).forEach(([issueId, issueValues]) => set(this.issueValues, [issueId], issueValues))
-      )
-    );
+    // ids already loaded or being loaded by a concurrent call are not requested again
+    const pending = new Set<Promise<void>>();
+    const missing: string[] = [];
+    new Set(issueIds).forEach((id) => {
+      if (this.issueValues[id]) return;
+      const inFlight = this.pendingIssueValueIds.get(id);
+      if (inFlight) pending.add(inFlight);
+      else missing.push(id);
+    });
+    // Ids travel in the query string; 100 per request keeps the URL well under proxy limits
+    const CHUNK_SIZE = 100;
+    for (let start = 0; start < missing.length; start += CHUNK_SIZE) {
+      const chunk = missing.slice(start, start + CHUNK_SIZE);
+      const request = this.service
+        .getBulkIssueValues(workspaceSlug, projectId, chunk)
+        .then((values) =>
+          runInAction(() =>
+            Object.entries(values).forEach(([issueId, issueValues]) => set(this.issueValues, [issueId], issueValues))
+          )
+        );
+      const tracked = request.finally(() =>
+        chunk.forEach((id) => {
+          if (this.pendingIssueValueIds.get(id) === tracked) this.pendingIssueValueIds.delete(id);
+        })
+      );
+      chunk.forEach((id) => this.pendingIssueValueIds.set(id, tracked));
+      pending.add(tracked);
+    }
+    await Promise.all(pending);
   };
 
   /** Optimistic: the value shows immediately and rolls back if the server rejects it. */
@@ -148,18 +188,25 @@ export class CustomPropertyStore implements ICustomPropertyStore {
     propertyId: string,
     value: TCustomPropertyValue
   ) => {
-    const previous = { ...this.issueValues[issueId] };
-    runInAction(() => {
-      const next = { ...previous };
-      if (value === null || value === "" || (Array.isArray(value) && value.length === 0)) delete next[propertyId];
-      else next[propertyId] = value;
-      set(this.issueValues, [issueId], next);
-    });
+    // Only the edited key is snapshotted, so a rollback doesn't undo concurrent edits of other keys.
+    // Work items whose values were never loaded stay unloaded; the server response fills them in.
+    const isLoaded = !!this.issueValues[issueId];
+    const previous = isLoaded ? this.issueValues[issueId][propertyId] : undefined;
+    const apply = (next: TCustomPropertyValue | undefined) =>
+      runInAction(() => {
+        const current = this.issueValues[issueId];
+        if (!current) return;
+        const updated = { ...current };
+        if (isEmptyValue(next)) delete updated[propertyId];
+        else updated[propertyId] = next as TCustomPropertyValue;
+        set(this.issueValues, [issueId], updated);
+      });
+    apply(value);
     try {
       const values = await this.service.updateIssueValues(workspaceSlug, projectId, issueId, { [propertyId]: value });
       runInAction(() => set(this.issueValues, [issueId], values));
     } catch (error) {
-      runInAction(() => set(this.issueValues, [issueId], previous));
+      apply(previous);
       throw error;
     }
   };

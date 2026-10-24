@@ -7,6 +7,7 @@
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 // plane imports
+import { useTranslation } from "@plane/i18n";
 import type { TFilterConditionNodeForDisplay, TFilterProperty } from "@plane/types";
 import { cn } from "@plane/utils";
 // local imports
@@ -88,6 +89,7 @@ export const NumberRangeFilterValueInput = observer(function NumberRangeFilterVa
   props: TRangeProps<P>
 ) {
   const { condition, isDisabled, onChange } = props;
+  const { t } = useTranslation();
   const [min = "", max = ""] = Array.isArray(condition.value) ? condition.value.map(String) : [];
   const commit = (nextMin: string, nextMax: string) => onChange(nextMin || nextMax ? [nextMin, nextMax] : null);
   return (
@@ -95,7 +97,7 @@ export const NumberRangeFilterValueInput = observer(function NumberRangeFilterVa
       <CommitInput
         type="number"
         value={min}
-        placeholder="min"
+        placeholder={t("common.min")}
         disabled={isDisabled}
         focusOnMount={!min && !max}
         className="w-16"
@@ -105,7 +107,7 @@ export const NumberRangeFilterValueInput = observer(function NumberRangeFilterVa
       <CommitInput
         type="number"
         value={max}
-        placeholder="max"
+        placeholder={t("common.max")}
         disabled={isDisabled}
         className="w-16"
         onCommit={(next) => commit(min, next)}

@@ -4,7 +4,6 @@
  * See the LICENSE file for details.
  */
 
-import { sortBy } from "lodash-es";
 // hooks
 import { useProjectState } from "@/hooks/store/use-project-state";
 
@@ -14,7 +13,8 @@ import { useProjectState } from "@/hooks/store/use-project-state";
  */
 export const useWorkItemCompletion = (projectId: string | null | undefined) => {
   const { getProjectStates, getProjectDefaultStateId, getStateById } = useProjectState();
-  const states = sortBy(getProjectStates(projectId) ?? [], "sequence");
+  // already ordered by state group, then sequence within the group
+  const states = getProjectStates(projectId) ?? [];
 
   const completedStateId = states.find((state) => state.group === "completed")?.id;
   const defaultStateId = getProjectDefaultStateId(projectId);

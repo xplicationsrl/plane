@@ -452,6 +452,8 @@
     "completed_at": "Completed at",
     "layout": "Layout",
     "filters": "Filters",
+    "min": "min",
+    "max": "max",
     "display": "Display",
     "load_more": "Load more",
     "activity": "Activity",

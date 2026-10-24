@@ -6,6 +6,7 @@
 
 import { pull, concat, update, uniq, set } from "lodash-es";
 import { action, makeObservable, observable, runInAction } from "mobx";
+import { computedFn } from "mobx-utils";
 // Plane Imports
 import type { TIssueComment, TIssueCommentMap, TIssueCommentIdMap, TIssueServiceType } from "@plane/types";
 // services
@@ -46,6 +47,8 @@ export interface IIssueCommentStore extends IIssueCommentStoreActions {
   // helper methods
   getCommentsByIssueId: (issueId: string) => string[] | undefined;
   getCommentById: (activityId: string) => TIssueComment | undefined;
+  /** Replies of the work item grouped by their root comment id, oldest first. */
+  getRepliesByParentId: (issueId: string) => Record<string, TIssueComment[]>;
 }
 
 export class IssueCommentStore implements IIssueCommentStore {
@@ -89,6 +92,19 @@ export class IssueCommentStore implements IIssueCommentStore {
     return this.commentMap[commentId] ?? undefined;
   };
 
+  getRepliesByParentId = computedFn((issueId: string) => {
+    const repliesByParentId: Record<string, TIssueComment[]> = {};
+    (this.getCommentsByIssueId(issueId) ?? []).forEach((commentId) => {
+      const reply = this.getCommentById(commentId);
+      if (!reply?.parent) return;
+      (repliesByParentId[reply.parent] ??= []).push(reply);
+    });
+    Object.values(repliesByParentId).forEach((replies) =>
+      replies.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+    );
+    return repliesByParentId;
+  });
+
   fetchComments = async (
     workspaceSlug: string,
     projectId: string,
@@ -108,9 +124,9 @@ export class IssueCommentStore implements IIssueCommentStore {
 
     const commentIds = comments.map((comment) => comment.id);
     runInAction(() => {
-      update(this.comments, issueId, (_commentIds) => {
-        if (!_commentIds) return commentIds;
-        return uniq(concat(_commentIds, commentIds));
+      update(this.comments, issueId, (existingIds) => {
+        if (!existingIds) return commentIds;
+        return uniq(concat(existingIds, commentIds));
       });
       comments.forEach((comment) => {
         this.rootIssueDetail.commentReaction.applyCommentReactions(comment.id, comment?.comment_reactions || []);

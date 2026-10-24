@@ -32,7 +32,8 @@ export const SubIssueQuickAdd = observer(function SubIssueQuickAdd(props: Props)
   const { t } = useTranslation();
   // store hooks
   const { issues } = useIssues(EIssuesStoreType.PROJECT);
-  const { createSubIssues, subIssueQuickAddParentId, setSubIssueQuickAddParentId } = useIssueDetail(issueServiceType);
+  const issueDetail = useIssueDetail(issueServiceType);
+  const { createSubIssues, subIssueQuickAddParentId, setSubIssueQuickAddParentId } = issueDetail;
   // states
   const [name, setName] = useState("");
   const [pendingCount, setPendingCount] = useState(0);
@@ -45,10 +46,11 @@ export const SubIssueQuickAdd = observer(function SubIssueQuickAdd(props: Props)
     if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
 
-  // Close when the user navigates to another work item
+  // Close when the user navigates to another work item; read the store at cleanup time,
+  // not the value captured when this effect ran
   useEffect(
     () => () => {
-      if (subIssueQuickAddParentId === parentIssueId) setSubIssueQuickAddParentId(null);
+      if (issueDetail.subIssueQuickAddParentId === parentIssueId) setSubIssueQuickAddParentId(null);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [parentIssueId]

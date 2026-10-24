@@ -16,30 +16,21 @@ import { Tooltip } from "@makeplane/propel/components/tooltip";
 import { DeleteOutline, PlayCircleOutline, StopCircleFilled } from "@makeplane/propel/icons";
 import { EUserPermissions, EUserPermissionsLevel } from "@plane/constants";
 import { DateSelect } from "@plane/blocks/property-select";
-import { formatDuration, formatTimerClock, parseDuration } from "@plane/blocks/utils";
+import { formatDuration, parseDuration } from "@plane/blocks/utils";
 import { setToast } from "@plane/blocks/toast";
 import { useTranslation } from "@plane/i18n";
 import { getFileURL, renderFormattedDate, renderFormattedPayloadDate } from "@plane/utils";
 // hooks
 import { useTimeEntry } from "@/hooks/store/use-time-entry";
 import { useUser, useUserPermissions, useUserProfile } from "@/hooks/store/user";
+// local imports
+import { TimerClock } from "./timer-clock";
 
 type Props = {
   workspaceSlug: string;
   projectId: string;
   issueId: string;
   disabled: boolean;
-};
-
-/** Seconds since `startedAt`, ticking every second while mounted. */
-export const useElapsed = (startedAt: string | null | undefined) => {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    if (!startedAt) return;
-    const interval = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(interval);
-  }, [startedAt]);
-  return startedAt ? Math.max(0, (now - new Date(startedAt).getTime()) / 1000) : 0;
 };
 
 const TimeLogForm = observer(function TimeLogForm(props: Omit<Props, "disabled">) {
@@ -134,7 +125,8 @@ const TimeLogForm = observer(function TimeLogForm(props: Omit<Props, "disabled">
 export const IssueTimeTracking = observer(function IssueTimeTracking(props: Props) {
   const { workspaceSlug, projectId, issueId, disabled } = props;
   const { t } = useTranslation();
-  const { summaries, running, fetchSummary, fetchRunning, startTimer, stopTimer, deleteEntry } = useTimeEntry();
+  // the running timer is loaded by the always-mounted top bar RunningTimerIndicator
+  const { summaries, running, fetchSummary, startTimer, stopTimer, deleteEntry } = useTimeEntry();
   const { data: currentUser } = useUser();
   const { allowPermissions } = useUserPermissions();
   const [isBusy, setIsBusy] = useState(false);
@@ -144,13 +136,8 @@ export const IssueTimeTracking = observer(function IssueTimeTracking(props: Prop
       void fetchSummary(workspaceSlug, projectId, issueId).catch(() => undefined);
   }, [workspaceSlug, projectId, issueId, fetchSummary]);
 
-  useEffect(() => {
-    if (workspaceSlug) void fetchRunning(workspaceSlug).catch(() => undefined);
-  }, [workspaceSlug, fetchRunning]);
-
   const summary = summaries[issueId];
   const isRunningHere = running?.issue === issueId;
-  const elapsed = useElapsed(isRunningHere ? running?.started_at : null);
   const isAdmin = allowPermissions([EUserPermissions.ADMIN], EUserPermissionsLevel.PROJECT, workspaceSlug, projectId);
   const loggedEntries = (summary?.entries ?? []).filter((entry) => !entry.is_running);
 
@@ -258,7 +245,7 @@ export const IssueTimeTracking = observer(function IssueTimeTracking(props: Prop
             {isRunningHere ? (
               <>
                 <StopCircleFilled className="size-4 text-danger-primary" />
-                <span className="font-mono text-primary tabular-nums">{formatTimerClock(elapsed)}</span>
+                <TimerClock startedAt={running?.started_at} className="font-mono text-primary tabular-nums" />
               </>
             ) : (
               <PlayCircleOutline className="size-4" />

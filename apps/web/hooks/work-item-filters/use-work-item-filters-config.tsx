@@ -106,7 +106,7 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
   const { getModuleById } = useModule();
   const { getStateById } = useProjectState();
   const { getUserDetails } = useMember();
-  const { fetchedProjectIds, getProjectProperties, fetchProjectProperties } = useCustomProperty();
+  const { getProjectProperties, ensureProjectProperties } = useCustomProperty();
   const { t } = useTranslation();
   // derived values
   const operatorConfigs = useFiltersOperatorConfigs({ workspaceSlug });
@@ -148,10 +148,8 @@ export const useWorkItemFiltersConfig = (props: TUseWorkItemFiltersConfigProps):
 
   // Custom properties are per project, so only project-level filters offer them
   useEffect(() => {
-    if (workspaceSlug && projectId && !fetchedProjectIds[projectId])
-      void fetchProjectProperties(workspaceSlug, projectId).catch(() => undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workspaceSlug, projectId]);
+    if (workspaceSlug && projectId) void ensureProjectProperties(workspaceSlug, projectId).catch(() => undefined);
+  }, [workspaceSlug, projectId, ensureProjectProperties]);
   const filterableProperties = getProjectProperties(projectId).filter((property) =>
     ["select", "multi_select", "checkbox", "member", "date", "text", "url", "number"].includes(property.property_type)
   );

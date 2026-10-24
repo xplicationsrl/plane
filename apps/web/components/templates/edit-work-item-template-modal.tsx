@@ -63,6 +63,9 @@ export const EditWorkItemTemplateModal = observer(function EditWorkItemTemplateM
   const subItemRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const focusKey = useRef<string | null>(null);
 
+  // Seed on open or when a different template is chosen; a refetch replacing the template
+  // object must not wipe in-progress edits
+  const templateId = template?.id;
   useEffect(() => {
     if (!isOpen || !template) return;
     setName(template.name);
@@ -70,7 +73,8 @@ export const EditWorkItemTemplateModal = observer(function EditWorkItemTemplateM
     setTitle(template.template.name);
     setPriority(template.template.priority);
     setSubItems(template.template.sub_issues.map(withKey));
-  }, [isOpen, template]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, templateId]);
 
   useEffect(() => {
     if (!focusKey.current) return;

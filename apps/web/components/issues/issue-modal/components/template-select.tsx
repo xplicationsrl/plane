@@ -29,9 +29,12 @@ export const WorkItemTemplateSelect = observer(function WorkItemTemplateSelect(p
   const { workItemTemplates, fetchWorkItemTemplates } = useTemplate();
   const { workItemTemplateId, setWorkItemTemplateId } = useIssueModal();
 
+  // A project's entry exists once loaded; template create/update/delete keep it fresh
+  const isLoaded = !!projectId && !!workItemTemplates[projectId];
   useEffect(() => {
-    if (workspaceSlug && projectId) void fetchWorkItemTemplates(workspaceSlug, projectId).catch(() => undefined);
-  }, [workspaceSlug, projectId, fetchWorkItemTemplates]);
+    if (workspaceSlug && projectId && !isLoaded)
+      void fetchWorkItemTemplates(workspaceSlug, projectId).catch(() => undefined);
+  }, [workspaceSlug, projectId, isLoaded, fetchWorkItemTemplates]);
 
   const templates = projectId ? (workItemTemplates[projectId] ?? []) : [];
   if (templates.length === 0) return null;

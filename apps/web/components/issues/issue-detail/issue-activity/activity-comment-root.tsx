@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 // plane imports
 import type { E_SORT_ORDER, TActivityFilters, EActivityFilterType } from "@plane/constants";
 import { BASE_ACTIVITY_FILTER_TYPES, filterActivityOnSelectedFilters } from "@plane/constants";
-import type { TCommentsOperations, TIssueComment } from "@plane/types";
+import type { TCommentsOperations } from "@plane/types";
 // components
 import { CommentCard } from "@/components/comments/card/root";
 // hooks
@@ -44,7 +44,7 @@ export const IssueActivityCommentRoot = observer(function IssueActivityCommentRo
   // store hooks
   const {
     activity: { getActivityAndCommentsByIssueId },
-    comment: { getCommentById, getCommentsByIssueId },
+    comment: { getCommentById, getRepliesByParentId },
   } = useIssueDetail();
   // derived values
   const activityAndComments = getActivityAndCommentsByIssueId(issueId, sortOrder);
@@ -56,15 +56,7 @@ export const IssueActivityCommentRoot = observer(function IssueActivityCommentRo
   const filteredActivityAndComments = filterActivityOnSelectedFilters(activityAndComments, selectedFilters);
 
   // Replies are threaded under their root comment, oldest first
-  const repliesByParentId: Record<string, TIssueComment[]> = {};
-  (getCommentsByIssueId(issueId) ?? []).forEach((commentId) => {
-    const reply = getCommentById(commentId);
-    if (!reply?.parent) return;
-    (repliesByParentId[reply.parent] ??= []).push(reply);
-  });
-  Object.values(repliesByParentId).forEach((replies) =>
-    replies.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-  );
+  const repliesByParentId = getRepliesByParentId(issueId);
 
   return (
     <div>

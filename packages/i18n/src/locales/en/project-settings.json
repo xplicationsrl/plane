@@ -619,6 +619,9 @@
       "rate_limited": "Too many submissions from your network. Please try again later.",
       "not_found_title": "This form isn't available",
       "not_found_description": "The link may be wrong, or the form is no longer accepting responses.",
+      "load_error_title": "Couldn't load this form",
+      "load_error_description": "Check your connection and try again.",
+      "retry": "Try again",
       "success_title": "Thank you",
       "success_default": "Your request has been received.",
       "another": "Submit another response"

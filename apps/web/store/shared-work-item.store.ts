@@ -49,6 +49,11 @@ export class SharedWorkItemStore implements ISharedWorkItemStore {
     try {
       const ids = await this.service.setLinkedProjects(workspaceSlug, projectId, issueId, projectIds);
       runInAction(() => set(this.linkedProjectIds, [issueId], ids));
+      // Projects gaining or losing this item have stale "shared into" lists: refresh the cached ones
+      const changed = [...previous.filter((id) => !ids.includes(id)), ...ids.filter((id) => !previous.includes(id))];
+      changed
+        .filter((id) => this.sharedWorkItems[id])
+        .forEach((id) => void this.fetchSharedWorkItems(workspaceSlug, id).catch(() => undefined));
     } catch (error) {
       runInAction(() => set(this.linkedProjectIds, [issueId], previous));
       throw error;

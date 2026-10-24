@@ -8,6 +8,7 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
+import { isEqual } from "lodash-es";
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
@@ -78,6 +79,18 @@ export interface IssueFormProps {
   showActionButtons?: boolean;
   dataResetProperties?: any[];
 }
+
+/** Form fields a work item template prefills (see IssueModalProvider.handleTemplateChange). */
+const TEMPLATE_FIELDS = [
+  "name",
+  "description_html",
+  "priority",
+  "state_id",
+  "assignee_ids",
+  "label_ids",
+  "module_ids",
+  "estimate_point",
+] as const satisfies readonly (keyof TIssue)[];
 
 export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormProps) {
   const { t } = useTranslation();
@@ -199,14 +212,32 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, projectId]);
 
+  // Values the applied template put in the form, so "No template" can take them back out
+  const templateValuesRef = useRef<Partial<TIssue> | null>(null);
   useEffect(() => {
     if (workItemTemplateId && editorRef.current) {
-      handleTemplateChange({
+      // handleTemplateChange resets the form synchronously before its first await
+      void handleTemplateChange({
         workspaceSlug: workspaceSlug?.toString(),
         reset,
         editorRef,
       });
+      templateValuesRef.current = Object.fromEntries(
+        TEMPLATE_FIELDS.map((field) => [field, getValues(field)])
+      ) as Partial<TIssue>;
+      return;
     }
+    // Template cleared: restore defaults only for fields still holding the template's value,
+    // keeping anything the user changed since applying it
+    const templateValues = templateValuesRef.current;
+    templateValuesRef.current = null;
+    if (workItemTemplateId || !templateValues) return;
+    const defaults: Partial<TIssue> = { ...DEFAULT_WORK_ITEM_FORM_VALUES, ...data };
+    TEMPLATE_FIELDS.forEach((field) => {
+      if (!isEqual(getValues(field), templateValues[field])) return;
+      setValue(field, defaults[field] as TIssue[typeof field], { shouldDirty: true });
+      if (field === "description_html") editorRef.current?.setEditorValue(defaults.description_html || "<p></p>");
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workItemTemplateId]);
 

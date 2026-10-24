@@ -21,19 +21,12 @@ import { CustomPropertyValueInput } from "./property-value-input";
  * Custom properties as spreadsheet columns. Only on project-level layouts: a workspace view
  * mixes projects whose properties differ.
  */
+/** Reads the project's properties; loading them is left to `useSpreadsheetCustomPropertyValues` (table level). */
 const useProjectProperties = () => {
   const { workspaceSlug, projectId } = useParams();
-  const { fetchedProjectIds, getProjectProperties, fetchProjectProperties } = useCustomProperty();
-  const slug = workspaceSlug?.toString();
+  const { getProjectProperties } = useCustomProperty();
   const project = projectId?.toString();
-
-  useEffect(() => {
-    if (slug && project && !fetchedProjectIds[project])
-      void fetchProjectProperties(slug, project).catch(() => undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug, project]);
-
-  return { workspaceSlug: slug, projectId: project, properties: getProjectProperties(project) };
+  return { workspaceSlug: workspaceSlug?.toString(), projectId: project, properties: getProjectProperties(project) };
 };
 
 export const CustomPropertyHeaderColumns = observer(function CustomPropertyHeaderColumns() {
@@ -98,11 +91,15 @@ export const CustomPropertyCells = observer(function CustomPropertyCells(props: 
   );
 });
 
-/** Loads custom property values for the rows on screen. */
+/** Loads the project's custom properties once, and their values for the rows on screen. */
 export const useSpreadsheetCustomPropertyValues = (issueIds: string[]) => {
   const { workspaceSlug, projectId, properties } = useProjectProperties();
-  const { fetchBulkIssueValues } = useCustomProperty();
+  const { ensureProjectProperties, fetchBulkIssueValues } = useCustomProperty();
   const key = issueIds.join(",");
+
+  useEffect(() => {
+    if (workspaceSlug && projectId) void ensureProjectProperties(workspaceSlug, projectId).catch(() => undefined);
+  }, [workspaceSlug, projectId, ensureProjectProperties]);
 
   useEffect(() => {
     if (!workspaceSlug || !projectId || properties.length === 0 || issueIds.length === 0) return;
