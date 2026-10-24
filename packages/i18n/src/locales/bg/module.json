@@ -1,7 +1,0 @@
-{
-  "module": {
-    "label": "{count, plural, one {Модул} other {Модули}}",
-    "no_module": "Без модул",
-    "select": "Добави модули"
-  }
-}

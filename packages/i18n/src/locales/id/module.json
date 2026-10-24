@@ -1,7 +1,0 @@
-{
-  "module": {
-    "label": "{count, plural, one {Modul} other {Modul}}",
-    "no_module": "Tidak ada modul",
-    "select": "Tambah modul"
-  }
-}

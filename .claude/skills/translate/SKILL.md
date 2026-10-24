@@ -14,6 +14,8 @@ user_invocable: true
 
 # Translate (Plane i18n)
 
+> **This deployment ships English only** (`packages/i18n/src/locales/en`). New strings go into the English files and nowhere else. The rules below only matter again if another locale is added back.
+
 Single source of truth for turning English UI strings into every target locale under `packages/i18n/src/locales/`. Follow this skill exactly — every mistake here ships to every user in that language.
 
 The locale list grows over time. This skill is intentionally generic: rules apply to any locale present now or added later. When you add a locale not explicitly named below, see **Adding a locale not documented here** at the bottom.

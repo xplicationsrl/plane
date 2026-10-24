@@ -20,7 +20,7 @@ Migrations: `0126`–`0131` (all new tables, no changes to existing ones). New b
 
 - Backend: 1436 passed. 18 failed, and the same 18 fail on the untouched `production` commit (magic-link auth and attachment storage need env not present locally). New tests: `test_issue_comment_replies_app`, `test_custom_property_app`, `test_time_entry_app`, `test_recurrence_app`, `tests/unit/utils/test_recurrence`, `test_template_app`, `test_intake_form_app`, `test_issue_project_link_app`.
 - Frontend: `check:types` passes for web and space. Lint is clean on touched files. `packages/blocks/src/utils/duration.test.ts` (vitest) passes.
-- Translations: every new string is in all 22 locales. sync-check is clean and ICU/placeholder checks pass.
+- Translations: English only since the other locales were removed. sync-check is clean.
 - **Not done: nobody has clicked through the UI.** There was no browser on the build machine. Check each screen once before release.
 
 ## Since the first handoff
@@ -38,5 +38,5 @@ Migrations: `0126`–`0131` (all new tables, no changes to existing ones). New b
 2. **Real client IPs for rate limits.** The repo now has a fix: Caddy resolves the visitor from `CF-Connecting-IP` and sends the API a single `X-Forwarded-For`, and `setup-host.sh` adds `NUM_PROXIES=1` to `api.env`. Both are root-owned installed copies, so they take effect only after `sudo bash deployments/native/setup-host.sh` is re-run on the server. (Or by hand: copy the Caddyfile to `/etc/caddy/Caddyfile`, run `systemctl reload caddy`, add `NUM_PROXIES=1` to `/opt/plane/shared/api.env`, then restart `plane.target`.) Caveat: port 80 is open directly, so a client that bypasses Cloudflare can still forge `CF-Connecting-IP`.
 3. Not built yet (deliberately scoped out):
    - Shared work items on the target project's boards: those boards group by the target project's own states, so shared items only appear in the shared list.
-4. Ukrainian: "темплейт"/"проджект"/"Плейн" were swept to "шаблон"/"проєкт"/"Xplication". Other transliterations (Воркфлоу, Пейджі, проперті, …) still need a native review.
+4. Languages: the app now ships English only (the other 21 locales were removed), so new strings need English text only.
 5. Deploy: merge into `production` and the GitHub workflow deploys. Remember the old queued run noted earlier (`e28a15e85`) must be cancelled first, or deploys stay stuck.

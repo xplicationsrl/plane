@@ -5,14 +5,16 @@
  */
 
 import { initPromise, i18nInstance } from "./instance";
-import { LANGUAGE_STORAGE_KEY } from "../constants/language";
+import { FALLBACK_LANGUAGE, LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from "../constants/language";
 import type { TLanguage } from "../types";
 
 export async function setLanguage(lng: TLanguage): Promise<void> {
   await initPromise;
-  await i18nInstance.changeLanguage(lng);
+  // Profiles can still hold a language that is no longer shipped; use the default instead
+  const language = SUPPORTED_LANGUAGES.some((option) => option.value === lng) ? lng : FALLBACK_LANGUAGE;
+  await i18nInstance.changeLanguage(language);
   if (typeof window !== "undefined") {
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, lng);
-    document.documentElement.lang = lng;
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+    document.documentElement.lang = language;
   }
 }

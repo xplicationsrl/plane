@@ -4,29 +4,7 @@
  * See the LICENSE file for details.
  */
 
-export type TLanguage =
-  | "en"
-  | "fr"
-  | "es"
-  | "ja"
-  | "zh-CN"
-  | "zh-TW"
-  | "ru"
-  | "it"
-  | "cs"
-  | "sk"
-  | "de"
-  | "ua"
-  | "pl"
-  | "ko"
-  | "pt-BR"
-  | "id"
-  | "ro"
-  | "vi-VN"
-  | "tr-TR"
-  | "ka-ge"
-  | "nl"
-  | "bg";
+export type TLanguage = "en";
 
 export interface ILanguageOption {
   label: string;

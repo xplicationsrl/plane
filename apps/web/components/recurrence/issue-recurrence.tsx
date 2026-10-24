@@ -29,13 +29,10 @@ type Props = {
 const FREQUENCIES: TRecurrenceFrequency[] = ["daily", "weekly", "monthly", "yearly"];
 const WEEKDAYS = [0, 1, 2, 3, 4, 5, 6];
 
-/** Plane locale codes that aren't BCP 47 tags. */
-const INTL_LOCALE: Record<string, string> = { ua: "uk", "ka-ge": "ka" };
-
 /** Short weekday names (0 = Monday) in the UI language. */
 const useWeekdayNames = () => {
   const { currentLocale } = useTranslation();
-  const formatter = new Intl.DateTimeFormat(INTL_LOCALE[currentLocale] ?? currentLocale, { weekday: "short" });
+  const formatter = new Intl.DateTimeFormat(currentLocale, { weekday: "short" });
   // 2024-01-01 was a Monday
   return WEEKDAYS.map((day) => formatter.format(new Date(2024, 0, 1 + day)));
 };
