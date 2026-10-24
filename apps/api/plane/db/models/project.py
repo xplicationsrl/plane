@@ -143,6 +143,8 @@ class Project(ChangeTrackerMixin, BaseModel):
         return f"{self.name} <{self.workspace.name}>"
 
     FORBIDDEN_IDENTIFIER_CHARS_PATTERN = r"^.*[&+,:;$^}{*=?@#|'<>.()%!-].*$"
+    # Project names may contain "-" and "." (e.g. "my-project.v2"); identifiers may not
+    FORBIDDEN_NAME_CHARS_PATTERN = r"^.*[&+,:;$^}{*=?@#|'<>()%!].*$"
 
     class Meta:
         unique_together = [
