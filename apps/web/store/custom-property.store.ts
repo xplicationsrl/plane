@@ -81,13 +81,20 @@ export class CustomPropertyStore implements ICustomPropertyStore {
     this.service = new CustomPropertyService();
   }
 
-  getProjectProperties = computedFn((projectId: string | null | undefined, includeInactive = false) => {
-    if (!projectId) return [];
-    const properties = Object.values(this.propertyMap).filter(
-      (property) => property.project === projectId && (includeInactive || property.is_active)
-    );
-    return sortBy(properties, ["sort_order", "created_at"]);
-  });
+  // computedFn throws unless every call passes the same number of arguments, so the
+  // optional flag is always filled in before reaching it
+  private computeProjectProperties = computedFn(
+    (projectId: string | null | undefined, includeInactive: boolean): TCustomProperty[] => {
+      if (!projectId) return [];
+      const properties = Object.values(this.propertyMap).filter(
+        (property) => property.project === projectId && (includeInactive || property.is_active)
+      );
+      return sortBy(properties, ["sort_order", "created_at"]);
+    }
+  );
+
+  getProjectProperties = (projectId: string | null | undefined, includeInactive = false) =>
+    this.computeProjectProperties(projectId, includeInactive);
 
   getPropertyById = (propertyId: string) => this.propertyMap[propertyId];
 
