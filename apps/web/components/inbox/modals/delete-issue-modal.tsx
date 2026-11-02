@@ -15,7 +15,6 @@ import type { TIssue } from "@plane/types";
 import { ConfirmDialog } from "@plane/blocks/dialog";
 // constants
 // hooks
-import { useProject } from "@/hooks/store/use-project";
 
 type Props = {
   data: Partial<TIssue>;
@@ -33,10 +32,8 @@ export const DeleteInboxIssueModal = observer(function DeleteInboxIssueModal({
   // states
   const [isDeleting, setIsDeleting] = useState(false);
   // store hooks
-  const { getProjectById } = useProject();
   const { t } = useTranslation();
   // derived values
-  const projectDetails = data.project_id ? getProjectById(data?.project_id) : undefined;
 
   const handleClose = () => {
     setIsDeleting(false);
@@ -78,9 +75,7 @@ export const DeleteInboxIssueModal = observer(function DeleteInboxIssueModal({
       content={
         <>
           Are you sure you want to delete work item{" "}
-          <span className="font-medium break-words text-primary">
-            {projectDetails?.identifier}-{data?.sequence_id}
-          </span>
+          <span className="font-medium break-words text-primary">{data?.name}</span>
           {""}? The work item will only be deleted from the intake and this action cannot be undone.
         </>
       }

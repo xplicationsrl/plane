@@ -135,7 +135,7 @@ export const ProjectMultiSelectModal = observer(function ProjectMultiSelectModal
                     >
                       <Logo logo={projectDetails.logo_props} size={14} />
                       <p className="truncate text-11 text-tertiary transition-colors group-hover:text-secondary">
-                        {projectDetails.identifier}
+                        {projectDetails.name}
                       </p>
                       <CloseOutline className="size-3 flex-shrink-0 text-placeholder transition-colors group-hover:text-secondary" />
                     </button>
@@ -164,12 +164,7 @@ export const ProjectMultiSelectModal = observer(function ProjectMultiSelectModal
                         value={projectDetails.id}
                         selection="checkbox"
                         label={projectDetails.name}
-                        icon={
-                          <span className="flex shrink-0 items-center gap-2.5">
-                            <Logo logo={projectDetails.logo_props} size={16} />
-                            <span className="shrink-0 text-10">{projectDetails.identifier}</span>
-                          </span>
-                        }
+                        icon={<Logo logo={projectDetails.logo_props} size={16} />}
                       />
                     );
                   })}

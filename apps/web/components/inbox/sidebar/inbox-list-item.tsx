@@ -4,6 +4,7 @@
  * See the LICENSE file for details.
  */
 
+import { ProjectName } from "@/components/issues/issue-detail/issue-identifier";
 import type { MouseEvent } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
@@ -70,8 +71,8 @@ export const InboxIssueListItem = observer(function InboxIssueListItem(props: In
         >
           <div className="space-y-1">
             <div className="relative flex items-center justify-between gap-2">
-              <div className="flex-shrink-0 text-11 font-medium text-tertiary">
-                {projectIdentifier}-{issue.sequence_id}
+              <div className="min-w-0 truncate text-11 font-medium text-tertiary">
+                <ProjectName projectId={issue.project_id} fallback={projectIdentifier} />
               </div>
               <div className="flex items-center gap-2">
                 {inboxIssue.status !== -2 && <InboxIssueStatus inboxIssue={inboxIssue} iconSize={12} />}

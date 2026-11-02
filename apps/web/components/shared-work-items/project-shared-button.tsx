@@ -4,6 +4,7 @@
  * See the LICENSE file for details.
  */
 
+import { ProjectName } from "@/components/issues/issue-detail/issue-identifier";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 // plane imports
@@ -38,8 +39,8 @@ function SharedRow(props: { item: TSharedWorkItem; workspaceSlug: string; onOpen
         style={{ backgroundColor: item.state?.color ?? "transparent" }}
         title={item.state?.name}
       />
-      <span className="flex-shrink-0 text-caption-sm-medium text-tertiary">
-        {item.project_identifier}-{item.sequence_id}
+      <span className="max-w-52 flex-shrink-0 truncate text-caption-sm-medium text-tertiary">
+        <ProjectName projectId={item.project_id} fallback={item.project_identifier} />
       </span>
       <span className="min-w-0 flex-1 truncate text-body-xs-regular text-primary">{item.name}</span>
       {item.target_date && (

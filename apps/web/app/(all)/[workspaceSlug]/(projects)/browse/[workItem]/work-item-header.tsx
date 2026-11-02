@@ -25,7 +25,7 @@ export const WorkItemDetailsHeader = observer(function WorkItemDetailsHeader() {
   // router
   const { workspaceSlug, workItem } = useParams();
   // store hooks
-  const { getProjectById, loader } = useProject();
+  const { loader } = useProject();
   const {
     issue: { getIssueById, getIssueIdByIdentifier },
   } = useIssueDetail();
@@ -34,7 +34,6 @@ export const WorkItemDetailsHeader = observer(function WorkItemDetailsHeader() {
   const issueDetails = issueId ? getIssueById(issueId.toString()) : undefined;
   const projectId = issueDetails ? issueDetails?.project_id : undefined;
   const projectCrumb = useProjectCrumbProps(workspaceSlug?.toString(), projectId?.toString());
-  const projectDetails = projectId ? getProjectById(projectId?.toString()) : undefined;
 
   if (!workspaceSlug || !projectId || !issueId) return null;
   return (
@@ -55,13 +54,7 @@ export const WorkItemDetailsHeader = observer(function WorkItemDetailsHeader() {
               />
             }
           />
-          <Breadcrumbs.Item
-            component={
-              <BreadcrumbLink
-                label={projectDetails && issueDetails ? `${projectDetails.identifier}-${issueDetails.sequence_id}` : ""}
-              />
-            }
-          />
+          <Breadcrumbs.Item component={<BreadcrumbLink label={issueDetails?.name ?? ""} />} />
         </Breadcrumbs>
       </Header.LeftItem>
       <Header.RightItem>

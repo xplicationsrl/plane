@@ -6,7 +6,12 @@
 
 import { setToast } from "@plane/blocks/toast";
 import { Tooltip } from "@makeplane/propel/components/tooltip";
-import type { TIdentifierTextProps, TIdentifierTextVariant, TIssueIdentifierSize } from "@plane/types";
+import type {
+  TIdentifierTextProps,
+  TIdentifierTextVariant,
+  TIssueIdentifierSize,
+  TProjectNameTextProps,
+} from "@plane/types";
 import { cn } from "@plane/utils";
 
 const SIZE_MAP: Record<TIssueIdentifierSize, string> = {
@@ -24,6 +29,18 @@ const VARIANT_MAP: Record<TIdentifierTextVariant, string> = {
   "primary-subtle": "text-primary/80",
   success: "text-success-primary",
 };
+
+export function ProjectNameText(props: TProjectNameTextProps) {
+  const { projectName, size = "lg", variant = "default" } = props;
+
+  return (
+    <Tooltip label={projectName}>
+      <span className={cn("block max-w-52 truncate text-12 font-medium", SIZE_MAP[size], VARIANT_MAP[variant])}>
+        {projectName}
+      </span>
+    </Tooltip>
+  );
+}
 
 export function IdentifierText(props: TIdentifierTextProps) {
   const { identifier, enableClickToCopyIdentifier = false, size = "lg", variant = "default" } = props;

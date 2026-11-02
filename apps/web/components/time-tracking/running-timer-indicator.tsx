@@ -40,7 +40,7 @@ export const RunningTimerIndicator = observer(function RunningTimerIndicator(pro
   if (!running) return null;
 
   const detail = running.issue_detail;
-  const label = detail ? `${detail.project_identifier}-${detail.sequence_id}` : "";
+  const label = detail?.name ?? "";
   const href = detail
     ? generateWorkItemLink({
         workspaceSlug,

@@ -18,7 +18,6 @@ import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useProject } from "@/hooks/store/use-project";
 import { usePlatformOS } from "@/hooks/use-platform-os";
 // components
-import { IssueIdentifier } from "@/components/issues/issue-detail/issue-identifier";
 // local imports
 import { ParentIssuesListModal } from "../parent-issues-list-modal";
 
@@ -94,14 +93,9 @@ export const IssueParentSelect = observer(function IssueParentSelect(props: TIss
             <Tooltip label={`Title: ${parentIssue.name}`} layout="stacked" disabled={isMobile}>
               <Link href={workItemLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                 {parentIssue?.project_id && parentIssueProjectDetails && (
-                  <IssueIdentifier
-                    projectId={parentIssue.project_id}
-                    issueTypeId={parentIssue.type_id}
-                    projectIdentifier={parentIssueProjectDetails?.identifier}
-                    issueSequenceId={parentIssue.sequence_id}
-                    size="xs"
-                    variant="secondary"
-                  />
+                  <span className="block max-w-40 truncate text-caption-sm-medium text-secondary">
+                    {parentIssue.name}
+                  </span>
                 )}
               </Link>
             </Tooltip>

@@ -102,8 +102,8 @@ export function SelectDuplicateInboxIssueModal(props: Props) {
                       backgroundColor: issue.state__color || "",
                     }}
                   />
-                  <span className="flex-shrink-0 text-11 text-secondary">
-                    {getProjectById(issue?.project_id)?.identifier}-{issue.sequence_id}
+                  <span className="max-w-52 flex-shrink-0 truncate text-11 text-secondary">
+                    {getProjectById(issue?.project_id)?.name}
                   </span>
                 </span>
               }

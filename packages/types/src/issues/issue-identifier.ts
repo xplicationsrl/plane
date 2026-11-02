@@ -35,6 +35,12 @@ export type TIssueTypeIdentifier = {
   size?: TIssueIdentifierSize;
 };
 
+export type TProjectNameTextProps = {
+  projectName: string;
+  size?: TIssueIdentifierSize;
+  variant?: TIdentifierTextVariant;
+};
+
 export type TIdentifierTextProps = {
   identifier: string;
   enableClickToCopyIdentifier?: boolean;

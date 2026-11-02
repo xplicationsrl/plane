@@ -55,7 +55,7 @@
     "display": {
       "properties": {
         "label": "Display Properties",
-        "id": "ID",
+        "id": "Project",
         "issue_type": "Work item Type",
         "sub_issue_count": "Sub-work item count",
         "attachment_count": "Attachment count",

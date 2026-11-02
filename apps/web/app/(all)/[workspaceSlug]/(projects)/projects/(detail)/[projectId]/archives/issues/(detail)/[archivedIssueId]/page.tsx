@@ -44,7 +44,7 @@ function ArchivedIssueDetailsPage({ params }: Route.ComponentProps) {
   // derived values
   const issue = getIssueById(archivedIssueId);
   const project = issue ? getProjectById(issue?.project_id ?? "") : undefined;
-  const pageTitle = project && issue ? `${project?.identifier}-${issue?.sequence_id} ${issue?.name}` : undefined;
+  const pageTitle = project && issue ? issue?.name : undefined;
 
   if (!issue) return <></>;
 

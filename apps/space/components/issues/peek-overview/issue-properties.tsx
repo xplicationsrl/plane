@@ -58,9 +58,7 @@ export const PeekOverviewIssueProperties = observer(function PeekOverviewIssuePr
     <div className={mode === "full" ? "divide-y divide-subtle-1" : ""}>
       {mode === "full" && (
         <div className="flex justify-between gap-2 pb-3">
-          <h6 className="flex items-center gap-2 font-medium">
-            {project_details?.identifier}-{issueDetails.sequence_id}
-          </h6>
+          <h6 className="flex items-center gap-2 font-medium">{project_details?.name}</h6>
           <div className="flex items-center gap-2">
             <button type="button" onClick={handleCopyLink} className="-rotate-45">
               <LinkOutline className="size-3.5 shrink-0" />

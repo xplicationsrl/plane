@@ -15,7 +15,7 @@ export const KanbanQuickAddIssueForm = observer(function KanbanQuickAddIssueForm
     <div className="m-1 overflow-hidden rounded-sm bg-layer-2 shadow-raised-200">
       <form ref={ref} onSubmit={onSubmit} className="flex w-full items-center gap-x-3 p-3">
         <div className="w-full">
-          <h4 className="text-11 leading-5 font-medium text-tertiary">{projectDetail?.identifier ?? "..."}</h4>
+          <h4 className="truncate text-11 leading-5 font-medium text-tertiary">{projectDetail?.name ?? "..."}</h4>
           <input
             autoComplete="off"
             placeholder={isEpic ? t("epic.title.label") : t("issue.title.label")}

@@ -11,7 +11,6 @@ import type { TIssue } from "@plane/types";
 // ui
 import { ConfirmDialog } from "@plane/blocks/dialog";
 // hooks
-import { useProject } from "@/hooks/store/use-project";
 
 type Props = {
   data: Partial<TIssue>;
@@ -25,10 +24,8 @@ export function DeclineIssueModal(props: Props) {
   // states
   const [isDeclining, setIsDeclining] = useState(false);
   // store hooks
-  const { getProjectById } = useProject();
   const { t } = useTranslation();
   // derived values
-  const projectDetails = data.project_id ? getProjectById(data?.project_id) : undefined;
 
   const handleClose = () => {
     setIsDeclining(false);
@@ -57,9 +54,7 @@ export function DeclineIssueModal(props: Props) {
       content={
         <>
           Are you sure you want to decline work item{" "}
-          <span className="font-medium break-words text-primary">
-            {projectDetails?.identifier}-{data?.sequence_id}
-          </span>
+          <span className="font-medium break-words text-primary">{data?.name}</span>
           {""}? This action cannot be undone.
         </>
       }

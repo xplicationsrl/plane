@@ -45,9 +45,7 @@ export function IssueLink(props: TIssueLink) {
         rel={activity.issue === null ? "" : "noopener noreferrer"}
         className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
       >
-        {activity.issue_detail
-          ? `${activity.project_detail.identifier}-${activity.issue_detail.sequence_id}`
-          : "Work items"}{" "}
+        {activity.issue_detail ? activity.project_detail.name : "Work items"}{" "}
         <span className="font-regular">{activity.issue_detail?.name}</span>
       </a>
     </Tooltip>

@@ -7,7 +7,7 @@
 import { useCallback } from "react";
 import { useTranslation } from "@plane/i18n";
 import type { ToastActionItem } from "@plane/blocks/toast";
-import { copyTextToClipboard, copyUrlToClipboard, generateWorkItemLink } from "@plane/utils";
+import { copyUrlToClipboard, generateWorkItemLink } from "@plane/utils";
 // hooks
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useProject } from "@/hooks/store/use-project";
@@ -40,7 +40,6 @@ export function useCreateIssueToastActions() {
       const hasIdentifier = !!(projectIdentifier && issue.sequence_id);
       if (!hasIdentifier) return [];
 
-      const identifier = `${projectIdentifier}-${issue.sequence_id}`;
       const workItemLink = generateWorkItemLink({
         workspaceSlug,
         projectId: issue.project_id,
@@ -51,20 +50,13 @@ export function useCreateIssueToastActions() {
       });
       if (!workItemLink) return [];
 
-      // Propel renders two left actions plus one right-aligned `primary`, so all three fit: view
-      // takes the primary slot (it is the call to action on a success toast) and the two copy
-      // affordances the old markup offered stay in the left cluster.
+      // View takes the right-aligned `primary` slot (it is the call to action on a success toast)
+      // and copy link stays on the left.
       return [
         {
           label: t("common.actions.copy_link"),
           onClick: () => {
             void copyUrlToClipboard(workItemLink);
-          },
-        },
-        {
-          label: identifier,
-          onClick: () => {
-            void copyTextToClipboard(identifier);
           },
         },
         { label: t("common.view"), href: workItemLink, target: "_blank", primary: true },

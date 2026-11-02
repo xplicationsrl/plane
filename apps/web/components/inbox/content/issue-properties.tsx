@@ -206,7 +206,7 @@ export const InboxIssueContentProperties = observer(function InboxIssueContentPr
                 >
                   <Tooltip label={duplicateIssueDetails?.name ?? ""} layout="stacked">
                     <span className="flex cursor-pointer items-center gap-1 rounded-sm bg-layer-1 px-1.5 py-1 pb-0.5 text-11 text-secondary">
-                      {`${currentProjectDetails?.identifier}-${duplicateIssueDetails?.sequence_id}`}
+                      {duplicateIssueDetails?.name}
                     </span>
                   </Tooltip>
                 </ControlLink>

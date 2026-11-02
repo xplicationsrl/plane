@@ -50,8 +50,6 @@ export const IssueBlock = observer(function IssueBlock(props: IssueBlockProps) {
 
   if (!issue) return null;
 
-  const projectIdentifier = project_details?.identifier;
-
   return (
     <div
       ref={issueRef}
@@ -67,8 +65,8 @@ export const IssueBlock = observer(function IssueBlock(props: IssueBlockProps) {
         <div className="flex grow items-center gap-0.5 truncate">
           <div className="flex items-center gap-1">
             {displayProperties && displayProperties?.key && (
-              <div className="shrink-0 px-4 text-11 font-medium text-tertiary">
-                {projectIdentifier}-{issue.sequence_id}
+              <div className="max-w-52 shrink-0 truncate px-4 text-11 font-medium text-tertiary">
+                {project_details?.name}
               </div>
             )}
           </div>

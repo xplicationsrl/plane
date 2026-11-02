@@ -4,6 +4,7 @@
  * See the LICENSE file for details.
  */
 
+import { ProjectName } from "@/components/issues/issue-detail/issue-identifier";
 import { useRouter } from "next/navigation";
 import { Avatar } from "@makeplane/propel/components/avatar";
 import { Logo } from "@plane/blocks/emoji-icon-picker";
@@ -52,8 +53,8 @@ export function RecentPage(props: BlockProps) {
             )}
           </div>
           {pageDetails?.project_identifier && (
-            <div className="text-13 font-medium whitespace-nowrap text-placeholder">
-              {pageDetails?.project_identifier}
+            <div className="max-w-52 truncate text-13 font-medium text-placeholder">
+              <ProjectName projectId={pageDetails?.project_id} fallback={pageDetails?.project_identifier} />
             </div>
           )}
         </div>

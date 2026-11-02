@@ -13,7 +13,6 @@ import { setToast } from "@plane/blocks/toast";
 import type { TDeDupeIssue, TIssue } from "@plane/types";
 // hooks
 import { useIssues } from "@/hooks/store/use-issues";
-import { useProject } from "@/hooks/store/use-project";
 
 type Props = {
   data?: TIssue | TDeDupeIssue;
@@ -29,13 +28,11 @@ export function ArchiveIssueModal(props: Props) {
   // states
   const [isArchiving, setIsArchiving] = useState(false);
   // store hooks
-  const { getProjectById } = useProject();
   const { issueMap } = useIssues();
 
   if (!dataId && !data) return null;
 
   const issue = data ? data : issueMap[dataId!];
-  const projectDetails = getProjectById(issue.project_id);
 
   const onClose = () => {
     setIsArchiving(false);
@@ -72,7 +69,7 @@ export function ArchiveIssueModal(props: Props) {
       handleSubmit={handleArchiveIssue}
       isSubmitting={isArchiving}
       variant="primary"
-      title={`${t("issue.archive.label")} ${projectDetails?.identifier ?? ""} ${issue.sequence_id}`}
+      title={`${t("issue.archive.label")} ${issue.name ?? ""}`}
       content={t("issue.archive.confirm_message")}
       primaryButtonText={{ loading: t("common.archiving"), default: t("common.archive") }}
       secondaryButtonText={t("common.cancel")}

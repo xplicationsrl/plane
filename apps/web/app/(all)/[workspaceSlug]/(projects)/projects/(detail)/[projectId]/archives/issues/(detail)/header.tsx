@@ -31,7 +31,7 @@ export const ProjectArchivedIssueDetailsHeader = observer(function ProjectArchiv
   const { workspaceSlug, projectId, archivedIssueId } = useParams();
   const projectCrumb = useProjectCrumbProps(workspaceSlug?.toString(), projectId?.toString());
   // store hooks
-  const { currentProjectDetails, loader } = useProject();
+  const { loader } = useProject();
 
   const { data: issueDetails } = useSWR(
     workspaceSlug && projectId && archivedIssueId ? ISSUE_DETAILS(archivedIssueId.toString()) : null,
@@ -67,17 +67,7 @@ export const ProjectArchivedIssueDetailsHeader = observer(function ProjectArchiv
               />
             }
           />
-          <Breadcrumbs.Item
-            component={
-              <BreadcrumbLink
-                label={
-                  currentProjectDetails && issueDetails
-                    ? `${currentProjectDetails.identifier}-${issueDetails.sequence_id}`
-                    : ""
-                }
-              />
-            }
-          />
+          <Breadcrumbs.Item component={<BreadcrumbLink label={issueDetails?.name ?? ""} />} />
         </Breadcrumbs>
       </Header.LeftItem>
       <Header.RightItem>

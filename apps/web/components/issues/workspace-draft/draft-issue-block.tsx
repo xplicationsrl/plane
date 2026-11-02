@@ -20,7 +20,7 @@ import { useAppTheme } from "@/hooks/store/use-app-theme";
 import { useProject } from "@/hooks/store/use-project";
 import { useWorkspaceDraftIssues } from "@/hooks/store/workspace-draft";
 // local imports
-import { IdentifierText } from "../issue-detail/identifier-text";
+import { ProjectNameText } from "../issue-detail/identifier-text";
 import { CreateUpdateIssueModal } from "../issue-modal/modal";
 import { WorkspaceDraftIssueDeleteIssueModal } from "./delete-modal";
 import { DraftIssueProperties } from "./draft-issue-properties";
@@ -42,7 +42,7 @@ export const DraftIssueBlock = observer(function DraftIssueBlock(props: Props) {
   // hooks
   const { getIssueById, updateIssue, deleteIssue } = useWorkspaceDraftIssues();
   const { sidebarCollapsed: isSidebarCollapsed } = useAppTheme();
-  const { getProjectIdentifierById } = useProject();
+  const { getProjectIdentifierById, getPartialProjectById } = useProject();
   // ref
   const issueRef = useRef<HTMLDivElement | null>(null);
   // derived values
@@ -145,9 +145,8 @@ export const DraftIssueBlock = observer(function DraftIssueBlock(props: Props) {
                 <div className="flex-shrink-0">
                   {issue.project_id && (
                     <div className="flex items-center space-x-2">
-                      <IdentifierText
-                        identifier={projectIdentifier}
-                        enableClickToCopyIdentifier
+                      <ProjectNameText
+                        projectName={getPartialProjectById(issue.project_id)?.name ?? projectIdentifier}
                         size="xs"
                         variant="tertiary"
                       />

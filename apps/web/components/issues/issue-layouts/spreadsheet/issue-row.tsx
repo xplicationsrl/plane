@@ -286,8 +286,8 @@ const IssueRowDetails = observer(function IssueRowDetails(props: IssueRowDetails
           >
             {/* Identifier section - conditionally rendered */}
             {displayProperties?.key && (
-              <div className="flex h-full min-w-24 flex-shrink-0 items-center">
-                <div className="relative flex cursor-pointer items-center text-11 hover:text-primary">
+              <div className="flex h-full w-28 flex-shrink-0 items-center md:w-52">
+                <div className="relative w-full cursor-pointer text-11 hover:text-primary">
                   {issueDetail.project_id && (
                     <IssueIdentifier
                       issueId={issueDetail.id}

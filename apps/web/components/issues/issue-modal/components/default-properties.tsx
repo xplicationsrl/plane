@@ -29,7 +29,6 @@ import { ModuleSelect } from "@/components/dropdowns/module/module-select";
 import { PrioritySelect } from "@/components/dropdowns/priority/priority-select";
 import { StateSelect } from "@/components/dropdowns/state/state-select";
 import { ParentIssuesListModal } from "@/components/issues/parent-issues-list-modal";
-import { IssueIdentifier } from "@/components/issues/issue-detail/issue-identifier";
 // hooks
 import { useProjectEstimates } from "@/hooks/store/estimates";
 import { useProject } from "@/hooks/store/use-project";
@@ -267,13 +266,7 @@ export const IssueDefaultProperties = observer(function IssueDefaultProperties(p
               // `PillChrome` renders its own `<button type="button">`, which becomes the menu trigger.
               <PillChrome size="sm" variant="outline">
                 {selectedParentIssue?.project_id && (
-                  <IssueIdentifier
-                    projectId={selectedParentIssue.project_id}
-                    issueTypeId={selectedParentIssue.type_id}
-                    projectIdentifier={selectedParentIssue?.project__identifier}
-                    issueSequenceId={selectedParentIssue.sequence_id}
-                    size="xs"
-                  />
+                  <span className="block max-w-40 truncate">{selectedParentIssue.name}</span>
                 )}
               </PillChrome>
             }

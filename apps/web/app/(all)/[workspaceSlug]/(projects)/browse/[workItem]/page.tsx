@@ -62,7 +62,7 @@ export const IssueDetailsPage = observer(function IssueDetailsPage({ params }: R
   const issue = getIssueById(issueId?.toString() || "") || undefined;
   const project = (issue?.project_id && getProjectById(issue?.project_id)) || undefined;
   const issueLoader = !issue || isLoading;
-  const pageTitle = project && issue ? `${project?.identifier}-${issue?.sequence_id} ${issue?.name}` : undefined;
+  const pageTitle = project && issue ? issue?.name : undefined;
 
   useWorkItemProperties(
     projectId,

@@ -4,6 +4,7 @@
  * See the LICENSE file for details.
  */
 
+import { ProjectName } from "@/components/issues/issue-detail/issue-identifier";
 import { useState } from "react";
 import { observer } from "mobx-react";
 import { ClockOutline } from "@makeplane/propel/icons";
@@ -119,7 +120,8 @@ export const NotificationItem = observer(function NotificationItem(props: TNotif
 
           <div className="relative flex items-center gap-3 text-caption-sm-regular text-secondary">
             <div className="line-clamp-1 w-full truncate overflow-hidden break-words whitespace-normal">
-              {notification?.data?.issue?.identifier}-{notification?.data?.issue?.sequence_id}&nbsp;
+              <ProjectName projectId={notification?.project} fallback={notification?.data?.issue?.identifier} />
+              &nbsp;
               {notification?.data?.issue?.name}
             </div>
             <div className="flex-shrink-0">

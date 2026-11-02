@@ -23,7 +23,7 @@ import type {
 import { generateWorkItemLink } from "@plane/utils";
 // components
 import type { TPowerKSearchResultsKeys } from "@/components/power-k/core/types";
-import { IssueIdentifier } from "@/components/issues/issue-detail/issue-identifier";
+import { IssueIdentifier, ProjectName } from "@/components/issues/issue-detail/issue-identifier";
 
 export type TPowerKSearchResultGroupDetails = {
   icon?: React.ComponentType<{ className?: string }>;
@@ -37,7 +37,10 @@ export const POWER_K_SEARCH_RESULTS_GROUPS_MAP: Record<TPowerKSearchResultsKeys,
     icon: CyclesOutline,
     itemName: (cycle: IWorkspaceDefaultSearchResult) => (
       <p>
-        <span className="text-11 text-tertiary">{cycle.project__identifier}</span> {cycle.name}
+        <span className="text-11 text-tertiary">
+          <ProjectName projectId={cycle.project_id} fallback={cycle.project__identifier} />
+        </span>{" "}
+        {cycle.name}
       </p>
     ),
     path: (cycle: IWorkspaceDefaultSearchResult) =>
@@ -71,7 +74,10 @@ export const POWER_K_SEARCH_RESULTS_GROUPS_MAP: Record<TPowerKSearchResultsKeys,
     icon: WorkItemsOutline,
     itemName: (view: IWorkspaceDefaultSearchResult) => (
       <p>
-        <span className="text-11 text-tertiary">{view.project__identifier}</span> {view.name}
+        <span className="text-11 text-tertiary">
+          <ProjectName projectId={view.project_id} fallback={view.project__identifier} />
+        </span>{" "}
+        {view.name}
       </p>
     ),
     path: (view: IWorkspaceDefaultSearchResult) =>
@@ -82,7 +88,10 @@ export const POWER_K_SEARCH_RESULTS_GROUPS_MAP: Record<TPowerKSearchResultsKeys,
     icon: ModuleOutline,
     itemName: (module: IWorkspaceDefaultSearchResult) => (
       <p>
-        <span className="text-11 text-tertiary">{module.project__identifier}</span> {module.name}
+        <span className="text-11 text-tertiary">
+          <ProjectName projectId={module.project_id} fallback={module.project__identifier} />
+        </span>{" "}
+        {module.name}
       </p>
     ),
     path: (module: IWorkspaceDefaultSearchResult) =>
@@ -93,7 +102,10 @@ export const POWER_K_SEARCH_RESULTS_GROUPS_MAP: Record<TPowerKSearchResultsKeys,
     icon: DocumentationOutline,
     itemName: (page: IWorkspacePageSearchResult) => (
       <p>
-        <span className="text-11 text-tertiary">{page.project__identifiers?.[0]}</span> {page.name}
+        <span className="text-11 text-tertiary">
+          <ProjectName projectId={page.project_ids?.[0]} fallback={page.project__identifiers?.[0]} />
+        </span>{" "}
+        {page.name}
       </p>
     ),
     path: (page: IWorkspacePageSearchResult, projectId: string | undefined) => {

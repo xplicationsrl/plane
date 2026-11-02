@@ -16,7 +16,7 @@ import { calculateTimeAgo, generateWorkItemLink } from "@plane/utils";
 // components
 import { ListItem } from "@/components/core/list";
 import { MemberSelect } from "@/components/dropdowns/member/member-select";
-import { IssueIdentifier } from "@/components/issues/issue-detail/issue-identifier";
+import { IssueIdentifier, ProjectName } from "@/components/issues/issue-detail/issue-identifier";
 // hooks
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useProject } from "@/hooks/store/use-project";
@@ -85,8 +85,8 @@ export const RecentIssue = observer(function RecentIssue(props: BlockProps) {
               <div className="grid size-8 flex-shrink-0 place-items-center rounded-sm bg-layer-2">
                 <WorkItemsOutline className="size-4 text-tertiary" />
               </div>
-              <div className="text-13 font-medium whitespace-nowrap text-placeholder">
-                {issueDetails?.project_identifier}-{issueDetails?.sequence_id}
+              <div className="max-w-52 truncate text-13 font-medium text-placeholder">
+                <ProjectName projectId={issueDetails?.project_id} fallback={issueDetails?.project_identifier} />
               </div>
             </div>
           )}

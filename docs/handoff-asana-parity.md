@@ -1,6 +1,6 @@
-# Handoff: Asana-parity work item features (`feat/asana-parity`)
+# Handoff: Asana-parity work item features
 
-Branch `feat/asana-parity`. Merged into `production` at `0edc95971` (deployed); later commits on the branch are not merged yet.
+All of this work is on `production` and deployed (last Asana-parity commit `53924f06d`, 2026-10-24). The `feat/asana-parity` branch was merged and deleted; new work goes on branches off `production`.
 
 ## Done (one commit per feature)
 
@@ -18,7 +18,7 @@ Migrations: `0126`–`0131` (all new tables, no changes to existing ones). New b
 
 ## Verification
 
-- Backend: 1436 passed. 18 failed, and the same 18 fail on the untouched `production` commit (magic-link auth and attachment storage need env not present locally). New tests: `test_issue_comment_replies_app`, `test_custom_property_app`, `test_time_entry_app`, `test_recurrence_app`, `tests/unit/utils/test_recurrence`, `test_template_app`, `test_intake_form_app`, `test_issue_project_link_app`.
+- Backend: full suite 1490 passed, 0 failed (Docker test stack, after the correctness pass). New tests: `test_issue_comment_replies_app`, `test_custom_property_app`, `test_time_entry_app`, `test_recurrence_app`, `tests/unit/utils/test_recurrence`, `test_template_app`, `test_intake_form_app`, `test_issue_project_link_app`.
 - Frontend: `check:types` passes for web and space. Lint is clean on touched files. `packages/blocks/src/utils/duration.test.ts` (vitest) passes.
 - Translations: English only since the other locales were removed. sync-check is clean.
 - **Not done: nobody has clicked through the UI.** There was no browser on the build machine. Check each screen once before release.
@@ -31,7 +31,8 @@ Migrations: `0126`–`0131` (all new tables, no changes to existing ones). New b
 - `67b874509` Custom properties as spreadsheet columns (project-level layouts), editable in place.
 - Custom property filters (single/multi select, checkbox, people, and dates on a day or in a range) in project filters, evaluated server-side via `customproperty_<id>__in|exact|range` keys. Text/URL ("contains") and number ("is" / "between", open-ended ranges allowed) filters added on top, with new `text`, `number` and `number_range` filter inputs and a `contains` operator in the rich-filter system.
 - Backend correctness pass (`7f27a931c`): worker and public-form rows keep their creator (`save(created_by_id=...)`); recurrences skip archived work items and archived/deleted projects, and a rule is deactivated after 5 failed spawns in a row (Redis counter, no migration); the "next due" preview uses the same helper as the spawn; template apply drops stale select values and doesn't duplicate sub-items on a second apply; project templates no longer hard-delete states used by trashed work items and always leave a default state; custom property names match case-insensitively; hidden properties can't be written; custom property filters are scoped to the view's project/workspace and skip non-numeric rows.
-- Merged into `production` at `0edc95971` and deployed. Migrations `0126`–`0131` and the beat task are confirmed on the live database.
+- Frontend pass (`2bd48f711`): a project's custom properties load once (in-flight requests shared) instead of once per spreadsheet row; bulk custom values go 100 ids per request (URL length); the running-timer clock is a leaf component so only it re-renders each second; no duplicate running-timer or template fetches; comment replies grouped in a store `computedFn`. Fixes: values and sub-items refresh after a template is applied; "No template" restores the prefilled fields; optimistic custom value edits roll back only the edited key; shared-items lists refresh after linking; the template edit modal keeps edits across refetches; the public form shows a retryable error on 5xx/network failures; URL values link only for http(s); quick-add closes on navigation.
+- Merged into `production` and deployed (`53924f06d`). Migrations `0126`–`0131` and the beat task are confirmed on the live database. The correctness and frontend passes need no migrations.
 
 ## Left to do
 
@@ -40,4 +41,6 @@ Migrations: `0126`–`0131` (all new tables, no changes to existing ones). New b
 3. Not built yet (deliberately scoped out):
    - Shared work items on the target project's boards: those boards group by the target project's own states, so shared items only appear in the shared list.
 4. Languages: the app now ships English only (the other 21 locales were removed), so new strings need English text only.
-5. Deploy: merge into `production` and the GitHub workflow deploys. Remember the old queued run noted earlier (`e28a15e85`) must be cancelled first, or deploys stay stuck.
+5. Deploy: every push to `production` deploys through the GitHub workflow. The old stuck queued runs have been cancelled; nothing is blocking deploys.
+6. Uploads: the API caps uploads at `FILE_SIZE_LIMIT` (bytes; 5 MB by default), separately from Caddy's 250MB `max_size`. It is set to 100 MB (`104857600`, the Cloudflare Free/Pro request limit) in the source `api.env`; on the server it goes in `/opt/plane/shared/api.env`, followed by `systemctl restart plane.target`.
+7. Pre-commit hook: installing dependencies enables husky (`core.hooksPath=.husky/_`), which runs `pnpm lint-staged` and needs Node 22.22 and pnpm 11.10.0. The build machine has Node 20 and no pnpm, so the hook is currently off there (`core.hooksPath` unset). Run `oxfmt` and `oxlint --deny-warnings` on changed files by hand before committing.
