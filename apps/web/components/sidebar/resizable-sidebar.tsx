@@ -193,7 +193,7 @@ export function ResizableSidebar({
         }}
         role="complementary"
         aria-label="Main sidebar"
-        data-prevent-outside-click={isMobile}
+        data-prevent-outside-click={isMobile || undefined}
       >
         <aside
           className={cn(
