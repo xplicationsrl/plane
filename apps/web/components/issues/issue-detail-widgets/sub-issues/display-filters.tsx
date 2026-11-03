@@ -38,10 +38,14 @@ export const SubIssueDisplayFilters = observer(function SubIssueDisplayFilters(p
     displayFilters,
   } = props;
 
-  const isFilterApplied = useMemo(
-    () => isDisplayFiltersApplied({ displayProperties, displayFilters }),
-    [displayProperties, displayFilters]
-  );
+  const isFilterApplied = useMemo(() => {
+    // Manual is the default order here, not -created_at as in the project lists
+    const { order_by, ...otherDisplayFilters } = displayFilters;
+    return (
+      isDisplayFiltersApplied({ displayProperties, displayFilters: otherDisplayFilters }) ||
+      (!!order_by && order_by !== "sort_order")
+    );
+  }, [displayProperties, displayFilters]);
 
   return (
     <>

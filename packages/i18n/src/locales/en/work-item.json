@@ -277,11 +277,27 @@
       "completed": "Completed"
     }
   },
+  "work_item_color": {
+    "label": "Color",
+    "set": "Set color",
+    "none": "No color",
+    "red": "Red",
+    "orange": "Orange",
+    "yellow": "Yellow",
+    "green": "Green",
+    "teal": "Teal",
+    "blue": "Blue",
+    "purple": "Purple",
+    "pink": "Pink"
+  },
   "sub_work_item": {
     "update": {
       "success": "Sub-work item updated successfully",
       "error": "Error updating sub-work item"
     },
+    "move_up": "Move up",
+    "move_down": "Move down",
+    "reorder_error": "Couldn't save the new order",
     "remove": {
       "success": "Sub-work item removed successfully",
       "error": "Error removing sub-work item"

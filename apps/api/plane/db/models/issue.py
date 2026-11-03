@@ -111,6 +111,16 @@ class Issue(ChangeTrackerMixin, ProjectBaseModel):
         ("low", "Low"),
         ("none", "None"),
     )
+    COLOR_CHOICES = (
+        ("red", "Red"),
+        ("orange", "Orange"),
+        ("yellow", "Yellow"),
+        ("green", "Green"),
+        ("teal", "Teal"),
+        ("blue", "Blue"),
+        ("purple", "Purple"),
+        ("pink", "Pink"),
+    )
     parent = models.ForeignKey(
         "self",
         on_delete=models.CASCADE,
@@ -156,6 +166,7 @@ class Issue(ChangeTrackerMixin, ProjectBaseModel):
     sequence_id = models.IntegerField(default=1, verbose_name="Issue Sequence ID")
     labels = models.ManyToManyField("db.Label", blank=True, related_name="labels", through="IssueLabel")
     sort_order = models.FloatField(default=65535)
+    color_code = models.CharField(max_length=16, choices=COLOR_CHOICES, null=True, blank=True)
     completed_at = models.DateTimeField(null=True)
     archived_at = models.DateField(null=True)
     is_draft = models.BooleanField(default=False)

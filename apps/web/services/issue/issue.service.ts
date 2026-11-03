@@ -283,6 +283,22 @@ export class IssueService extends APIService {
       });
   }
 
+  async reorderSubIssues(
+    workspaceSlug: string,
+    projectId: string,
+    issueId: string,
+    data: { sub_issue_ids: string[] }
+  ): Promise<{ sort_orders: Record<string, number> }> {
+    return this.post(
+      `/api/workspaces/${workspaceSlug}/projects/${projectId}/issues/${issueId}/sub-issues/reorder/`,
+      data
+    )
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error?.response?.data;
+      });
+  }
+
   async fetchIssueLinks(workspaceSlug: string, projectId: string, issueId: string): Promise<TIssueLink[]> {
     return this.get(
       `/api/workspaces/${workspaceSlug}/projects/${projectId}/${this.serviceType}/${issueId}/${this.serviceType === EIssueServiceType.EPICS ? "links" : "issue-links"}/`

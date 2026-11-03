@@ -8,6 +8,7 @@ import { observer } from "mobx-react";
 // i18n
 import { useTranslation } from "@plane/i18n";
 // ui
+import { Palette } from "lucide-react";
 import {
   ClockOutline,
   CyclesOutline,
@@ -31,6 +32,7 @@ import { EstimateSelect } from "@/components/dropdowns/estimate/estimate-select"
 import { ButtonAvatars } from "@/components/dropdowns/member/avatar";
 import { MemberSelect } from "@/components/dropdowns/member/member-select";
 import { PrioritySelect } from "@/components/dropdowns/priority/priority-select";
+import { WorkItemColorSelect } from "@/components/issues/work-item-color";
 import { StateSelect } from "@/components/dropdowns/state/state-select";
 // hooks
 import { useProjectEstimates } from "@/hooks/store/estimates";
@@ -101,6 +103,15 @@ export const IssueDetailsSidebar = observer(function IssueDetailsSidebar(props: 
                 disabled={!isEditable}
                 variant="select-ghost-md"
                 tooltip
+              />
+            </SidebarPropertyListItem>
+
+            <SidebarPropertyListItem icon={Palette} label={t("work_item_color.label")}>
+              <WorkItemColorSelect
+                showLabel
+                value={issue?.color_code}
+                disabled={!isEditable}
+                onChange={(color) => issueOperations.update(workspaceSlug, projectId, issueId, { color_code: color })}
               />
             </SidebarPropertyListItem>
 

@@ -357,6 +357,12 @@ export class IssueDetail implements IIssueDetail {
     oldIssue?: Partial<TIssue>,
     fromModal?: boolean
   ) => this.subIssues.updateSubIssue(workspaceSlug, projectId, parentIssueId, issueId, issueData, oldIssue, fromModal);
+  reorderSubIssues = async (
+    workspaceSlug: string,
+    projectId: string,
+    parentIssueId: string,
+    orderedIssueIds: string[]
+  ) => this.subIssues.reorderSubIssues(workspaceSlug, projectId, parentIssueId, orderedIssueIds);
   removeSubIssue = async (workspaceSlug: string, projectId: string, parentIssueId: string, issueId: string) =>
     this.subIssues.removeSubIssue(workspaceSlug, projectId, parentIssueId, issueId);
   deleteSubIssue = async (workspaceSlug: string, projectId: string, parentIssueId: string, issueId: string) =>

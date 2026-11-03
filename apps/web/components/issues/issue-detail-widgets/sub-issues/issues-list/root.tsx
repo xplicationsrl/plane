@@ -53,7 +53,13 @@ export const SubIssuesListRoot = observer(function SubIssuesListRoot(props: Prop
   const {
     subIssues: {
       subIssuesByIssueId,
-      filters: { getSubIssueFilters, getGroupedSubWorkItems, getFilteredSubWorkItems, resetFilters },
+      filters: {
+        getSubIssueFilters,
+        getGroupedSubWorkItems,
+        getFilteredSubWorkItems,
+        getOrderedNestedSubWorkItems,
+        resetFilters,
+      },
     },
   } = useIssueDetail(issueServiceType);
 
@@ -77,13 +83,14 @@ export const SubIssuesListRoot = observer(function SubIssuesListRoot(props: Prop
         const groupedSubIssues = getGroupedSubWorkItems(rootIssueId);
         return groupedSubIssues?.[groupId] ?? [];
       }
-      const subIssueIds = subIssuesByIssueId(parentIssueId);
-      return subIssueIds ?? [];
+      return subIssuesByIssueId(parentIssueId) ? getOrderedNestedSubWorkItems(rootIssueId, parentIssueId) : [];
     },
-    [isRootLevel, subIssuesByIssueId, rootIssueId, getGroupedSubWorkItems, parentIssueId]
+    [isRootLevel, subIssuesByIssueId, rootIssueId, getGroupedSubWorkItems, getOrderedNestedSubWorkItems, parentIssueId]
   );
 
   const isSubWorkItems = issueServiceType === EIssueServiceType.ISSUES;
+  // Moving a row only means something in the manual order, and only there is its position its own
+  const canReorder = canEdit && isSubWorkItems && filters.displayFilters?.order_by === "sort_order" && !group_by;
 
   return (
     <div className="relative">
@@ -121,6 +128,7 @@ export const SubIssuesListRoot = observer(function SubIssuesListRoot(props: Prop
             group={group}
             serviceType={issueServiceType}
             canEdit={canEdit}
+            canReorder={canReorder}
             parentIssueId={parentIssueId}
             rootIssueId={rootIssueId}
             handleIssueCrudState={handleIssueCrudState}

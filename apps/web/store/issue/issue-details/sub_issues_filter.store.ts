@@ -16,7 +16,12 @@ import type {
   TGroupedIssues,
   TIssue,
 } from "@plane/types";
-import { getFilteredWorkItems, getGroupedWorkItemIds, updateSubWorkItemFilters } from "../helpers/base-issues-utils";
+import {
+  getFilteredWorkItems,
+  getGroupedWorkItemIds,
+  getOrderedWorkItems,
+  updateSubWorkItemFilters,
+} from "../helpers/base-issues-utils";
 import type { IssueSubIssuesStore } from "./sub_issues.store";
 
 export const DEFAULT_DISPLAY_PROPERTIES = {
@@ -38,6 +43,7 @@ export interface IWorkItemSubIssueFiltersStore {
     workItemId: string
   ) => void;
   getGroupedSubWorkItems: (workItemId: string) => TGroupedIssues;
+  getOrderedNestedSubWorkItems: (rootWorkItemId: string, parentWorkItemId: string) => string[];
   getFilteredSubWorkItems: (workItemId: string, filters: IIssueFilterOptions) => TIssue[];
   getSubIssueFilters: (workItemId: string) => Partial<ISubWorkItemFilters>;
   resetFilters: (workItemId: string) => void;
@@ -80,7 +86,7 @@ export class WorkItemSubIssueFiltersStore implements IWorkItemSubIssueFiltersSto
   initializeFilters = (workItemId: string) => {
     set(this.subIssueFilters, [workItemId, "displayProperties"], DEFAULT_DISPLAY_PROPERTIES);
     set(this.subIssueFilters, [workItemId, "filters"], {});
-    set(this.subIssueFilters, [workItemId, "displayFilters"], {});
+    set(this.subIssueFilters, [workItemId, "displayFilters"], { order_by: "sort_order" });
   };
 
   /**
@@ -112,10 +118,40 @@ export class WorkItemSubIssueFiltersStore implements IWorkItemSubIssueFiltersSto
     const groupByKey = subIssueFilters.displayFilters?.group_by;
     const orderByKey = subIssueFilters.displayFilters?.order_by;
 
-    const groupedWorkItemIds = getGroupedWorkItemIds(filteredWorkItems, groupByKey, orderByKey);
+    const groupedWorkItemIds = getGroupedWorkItemIds(this.withStateGroups(filteredWorkItems), groupByKey, orderByKey);
 
     return groupedWorkItemIds;
   });
+
+  /**
+   * @description Sub work items of an expanded row, in the order picked for the root work item's list
+   * @param rootWorkItemId
+   * @param parentWorkItemId
+   * @returns
+   */
+  getOrderedNestedSubWorkItems = computedFn((rootWorkItemId: string, parentWorkItemId: string) => {
+    const orderByKey = this.getSubIssueFilters(rootWorkItemId).displayFilters?.order_by ?? "sort_order";
+    const workItems = this.subIssueStore.rootIssueDetailStore.rootIssueStore.issues.getIssuesByIds(
+      this.subIssueStore.subIssuesByIssueId(parentWorkItemId),
+      "un-archived"
+    );
+
+    return getOrderedWorkItems(this.withStateGroups(workItems), orderByKey);
+  });
+
+  /**
+   * @description The API returns state_group on sub work items and it goes stale when one is completed,
+   * so the done sort reads the group from the state itself
+   * @param workItems
+   * @returns
+   */
+  private withStateGroups = (workItems: TIssue[]): TIssue[] => {
+    const { stateMap } = this.subIssueStore.rootIssueDetailStore.rootIssueStore;
+    return workItems.map((workItem) => ({
+      ...workItem,
+      state__group: (workItem.state_id && stateMap?.[workItem.state_id]?.group) || workItem.state__group,
+    }));
+  };
 
   /**
    * @description This method is used to get the filtered sub work items

@@ -26,6 +26,7 @@ import { cn, generateWorkItemLink } from "@plane/utils";
 import RenderIfVisible from "@/components/core/render-if-visible-HOC";
 import { HIGHLIGHT_CLASS, getIssueBlockId } from "@/components/issues/issue-layouts/utils";
 import { IssueIdentifier } from "@/components/issues/issue-detail/issue-identifier";
+import { WorkItemColorSelect } from "@/components/issues/work-item-color";
 // hooks
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useKanbanView } from "@/hooks/store/use-kanban-view";
@@ -123,11 +124,21 @@ const KanbanIssueDetailsBlock = observer(function KanbanIssueDetailsBlock(props:
         </div>
       </div>
 
-      <Tooltip label={issue.name} layout="stacked" disabled={isMobile}>
-        <div className="line-clamp-1 w-full text-body-sm-medium text-primary">
-          <span>{issue.name}</span>
-        </div>
-      </Tooltip>
+      <div className="flex items-center gap-1.5">
+        {!issue?.tempId && (
+          <WorkItemColorSelect
+            value={issue.color_code}
+            disabled={isReadOnly || !updateIssue}
+            onChange={(color) => updateIssue?.(issue.project_id, issue.id, { color_code: color })}
+            emptyClassName="opacity-0 group-hover/kanban-block:opacity-100"
+          />
+        )}
+        <Tooltip label={issue.name} layout="stacked" disabled={isMobile}>
+          <div className="line-clamp-1 w-full min-w-0 text-body-sm-medium text-primary">
+            <span>{issue.name}</span>
+          </div>
+        </Tooltip>
+      </div>
 
       <IssueProperties
         className="flex flex-wrap items-center gap-2 pt-1.5 whitespace-nowrap text-tertiary"

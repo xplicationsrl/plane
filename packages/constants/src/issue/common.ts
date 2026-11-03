@@ -6,6 +6,7 @@
 
 import type {
   TIssueGroupByOptions,
+  TIssueColor,
   TIssueOrderByOptions,
   IIssueDisplayProperties,
   IIssueFilterOptions,
@@ -127,6 +128,18 @@ export const ISSUE_GROUP_BY_OPTIONS: {
   { key: null, titleTranslationKey: "common.none" },
 ];
 
+/** In palette order, which is also the order the "Color" sort uses (see order_queryset.py). */
+export const ISSUE_COLORS: { key: TIssueColor; hex: string; titleTranslationKey: string }[] = [
+  { key: "red", hex: "#ef4444", titleTranslationKey: "work_item_color.red" },
+  { key: "orange", hex: "#f97316", titleTranslationKey: "work_item_color.orange" },
+  { key: "yellow", hex: "#eab308", titleTranslationKey: "work_item_color.yellow" },
+  { key: "green", hex: "#22c55e", titleTranslationKey: "work_item_color.green" },
+  { key: "teal", hex: "#14b8a6", titleTranslationKey: "work_item_color.teal" },
+  { key: "blue", hex: "#3b82f6", titleTranslationKey: "work_item_color.blue" },
+  { key: "purple", hex: "#a855f7", titleTranslationKey: "work_item_color.purple" },
+  { key: "pink", hex: "#ec4899", titleTranslationKey: "work_item_color.pink" },
+];
+
 export const ISSUE_ORDER_BY_OPTIONS: {
   key: TIssueOrderByOptions;
   titleTranslationKey: string;
@@ -137,6 +150,10 @@ export const ISSUE_ORDER_BY_OPTIONS: {
   { key: "start_date", titleTranslationKey: "common.order_by.start_date" },
   { key: "target_date", titleTranslationKey: "common.order_by.due_date" },
   { key: "-priority", titleTranslationKey: "common.priority" },
+  { key: "state__group", titleTranslationKey: "common.order_by.done_last" },
+  { key: "-state__group", titleTranslationKey: "common.order_by.done_first" },
+  { key: "color_code", titleTranslationKey: "common.order_by.color" },
+  { key: "name", titleTranslationKey: "common.order_by.name" },
 ];
 
 export const ISSUE_DISPLAY_PROPERTIES_KEYS: (keyof IIssueDisplayProperties)[] = [

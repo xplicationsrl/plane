@@ -17,6 +17,7 @@ import type {
   TIssueServiceType,
   TLoader,
 } from "@plane/types";
+import { getReorderedSortOrders } from "@plane/utils";
 // services
 import { IssueService } from "@/services/issue";
 // store
@@ -31,6 +32,12 @@ export interface IIssueSubIssuesStoreActions {
     projectId: string,
     parentIssueId: string,
     issueIds: string[]
+  ) => Promise<void>;
+  reorderSubIssues: (
+    workspaceSlug: string,
+    projectId: string,
+    parentIssueId: string,
+    orderedIssueIds: string[]
   ) => Promise<void>;
   updateSubIssue: (
     workspaceSlug: string,
@@ -88,6 +95,7 @@ export class IssueSubIssuesStore implements IIssueSubIssuesStore {
       setSubIssueHelpers: action,
       fetchSubIssues: action,
       createSubIssues: action,
+      reorderSubIssues: action,
       updateSubIssue: action,
       removeSubIssue: action,
       deleteSubIssue: action,
@@ -203,6 +211,35 @@ export class IssueSubIssuesStore implements IIssueSubIssuesStore {
     );
 
     return;
+  };
+
+  reorderSubIssues = async (
+    workspaceSlug: string,
+    projectId: string,
+    parentIssueId: string,
+    orderedIssueIds: string[]
+  ) => {
+    const { issuesMap } = this.rootIssueDetailStore.rootIssueStore.issues;
+    const subIssues = orderedIssueIds.map((issueId) => issuesMap[issueId]).filter(Boolean);
+    // Written straight to the map: IssueStore.updateIssue would bump updated_at, and a reorder isn't an edit
+    const applySortOrders = (sortOrders: Record<string, number>) =>
+      runInAction(() => {
+        Object.entries(sortOrders).forEach(([issueId, sortOrder]) => {
+          if (issuesMap[issueId]) set(issuesMap, [issueId, "sort_order"], sortOrder);
+        });
+      });
+
+    const previousSortOrders = Object.fromEntries(subIssues.map((issue) => [issue.id, issue.sort_order]));
+    applySortOrders(getReorderedSortOrders(subIssues, orderedIssueIds));
+    try {
+      const { sort_orders } = await this.issueService.reorderSubIssues(workspaceSlug, projectId, parentIssueId, {
+        sub_issue_ids: orderedIssueIds,
+      });
+      applySortOrders(sort_orders);
+    } catch (error) {
+      applySortOrders(previousSortOrders);
+      throw error;
+    }
   };
 
   updateSubIssue = async (

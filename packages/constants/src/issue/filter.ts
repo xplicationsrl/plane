@@ -8,6 +8,7 @@ import type {
   IIssueFilterOptions,
   ILayoutDisplayFiltersOptions,
   TIssueActivityComment,
+  TIssueOrderByOptions,
   TWorkItemFilterProperty,
 } from "@plane/types";
 import { EIssuesStoreType } from "@plane/types";
@@ -17,6 +18,19 @@ import { ISSUE_DISPLAY_PROPERTIES_KEYS, SUB_ISSUES_DISPLAY_PROPERTIES_KEYS } fro
 import type { TIssueLayout } from "./layout";
 
 export type TIssueFilterKeys = "priority" | "state" | "labels";
+
+const WORK_ITEM_ORDER_BY: TIssueOrderByOptions[] = [
+  "sort_order",
+  "-created_at",
+  "-updated_at",
+  "start_date",
+  "target_date",
+  "-priority",
+  "state__group",
+  "-state__group",
+  "color_code",
+  "name",
+];
 
 export enum EServerGroupByToFilterOptions {
   "state_id" = "state",
@@ -117,7 +131,7 @@ export const ISSUE_DISPLAY_FILTERS_BY_PAGE: TIssueFiltersToDisplayByPageType = {
         display_properties: ISSUE_DISPLAY_PROPERTIES_KEYS,
         display_filters: {
           group_by: ["state_detail.group", "priority", "project", "labels", null],
-          order_by: ["sort_order", "-created_at", "-updated_at", "start_date", "-priority"],
+          order_by: WORK_ITEM_ORDER_BY,
           type: ["active", "backlog"],
         },
         extra_options: {
@@ -129,7 +143,7 @@ export const ISSUE_DISPLAY_FILTERS_BY_PAGE: TIssueFiltersToDisplayByPageType = {
         display_properties: ISSUE_DISPLAY_PROPERTIES_KEYS,
         display_filters: {
           group_by: ["state_detail.group", "priority", "project", "labels"],
-          order_by: ["sort_order", "-created_at", "-updated_at", "start_date", "-priority"],
+          order_by: WORK_ITEM_ORDER_BY,
           type: ["active", "backlog"],
         },
         extra_options: {
@@ -157,7 +171,7 @@ export const ISSUE_DISPLAY_FILTERS_BY_PAGE: TIssueFiltersToDisplayByPageType = {
         display_properties: ISSUE_DISPLAY_PROPERTIES_KEYS,
         display_filters: {
           group_by: ["state", "cycle", "module", "priority", "labels", "assignees", "created_by", null],
-          order_by: ["sort_order", "-created_at", "-updated_at", "start_date", "-priority"],
+          order_by: WORK_ITEM_ORDER_BY,
           type: ["active", "backlog"],
         },
         extra_options: {
@@ -183,7 +197,7 @@ export const ISSUE_DISPLAY_FILTERS_BY_PAGE: TIssueFiltersToDisplayByPageType = {
       spreadsheet: {
         display_properties: ISSUE_DISPLAY_PROPERTIES_KEYS,
         display_filters: {
-          order_by: [],
+          order_by: WORK_ITEM_ORDER_BY.filter((orderBy) => orderBy !== "sort_order"),
           type: ["active", "backlog"],
         },
         extra_options: {
@@ -222,7 +236,7 @@ export const ISSUE_DISPLAY_FILTERS_BY_PAGE: TIssueFiltersToDisplayByPageType = {
         display_properties: ISSUE_DISPLAY_PROPERTIES_KEYS,
         display_filters: {
           group_by: ["state", "priority", "cycle", "module", "labels", "assignees", "created_by", null],
-          order_by: ["sort_order", "-created_at", "-updated_at", "start_date", "-priority", "target_date"],
+          order_by: WORK_ITEM_ORDER_BY,
           type: ["active", "backlog"],
         },
         extra_options: {
@@ -235,7 +249,7 @@ export const ISSUE_DISPLAY_FILTERS_BY_PAGE: TIssueFiltersToDisplayByPageType = {
         display_filters: {
           group_by: ["state", "priority", "cycle", "module", "labels", "assignees", "created_by"],
           sub_group_by: ["state", "priority", "cycle", "module", "labels", "assignees", "created_by", null],
-          order_by: ["sort_order", "-created_at", "-updated_at", "start_date", "-priority", "target_date"],
+          order_by: WORK_ITEM_ORDER_BY,
           type: ["active", "backlog"],
         },
         extra_options: {
@@ -256,7 +270,7 @@ export const ISSUE_DISPLAY_FILTERS_BY_PAGE: TIssueFiltersToDisplayByPageType = {
       spreadsheet: {
         display_properties: ISSUE_DISPLAY_PROPERTIES_KEYS,
         display_filters: {
-          order_by: ["sort_order", "-created_at", "-updated_at", "start_date", "-priority"],
+          order_by: WORK_ITEM_ORDER_BY,
           type: ["active", "backlog"],
         },
         extra_options: {
@@ -283,7 +297,7 @@ export const ISSUE_DISPLAY_FILTERS_BY_PAGE: TIssueFiltersToDisplayByPageType = {
       list: {
         display_properties: SUB_ISSUES_DISPLAY_PROPERTIES_KEYS,
         display_filters: {
-          order_by: ["-created_at", "-updated_at", "start_date", "-priority"],
+          order_by: WORK_ITEM_ORDER_BY,
           group_by: ["state", "priority", "assignees", null],
         },
         extra_options: {

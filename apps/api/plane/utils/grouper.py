@@ -108,6 +108,7 @@ def issue_on_results(
         "name",
         "state_id",
         "sort_order",
+        "color_code",
         "completed_at",
         "estimate_point",
         "priority",

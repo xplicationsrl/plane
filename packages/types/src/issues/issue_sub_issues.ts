@@ -33,6 +33,12 @@ export type TSubIssueOperations = {
   copyLink: (path: string) => void;
   fetchSubIssues: (workspaceSlug: string, projectId: string, parentIssueId: string) => Promise<void>;
   addSubIssue: (workspaceSlug: string, projectId: string, parentIssueId: string, issueIds: string[]) => Promise<void>;
+  reorderSubIssues: (
+    workspaceSlug: string,
+    projectId: string,
+    parentIssueId: string,
+    orderedIssueIds: string[]
+  ) => Promise<void>;
   updateSubIssue: (
     workspaceSlug: string,
     projectId: string,

@@ -4,13 +4,14 @@
  * See the LICENSE file for details.
  */
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { observer } from "mobx-react";
 import { CircleDashed } from "lucide-react";
 import { Collapsible } from "@makeplane/propel/components/collapsible";
 import { ALL_ISSUES } from "@plane/constants";
 import type { IGroupByColumn, TIssue, TIssueServiceType, TSubIssueOperations } from "@plane/types";
 import { EIssuesStoreType } from "@plane/types";
+import { moveWorkItemId } from "@plane/utils";
 import { SubIssuesListItem } from "./list-item";
 
 interface TSubIssuesListGroupProps {
@@ -20,6 +21,7 @@ interface TSubIssuesListGroupProps {
   group: IGroupByColumn;
   serviceType: TIssueServiceType;
   canEdit: boolean;
+  canReorder: boolean;
   parentIssueId: string;
   rootIssueId: string;
   handleIssueCrudState: (
@@ -37,6 +39,7 @@ export const SubIssuesListGroup = observer(function SubIssuesListGroup(props: TS
     group,
     serviceType,
     canEdit,
+    canReorder,
     parentIssueId,
     rootIssueId,
     projectId,
@@ -53,11 +56,24 @@ export const SubIssuesListGroup = observer(function SubIssuesListGroup(props: TS
   // states
   const [isCollapsibleOpen, setIsCollapsibleOpen] = useState(true);
 
+  const handleReorder = useCallback(
+    (sourceId: string, targetId: string, edge: "top" | "bottom") => {
+      const orderedIds = moveWorkItemId(workItemIds, sourceId, targetId, edge);
+      if (orderedIds.every((id, index) => id === workItemIds[index])) return;
+      subIssueOperations.reorderSubIssues(workspaceSlug, projectId, parentIssueId, orderedIds);
+    },
+    [workItemIds, subIssueOperations, workspaceSlug, projectId, parentIssueId]
+  );
+
   if (!workItemIds.length) return null;
 
-  const items = workItemIds.map((workItemId) => (
+  const items = workItemIds.map((workItemId, index) => (
     <SubIssuesListItem
       key={workItemId}
+      canReorder={canReorder}
+      previousIssueId={workItemIds[index - 1]}
+      nextIssueId={workItemIds[index + 1]}
+      onReorder={handleReorder}
       workspaceSlug={workspaceSlug}
       projectId={projectId}
       parentIssueId={parentIssueId}

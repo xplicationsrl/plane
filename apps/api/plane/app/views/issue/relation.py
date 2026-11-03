@@ -190,6 +190,7 @@ class IssueRelationViewSet(BaseViewSet):
             "name",
             "state_id",
             "sort_order",
+            "color_code",
             "priority",
             "sequence_id",
             "project_id",

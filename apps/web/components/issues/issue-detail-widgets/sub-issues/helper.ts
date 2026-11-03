@@ -23,6 +23,7 @@ export const useSubIssueOperations = (issueServiceType: TIssueServiceType): TSub
     createSubIssues,
     fetchSubIssues,
     updateSubIssue,
+    reorderSubIssues,
     deleteSubIssue,
     removeSubIssue,
   } = useIssueDetail(issueServiceType);
@@ -106,6 +107,17 @@ export const useSubIssueOperations = (issueServiceType: TIssueServiceType): TSub
           });
         }
       },
+      reorderSubIssues: async (workspaceSlug, projectId, parentIssueId, orderedIssueIds) => {
+        try {
+          await reorderSubIssues(workspaceSlug, projectId, parentIssueId, orderedIssueIds);
+        } catch {
+          setToast({
+            type: "error",
+            title: t("toast.error"),
+            message: t("sub_work_item.reorder_error"),
+          });
+        }
+      },
       removeSubIssue: async (workspaceSlug, projectId, parentIssueId, issueId) => {
         try {
           setSubIssueHelpers(parentIssueId, "issue_loader", issueId);
@@ -162,6 +174,7 @@ export const useSubIssueOperations = (issueServiceType: TIssueServiceType): TSub
       setSubIssueHelpers,
       t,
       updateSubIssue,
+      reorderSubIssues,
     ]
   );
 

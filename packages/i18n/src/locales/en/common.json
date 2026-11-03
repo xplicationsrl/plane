@@ -523,6 +523,10 @@
       "last_updated": "Last updated",
       "start_date": "Start date",
       "due_date": "Due date",
+      "done_last": "Done last",
+      "done_first": "Done first",
+      "color": "Color",
+      "name": "Name",
       "asc": "Ascending",
       "desc": "Descending",
       "updated_on": "Updated on"

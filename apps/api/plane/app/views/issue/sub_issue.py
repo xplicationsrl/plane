@@ -16,7 +16,7 @@ from django.db.models.functions import Coalesce
 
 # Third Party imports
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import serializers, status
 
 # Module imports
 from .. import BaseAPIView
@@ -149,6 +149,7 @@ class SubIssuesEndpoint(BaseAPIView):
                 "name",
                 "state_id",
                 "sort_order",
+                "color_code",
                 "completed_at",
                 "estimate_point",
                 "priority",
@@ -271,5 +272,52 @@ class SubIssuesEndpoint(BaseAPIView):
         serializer = IssueSerializer(updated_sub_issues, many=True)
         return Response(
             {"sub_issues": serializer.data, "state_distribution": result},
+            status=status.HTTP_200_OK,
+        )
+
+
+class SubIssueReorderEndpoint(BaseAPIView):
+    """Put sub-work items in the given order, reusing the sort_order values they already hold.
+
+    Reusing them keeps the items roughly where they were on the project's manual boards.
+    Siblings can share a value because new items are numbered per state, so ties are
+    pushed apart: a midpoint PATCH could never separate them.
+    """
+
+    permission_classes = [ProjectEntityPermission]
+
+    def post(self, request, slug, project_id, issue_id):
+        field = serializers.ListField(child=serializers.UUIDField(), allow_empty=False)
+        try:
+            sub_issue_ids = field.run_validation(request.data.get("sub_issue_ids"))
+        except serializers.ValidationError:
+            return Response({"error": "Sub Issue IDs are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Scoped through the URL's parent so ids from another parent or project can't be touched
+        sub_issues = Issue.issue_objects.filter(
+            parent_id=issue_id, id__in=sub_issue_ids, workspace__slug=slug, project_id=project_id
+        ).in_bulk()
+        if len(sub_issues) != len(sub_issue_ids):
+            return Response(
+                {"error": "Sub Issue IDs must be distinct sub-work items of this work item"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        slots = sorted(sub_issue.sort_order for sub_issue in sub_issues.values())
+        changed = []
+        previous = None
+        for sub_issue_id, slot in zip(sub_issue_ids, slots):
+            sub_issue = sub_issues[sub_issue_id]
+            sort_order = slot if previous is None or slot > previous else previous + 1
+            if sub_issue.sort_order != sort_order:
+                sub_issue.sort_order = sort_order
+                changed.append(sub_issue)
+            previous = sort_order
+
+        # bulk_update on purpose: reordering isn't an edit, so updated_at and the activity log stay put
+        Issue.objects.bulk_update(changed, ["sort_order"], batch_size=100)
+
+        return Response(
+            {"sort_orders": {str(pk): sub_issue.sort_order for pk, sub_issue in sub_issues.items()}},
             status=status.HTTP_200_OK,
         )

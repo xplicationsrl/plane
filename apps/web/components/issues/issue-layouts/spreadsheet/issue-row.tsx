@@ -23,6 +23,7 @@ import { cn, generateWorkItemLink } from "@plane/utils";
 import { MultipleSelectEntityAction } from "@/components/core/multiple-select";
 import RenderIfVisible from "@/components/core/render-if-visible-HOC";
 import { IssueIdentifier } from "@/components/issues/issue-detail/issue-identifier";
+import { WorkItemColorSelect } from "@/components/issues/work-item-color";
 // hooks
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useIssues } from "@/hooks/store/use-issues";
@@ -353,6 +354,12 @@ const IssueRowDetails = observer(function IssueRowDetails(props: IssueRowDetails
               </div>
 
               <div className="my-auto flex h-full w-full items-center justify-between gap-2 truncate">
+                <WorkItemColorSelect
+                  value={issueDetail.color_code}
+                  disabled={disableUserActions || !updateIssue}
+                  onChange={(color) => updateIssue?.(issueDetail.project_id, issueDetail.id, { color_code: color })}
+                  emptyClassName="opacity-0 group-hover/list-block:opacity-100"
+                />
                 <div className="line-clamp-1 w-full text-14 text-primary">
                   <div className="w-full overflow-hidden">
                     <Tooltip label={issueDetail.name} layout="stacked" disabled={isMobile}>

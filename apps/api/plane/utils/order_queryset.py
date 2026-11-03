@@ -2,11 +2,15 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # See the LICENSE file for details.
 
-from django.db.models import Case, CharField, Min, Value, When
+from django.db.models import Case, CharField, F, IntegerField, Min, Value, When
+from django.db.models.functions import Lower
 
 # Custom ordering for priority and state
 PRIORITY_ORDER = ["urgent", "high", "medium", "low", "none"]
 STATE_ORDER = ["backlog", "unstarted", "started", "completed", "cancelled"]
+# "-state__group" reads as "done first", which STATE_ORDER reversed isn't: that puts cancelled on top
+DONE_FIRST_STATE_ORDER = ["completed", "cancelled", "started", "unstarted", "backlog"]
+COLOR_ORDER = ["red", "orange", "yellow", "green", "teal", "blue", "purple", "pink"]
 
 # ---------------------------------------------------------------------------
 # order_by allowlists — one per model/endpoint family
@@ -30,6 +34,8 @@ ISSUE_ORDER_BY_ALLOWLIST = frozenset({
     "assignees__first_name",
     "labels__name",
     "issue_module__module__name",
+    "color_code",
+    "name",
 })
 
 # IntakeIssue queryset — fields are prefixed with `issue__` for the join.
@@ -172,7 +178,7 @@ def order_issue_queryset(issue_queryset, order_by_param="-created_at"):
         order_by_param = "priority_order" if order_by_param.startswith("-") else "-priority_order"
     # State Ordering
     elif order_by_param in ["state__group", "-state__group"]:
-        state_order = STATE_ORDER if order_by_param in ["state__name", "state__group"] else STATE_ORDER[::-1]
+        state_order = STATE_ORDER if order_by_param == "state__group" else DONE_FIRST_STATE_ORDER
         issue_queryset = issue_queryset.annotate(
             state_order=Case(
                 *[When(state__group=state_group, then=Value(i)) for i, state_group in enumerate(state_order)],
@@ -180,7 +186,23 @@ def order_issue_queryset(issue_queryset, order_by_param="-created_at"):
                 output_field=CharField(),
             )
         ).order_by("state_order", "-created_at")
-        order_by_param = "-state_order" if order_by_param.startswith("-") else "state_order"
+        # state_order already encodes the direction, so the paginator must not flip it again
+        order_by_param = "state_order"
+    # Color ordering: palette order, uncolored last in both directions
+    elif order_by_param in ["color_code", "-color_code"]:
+        is_desc = order_by_param.startswith("-")
+        color_order = F("color_order").desc(nulls_last=True) if is_desc else F("color_order").asc(nulls_last=True)
+        issue_queryset = issue_queryset.annotate(
+            color_order=Case(
+                *[When(color_code=color, then=Value(i)) for i, color in enumerate(COLOR_ORDER)],
+                output_field=IntegerField(),
+            )
+        ).order_by(color_order, "-created_at")
+        order_by_param = "-color_order" if is_desc else "color_order"
+    # Name ordering: case-insensitive, like the client-side sort
+    elif order_by_param in ["name", "-name"]:
+        order_by_param = "-name_order" if order_by_param.startswith("-") else "name_order"
+        issue_queryset = issue_queryset.annotate(name_order=Lower("name")).order_by(order_by_param, "-created_at")
     # assignee and label ordering
     elif order_by_param in [
         "labels__name",

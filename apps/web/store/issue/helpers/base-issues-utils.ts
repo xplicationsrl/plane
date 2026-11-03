@@ -15,7 +15,13 @@ import type {
   TIssueGroupByOptions,
   TIssueOrderByOptions,
 } from "@plane/types";
-import { checkDateCriteria, convertToISODateString, parseDateFilter } from "@plane/utils";
+import {
+  checkDateCriteria,
+  convertToISODateString,
+  parseDateFilter,
+  getWorkItemColorRank,
+  getWorkItemDoneRank,
+} from "@plane/utils";
 import { store } from "@/lib/store-context";
 import { EIssueGroupedAction, ISSUE_GROUP_BY_KEY } from "./base-issues.store";
 
@@ -279,6 +285,29 @@ export const getFilteredWorkItems = (workItems: TIssue[], filters: IIssueFilterO
  */
 export const getOrderedWorkItems = (workItems: TIssue[], orderByKey: TIssueOrderByOptions): string[] => {
   switch (orderByKey) {
+    case "sort_order":
+      return getIssueIds(
+        orderBy(workItems, ["sort_order", (item) => convertToISODateString(item["created_at"])], ["asc", "desc"])
+      );
+
+    case "state__group":
+    case "-state__group":
+      return getIssueIds(
+        orderBy(workItems, (item) => getWorkItemDoneRank(item.state__group, orderByKey === "-state__group"))
+      );
+
+    case "color_code":
+      return getIssueIds(orderBy(workItems, (item) => getWorkItemColorRank(item.color_code)));
+
+    case "name":
+      return getIssueIds(orderBy(workItems, (item) => item.name?.toLocaleLowerCase()));
+
+    case "start_date":
+    case "target_date":
+      return getIssueIds(
+        orderBy(workItems, [getSortOrderToFilterEmptyValues.bind(null, orderByKey), orderByKey]) //preferring sorting based on empty values to always keep the empty values below
+      );
+
     case "-updated_at":
       return getIssueIds(orderBy(workItems, (item) => convertToISODateString(item["updated_at"]), ["desc"]));
 

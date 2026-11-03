@@ -42,11 +42,14 @@ export enum EIssuesStoreType {
   TEAM_PROJECT_WORK_ITEMS = "TEAM_PROJECT_WORK_ITEMS",
 }
 
+export type TIssueColor = "red" | "orange" | "yellow" | "green" | "teal" | "blue" | "purple" | "pink";
+
 export type TBaseIssue = {
   id: string;
   sequence_id: number;
   name: string;
   sort_order: number;
+  color_code?: TIssueColor | null;
 
   state_id: string | null;
   priority: TIssuePriorities | null;

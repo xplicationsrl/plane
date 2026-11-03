@@ -53,7 +53,7 @@ def add_issue_relations(issue, *, actor_id, assignee_ids=(), label_ids=(), modul
 def copy_issue(source, *, actor_id, start_date=_UNSET, target_date=_UNSET, parent_id=_UNSET, state_id=None):
     """A copy of ``source`` in the same project, in the project's default state unless given.
 
-    Copies the content, priority, estimate, type, assignees, labels, modules and custom
+    Copies the content, priority, color, estimate, type, assignees, labels, modules and custom
     property values. Cycles are not copied: they are time-boxed.
     """
     issue = Issue(
@@ -63,6 +63,7 @@ def copy_issue(source, *, actor_id, start_date=_UNSET, target_date=_UNSET, paren
         description_html=source.description_html,
         description_json=source.description_json,
         priority=source.priority,
+        color_code=source.color_code,
         estimate_point_id=source.estimate_point_id,
         type_id=source.type_id,
         parent_id=source.parent_id if parent_id is _UNSET else parent_id,

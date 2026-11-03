@@ -24,6 +24,7 @@ import { cn, generateWorkItemLink } from "@plane/utils";
 import { MultipleSelectEntityAction } from "@/components/core/multiple-select";
 import { IssueProperties } from "@/components/issues/issue-layouts/properties";
 import { IssueIdentifier } from "@/components/issues/issue-detail/issue-identifier";
+import { WorkItemColorSelect } from "@/components/issues/work-item-color";
 // hooks
 import { useAppTheme } from "@/hooks/store/use-app-theme";
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
@@ -256,6 +257,17 @@ export const IssueBlock = observer(function IssueBlock(props: IssueBlockProps) {
                 <div className="absolute top-0 left-0 z-[99999] h-full w-full animate-pulse bg-surface-1/20" />
               )}
             </div>
+
+            {!issue?.tempId && (
+              <div className="mr-1.5">
+                <WorkItemColorSelect
+                  value={issue.color_code}
+                  disabled={!canEditIssueProperties || !updateIssue}
+                  onChange={(color) => updateIssue?.(issue.project_id, issue.id, { color_code: color })}
+                  emptyClassName="opacity-0 group-hover/list-block:opacity-100"
+                />
+              </div>
+            )}
 
             <Tooltip label={issue.name} layout="stacked" align="start" disabled={isCurrentBlockDragging || isMobile}>
               <p className="cursor-pointer truncate text-body-xs-medium text-primary">{issue.name}</p>

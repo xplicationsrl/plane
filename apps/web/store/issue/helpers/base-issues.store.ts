@@ -28,7 +28,7 @@ import type {
 } from "@plane/types";
 import { EIssueServiceType, EIssueLayoutTypes } from "@plane/types";
 // helpers
-import { convertToISODateString } from "@plane/utils";
+import { convertToISODateString, getWorkItemColorRank, getWorkItemDoneRank } from "@plane/utils";
 // plane web imports
 // services
 import { CycleService } from "@/services/cycle.service";
@@ -151,6 +151,12 @@ const ISSUE_ORDERBY_KEY: Record<TIssueOrderByOptions, keyof TIssue> = {
   sort_order: "sort_order",
   state__name: "state_id",
   "-state__name": "state_id",
+  state__group: "state_id",
+  "-state__group": "state_id",
+  color_code: "color_code",
+  "-color_code": "color_code",
+  name: "name",
+  "-name": "name",
   assignees__first_name: "assignee_ids",
   "-assignees__first_name": "assignee_ids",
   labels__name: "label_ids",
@@ -1784,6 +1790,30 @@ export abstract class BaseIssuesStore implements IBaseIssuesStore {
             ["desc"]
           )
         );
+      case "state__group":
+      case "-state__group":
+        return getIssueIds(
+          orderBy(array, (issue) =>
+            getWorkItemDoneRank(
+              (issue.state_id && this.rootIssueStore?.stateMap?.[issue.state_id]?.group) || issue.state__group,
+              key === "-state__group"
+            )
+          )
+        );
+      case "color_code":
+        return getIssueIds(orderBy(array, (issue) => getWorkItemColorRank(issue.color_code)));
+      case "-color_code":
+        return getIssueIds(
+          orderBy(
+            array,
+            [(issue) => !issue.color_code, (issue) => getWorkItemColorRank(issue.color_code)],
+            ["asc", "desc"]
+          )
+        );
+      case "name":
+        return getIssueIds(orderBy(array, (issue) => issue.name?.toLocaleLowerCase()));
+      case "-name":
+        return getIssueIds(orderBy(array, (issue) => issue.name?.toLocaleLowerCase(), ["desc"]));
       // dates
       case "created_at":
         return getIssueIds(orderBy(array, (issue) => convertToISODateString(issue["created_at"])));

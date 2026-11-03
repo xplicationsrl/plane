@@ -27,6 +27,7 @@ class ViewIssueListSerializer(serializers.Serializer):
             "name": instance.name,
             "state_id": instance.state_id,
             "sort_order": instance.sort_order,
+            "color_code": instance.color_code,
             "completed_at": instance.completed_at,
             "estimate_point": instance.estimate_point_id,
             "priority": instance.priority,
