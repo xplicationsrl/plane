@@ -65,10 +65,12 @@ export const SidebarItemBase = observer(function SidebarItemBase({
 
   const itemHref =
     item.key === "your_work" && data?.id ? joinUrlPath(slug, item.href, data?.id) : joinUrlPath(slug, item.href);
+  // your work opens on the assigned tab, but stays highlighted across all of its tabs
+  const linkHref = item.key === "your_work" && data?.id ? joinUrlPath(itemHref, "assigned") : itemHref;
   const icon = getSidebarNavigationItemIcon(item.key);
 
   return (
-    <Link href={itemHref} onClick={handleLinkClick}>
+    <Link href={linkHref} onClick={handleLinkClick}>
       <SidebarNavItem isActive={item.highlight(pathname, itemHref)}>
         <div className="flex items-center gap-1.5 py-[1px]">
           {icon}

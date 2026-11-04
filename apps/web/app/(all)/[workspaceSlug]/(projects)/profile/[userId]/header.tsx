@@ -48,7 +48,7 @@ export const UserProfileHeader = observer(function UserProfileHeader(props: TUse
 
   if (!workspaceUserInfo) return null;
 
-  const tabsList = isAuthorized ? [...PROFILE_VIEWER_TAB, ...PROFILE_ADMINS_TAB] : PROFILE_VIEWER_TAB;
+  const tabsList = isAuthorized ? PROFILE_ADMINS_TAB : PROFILE_VIEWER_TAB;
 
   const userName = `${userProjectsData?.user_data?.first_name} ${userProjectsData?.user_data?.last_name}`;
 

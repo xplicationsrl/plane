@@ -22,7 +22,7 @@ export function ProfileNavbar(props: Props) {
   const { workspaceSlug, userId } = useParams();
   const pathname = usePathname();
 
-  const tabsList = isAuthorized ? [...PROFILE_VIEWER_TAB, ...PROFILE_ADMINS_TAB] : PROFILE_VIEWER_TAB;
+  const tabsList = isAuthorized ? PROFILE_ADMINS_TAB : PROFILE_VIEWER_TAB;
 
   return (
     <Header variant={EHeaderVariant.SECONDARY} showOnMobile={false}>

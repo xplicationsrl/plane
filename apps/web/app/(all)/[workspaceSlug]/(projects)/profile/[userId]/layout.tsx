@@ -52,7 +52,7 @@ function UseProfileLayout({ params }: Route.ComponentProps) {
     pathname.includes("assigned") || pathname.includes("created") || pathname.includes("subscribed");
   const isIssuesTab = pathname.includes("assigned") || pathname.includes("created") || pathname.includes("subscribed");
 
-  const tabsList = isAuthorized ? [...PROFILE_VIEWER_TAB, ...PROFILE_ADMINS_TAB] : PROFILE_VIEWER_TAB;
+  const tabsList = isAuthorized ? PROFILE_ADMINS_TAB : PROFILE_VIEWER_TAB;
   const currentTab = tabsList.find((tab) => pathname === `/${workspaceSlug}/profile/${userId}${tab.selected}`);
 
   return (

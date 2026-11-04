@@ -5,6 +5,7 @@
  */
 
 // plane imports
+import type { TWorkItemFilterExpression } from "@plane/types";
 import { EStartOfTheWeek } from "@plane/types";
 
 export const PROFILE_VIEWER_TAB = [
@@ -23,6 +24,7 @@ export const PROFILE_ADMINS_TAB = [
     i18n_label: "profile.tabs.assigned",
     selected: "/assigned/",
   },
+  ...PROFILE_VIEWER_TAB,
   {
     key: "created",
     route: "created",
@@ -42,6 +44,13 @@ export const PROFILE_ADMINS_TAB = [
     selected: "/activity/",
   },
 ];
+
+/**
+ * @description Applied to the profile work item tabs until the user sets or clears their own filters: hides completed work items
+ */
+export const PROFILE_DEFAULT_RICH_FILTERS: TWorkItemFilterExpression = {
+  state_group__in: "backlog,unstarted,started,cancelled",
+};
 
 export const PREFERENCE_OPTIONS: {
   id: string;

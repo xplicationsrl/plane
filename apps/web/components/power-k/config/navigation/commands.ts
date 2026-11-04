@@ -137,7 +137,8 @@ export const usePowerKNavigationCommandsRecord = (): Record<TPowerKNavigationCom
       i18n_title: "power_k.navigation_actions.nav_your_work",
       icon: ActivityOutline,
       keySequence: "gy",
-      action: (ctx) => handlePowerKNavigate(ctx, [ctx.params.workspaceSlug?.toString(), "profile", currentUser?.id]),
+      action: (ctx) =>
+        handlePowerKNavigate(ctx, [ctx.params.workspaceSlug?.toString(), "profile", currentUser?.id, "assigned"]),
       isEnabled: (ctx) => baseWorkspaceConditions(ctx) && hasWorkspaceMemberLevelPermissions(ctx),
       isVisible: (ctx) => baseWorkspaceConditions(ctx) && hasWorkspaceMemberLevelPermissions(ctx),
       closeOnSelect: true,
