@@ -25,7 +25,7 @@ export const ProjectName = observer(function ProjectName(props: TProjectNameProp
 });
 
 export const IssueIdentifier = observer(function IssueIdentifier(props: TIssueIdentifierProps) {
-  const { projectId, variant, size, displayProperties, enableClickToCopyIdentifier = false } = props;
+  const { projectId, variant, size, displayProperties, enableClickToCopyIdentifier = false, compact } = props;
   // store hooks
   const { getProjectIdentifierById, getPartialProjectById } = useProject();
   const {
@@ -43,7 +43,7 @@ export const IssueIdentifier = observer(function IssueIdentifier(props: TIssueId
 
   if (!shouldRenderIssueID) return null;
 
-  if (projectName) return <ProjectNameText projectName={projectName} variant={variant} size={size} />;
+  if (projectName) return <ProjectNameText projectName={projectName} variant={variant} size={size} compact={compact} />;
 
   return (
     <div className="flex shrink-0 items-center space-x-2">

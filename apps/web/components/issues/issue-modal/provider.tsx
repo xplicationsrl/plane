@@ -31,7 +31,7 @@ export type TIssueModalProviderProps = {
 };
 
 export const IssueModalProvider = observer(function IssueModalProvider(props: TIssueModalProviderProps) {
-  const { children, allowedProjectIds, templateId } = props;
+  const { children, allowedProjectIds, templateId, dataForPreload } = props;
   const { t } = useTranslation();
   // states
   const [selectedParentIssue, setSelectedParentIssue] = useState<ISearchIssueResponse | null>(null);
@@ -55,16 +55,23 @@ export const IssueModalProvider = observer(function IssueModalProvider(props: TI
     const template = workItemTemplateId ? findTemplate(workItemTemplateId) : undefined;
     if (!template) return;
     const data = template.template;
+    // Where the form was opened from (cycle, module, parent, board column, calendar day) outranks the template
+    const context = dataForPreload ?? {};
+    const moduleIds = [...new Set([...(context.module_ids ?? []), ...data.module_ids])];
     reset({
       ...DEFAULT_WORK_ITEM_FORM_VALUES,
       project_id: template.project,
       name: data.name,
       description_html: data.description_html,
-      priority: data.priority,
-      state_id: data.state_id ?? DEFAULT_WORK_ITEM_FORM_VALUES.state_id,
-      assignee_ids: data.assignee_ids,
-      label_ids: data.label_ids,
-      module_ids: data.module_ids.length ? data.module_ids : null,
+      priority: context.priority && context.priority !== "none" ? context.priority : data.priority,
+      state_id: context.state_id || data.state_id || DEFAULT_WORK_ITEM_FORM_VALUES.state_id,
+      parent_id: context.parent_id ?? null,
+      cycle_id: context.cycle_id ?? null,
+      start_date: context.start_date ?? null,
+      target_date: context.target_date ?? null,
+      assignee_ids: [...new Set([...(context.assignee_ids ?? []), ...data.assignee_ids])],
+      label_ids: [...new Set([...(context.label_ids ?? []), ...data.label_ids])],
+      module_ids: moduleIds.length ? moduleIds : null,
       estimate_point: data.estimate_point_id,
     });
     editorRef.current?.setEditorValue(data.description_html || "<p></p>");

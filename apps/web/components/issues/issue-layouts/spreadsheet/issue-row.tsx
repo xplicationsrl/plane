@@ -34,7 +34,10 @@ import { usePlatformOS } from "@/hooks/use-platform-os";
 // local components
 import type { TRenderQuickActions } from "../list/list-view-types";
 import { isIssueNew } from "../utils";
-import { CustomPropertyCells } from "@/components/custom-properties/spreadsheet-columns";
+import {
+  CustomPropertyCells,
+  useSpreadsheetCustomPropertyValues,
+} from "@/components/custom-properties/spreadsheet-columns";
 import { IssueColumn } from "./issue-column";
 
 interface Props {
@@ -82,6 +85,7 @@ export const SpreadsheetIssueRow = observer(function SpreadsheetIssueRow(props: 
   // derived values
   const issue = issueMap[issueId];
   const subIssues = subIssuesStore.subIssuesByIssueId(issueId);
+  useSpreadsheetCustomPropertyValues(isExpanded && !isEpic ? (subIssues ?? []) : []);
   const isIssueSelected = selectionHelpers.getIsEntitySelected(issueId);
   const isIssueActive = selectionHelpers.getIsEntityActive(issueId);
 
@@ -354,12 +358,14 @@ const IssueRowDetails = observer(function IssueRowDetails(props: IssueRowDetails
               </div>
 
               <div className="my-auto flex h-full w-full items-center justify-between gap-2 truncate">
-                <WorkItemColorSelect
-                  value={issueDetail.color_code}
-                  disabled={disableUserActions || !updateIssue}
-                  onChange={(color) => updateIssue?.(issueDetail.project_id, issueDetail.id, { color_code: color })}
-                  emptyClassName="opacity-0 group-hover/list-block:opacity-100"
-                />
+                {!issueDetail.tempId && (
+                  <WorkItemColorSelect
+                    value={issueDetail.color_code}
+                    disabled={disableUserActions || !updateIssue}
+                    onChange={(color) => updateIssue?.(issueDetail.project_id, issueDetail.id, { color_code: color })}
+                    emptyClassName="opacity-0 group-hover/list-block:opacity-100"
+                  />
+                )}
                 <div className="line-clamp-1 w-full text-14 text-primary">
                   <div className="w-full overflow-hidden">
                     <Tooltip label={issueDetail.name} layout="stacked" disabled={isMobile}>

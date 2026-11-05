@@ -83,3 +83,13 @@ class TestApiProjectCreateSerializerName:
             context={"workspace_id": workspace.id},
         )
         assert not serializer.is_valid()
+
+
+@pytest.mark.unit
+class TestProjectNameControlCharacters:
+    @pytest.mark.parametrize("name", ["a\n<script>", "a\nb", "a\tb", "a\x00b", "a\r\nb"])
+    def test_name_pattern_rejects_control_characters(self, name):
+        assert re.match(Project.FORBIDDEN_NAME_CHARS_PATTERN, name) is not None
+
+    def test_identifier_pattern_rejects_newlines(self):
+        assert re.match(Project.FORBIDDEN_IDENTIFIER_CHARS_PATTERN, "AB\nC") is not None

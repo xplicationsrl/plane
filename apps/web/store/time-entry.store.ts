@@ -89,8 +89,14 @@ export class TimeEntryStore implements ITimeEntryStore {
   stopTimer = async (workspaceSlug: string) => {
     const running = this.running;
     if (!running) return;
-    await this.service.update(workspaceSlug, running.project, running.issue, running.id, { stop: true });
-    runInAction(() => (this.running = null));
+    try {
+      await this.service.update(workspaceSlug, running.project, running.issue, running.id, { stop: true });
+      runInAction(() => (this.running = null));
+    } catch (error) {
+      // Possibly stopped elsewhere (another tab): trust the server, and only fail if it is still running
+      await this.fetchRunning(workspaceSlug);
+      if (this.running?.id === running.id) throw error;
+    }
     await this.refreshIfLoaded(workspaceSlug, running.project, running.issue);
   };
 

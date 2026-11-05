@@ -168,3 +168,64 @@ class TestTimers:
         )
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.contract
+class TestTimerOnRemoval:
+    def _start(self, workspace, project, issue):
+        user, client = _member(workspace, project, 15)
+        started = client.post(entries_url(workspace.slug, project.id, issue.id), {"timer": "start"}, format="json")
+        assert started.status_code == status.HTTP_201_CREATED, started.data
+        return user, client, IssueTimeEntry.objects.get(user=user)
+
+    def test_removal_from_project_stops_it_and_keeps_the_time(self, session_client, workspace, project, issue):
+        user, client, entry = self._start(workspace, project, issue)
+        membership = ProjectMember.objects.get(project=project, member=user)
+
+        response = session_client.delete(
+            f"/api/workspaces/{workspace.slug}/projects/{project.id}/members/{membership.id}/"
+        )
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        entry.refresh_from_db()
+        assert entry.ended_at is not None
+        assert entry.duration_seconds >= 1
+        assert client.get(running_url(workspace.slug)).data is None
+
+    def test_leaving_a_project_stops_it(self, workspace, project, issue):
+        _, client, entry = self._start(workspace, project, issue)
+
+        response = client.post(f"/api/workspaces/{workspace.slug}/projects/{project.id}/members/leave/")
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        entry.refresh_from_db()
+        assert entry.ended_at is not None
+
+    def test_removal_from_workspace_stops_it(self, session_client, workspace, project, issue):
+        user, _, entry = self._start(workspace, project, issue)
+        membership = WorkspaceMember.objects.get(workspace=workspace, member=user)
+
+        response = session_client.delete(f"/api/workspaces/{workspace.slug}/members/{membership.id}/")
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        entry.refresh_from_db()
+        assert entry.ended_at is not None
+
+    def test_timer_on_another_project_keeps_running(self, workspace, project, issue, create_user):
+        other = Project.objects.create(
+            name="Other", identifier=f"O{uuid4().hex[:4].upper()}", workspace=workspace, created_by=create_user
+        )
+        user, client, entry = self._start(workspace, project, issue)
+        ProjectMember.objects.create(project=other, member=user, workspace=workspace, role=15)
+
+        response = client.post(f"/api/workspaces/{workspace.slug}/projects/{other.id}/members/leave/")
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        entry.refresh_from_db()
+        assert entry.ended_at is None
+
+    def test_running_hides_work_item_when_membership_is_gone(self, workspace, project, issue):
+        user, client, entry = self._start(workspace, project, issue)
+        ProjectMember.objects.filter(project=project, member=user).update(is_active=False)
+
+        assert client.get(running_url(workspace.slug)).data is None

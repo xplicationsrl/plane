@@ -142,9 +142,10 @@ class Project(ChangeTrackerMixin, BaseModel):
         """Return name of the project"""
         return f"{self.name} <{self.workspace.name}>"
 
-    FORBIDDEN_IDENTIFIER_CHARS_PATTERN = r"^.*[&+,:;$^}{*=?@#|'<>.()%!-].*$"
+    # (?s) and the control characters: "." alone stops at a newline, which would let "a\n<script>" through
+    FORBIDDEN_IDENTIFIER_CHARS_PATTERN = r"(?s)^.*[\x00-\x1f\x7f&+,:;$^}{*=?@#|'<>.()%!-].*$"
     # Project names may contain "-" and "." (e.g. "my-project.v2"); identifiers may not
-    FORBIDDEN_NAME_CHARS_PATTERN = r"^.*[&+,:;$^}{*=?@#|'<>()%!].*$"
+    FORBIDDEN_NAME_CHARS_PATTERN = r"(?s)^.*[\x00-\x1f\x7f&+,:;$^}{*=?@#|'<>()%!].*$"
 
     class Meta:
         unique_together = [

@@ -141,6 +141,7 @@ export const CalendarIssueBlock = observer(
                         projectId={issue.project_id}
                         size="xs"
                         variant="tertiary"
+                        compact
                         displayProperties={issuesFilter?.issueFilters?.displayProperties}
                       />
                     )}

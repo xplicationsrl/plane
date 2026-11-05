@@ -16,13 +16,17 @@ from plane.db.models import (
     Issue,
     IssueLabel,
     IssueProjectLink,
+    IssueRelation,
     Page,
     Project,
     ProjectMember,
     ProjectPage,
+    User,
     Workspace,
     WorkspaceMember,
 )
+
+WORKSPACE_ADMIN_ROLE = 20
 
 
 def _fk_to(model, field_name, target):
@@ -48,7 +52,8 @@ def move_projects(source, target, identifiers):
     if source.id == target.id:
         raise CommandError("Source and target workspace are the same")
 
-    projects = list(Project.all_objects.filter(workspace=source, identifier__in=identifiers))
+    # Trashed projects keep their identifier, so a live one's move must not drag them along
+    projects = list(Project.all_objects.filter(workspace=source, identifier__in=identifiers, deleted_at__isnull=True))
     missing = sorted(set(identifiers) - {p.identifier for p in projects})
     if missing:
         raise CommandError(f"Projects not found in '{source.slug}': {', '.join(missing)}")
@@ -79,7 +84,17 @@ def move_projects(source, target, identifiers):
         .values_list("label__name", flat=True)
     )
     if workspace_labels:
-        blockers.append(f"Work items use labels that don't belong to the moved projects: {', '.join(set(workspace_labels))}")
+        blockers.append(
+            f"Work items use labels that don't belong to the moved projects: {', '.join(set(workspace_labels))}"
+        )
+
+    relations = (
+        IssueRelation._base_manager.filter(deleted_at__isnull=True)
+        .filter(models.Q(issue_id__in=issue_ids) | models.Q(related_issue_id__in=issue_ids))
+        .exclude(issue_id__in=issue_ids, related_issue_id__in=issue_ids)
+    )
+    if relations.exists():
+        blockers.append(f"{relations.count()} work item relations point to work items that stay in '{source.slug}'")
 
     typed = Issue.all_objects.filter(project_id__in=project_ids, type__isnull=False)
     if typed.exists():
@@ -133,9 +148,7 @@ def move_projects(source, target, identifiers):
         except FieldDoesNotExist:
             parent = None
         if isinstance(parent, models.ForeignKey) and parent.related_model is model and parent.null:
-            manager.filter(workspace=target, parent__isnull=False).exclude(parent__workspace=target).update(
-                parent=None
-            )
+            manager.filter(workspace=target, parent__isnull=False).exclude(parent__workspace=target).update(parent=None)
 
     # Everyone active on a moved project needs to be a member of the target workspace
     member_ids = set(
@@ -147,22 +160,33 @@ def move_projects(source, target, identifiers):
         WorkspaceMember.objects.filter(workspace=source, member_id__in=member_ids).values_list("member_id", "role")
     )
     added = 0
+    new_admin_ids = []
     for member_id in member_ids:
         workspace_member = WorkspaceMember.objects.filter(workspace=target, member_id=member_id).first()
         if workspace_member is None:
-            WorkspaceMember.objects.create(workspace=target, member_id=member_id, role=source_roles.get(member_id, 5))
+            role = source_roles.get(member_id, 5)
+            WorkspaceMember.objects.create(workspace=target, member_id=member_id, role=role)
             added += 1
+            if role >= WORKSPACE_ADMIN_ROLE:
+                new_admin_ids.append(member_id)
         elif not workspace_member.is_active:
             workspace_member.is_active = True
             workspace_member.save(update_fields=["is_active"])
             added += 1
     counts["WorkspaceMember (added)"] = added
+    if new_admin_ids:
+        emails = sorted(User.objects.filter(id__in=new_admin_ids).values_list("email", flat=True))
+        warnings.append(
+            f"Now workspace admins of '{target.slug}', same role as in '{source.slug}': {', '.join(emails)}"
+        )
 
     return counts, warnings
 
 
 class Command(BaseCommand):
-    help = "Move projects (with all their work items, pages, members, ...) to another workspace. Dry run unless --commit"
+    help = (
+        "Move projects (with all their work items, pages, members, ...) to another workspace. Dry run unless --commit"
+    )
 
     def add_arguments(self, parser):
         parser.add_argument("--source", required=True, help="Source workspace slug")

@@ -251,6 +251,7 @@ export const SubIssuesListItem = observer(function SubIssuesListItem(props: Prop
                       projectIdentifier={projectDetail.identifier}
                       issueSequenceId={issue.sequence_id}
                       size="xs"
+                      compact
                       variant="secondary"
                     />
                   )}

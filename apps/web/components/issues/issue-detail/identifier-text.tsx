@@ -31,11 +31,18 @@ const VARIANT_MAP: Record<TIdentifierTextVariant, string> = {
 };
 
 export function ProjectNameText(props: TProjectNameTextProps) {
-  const { projectName, size = "lg", variant = "default" } = props;
+  const { projectName, size = "lg", variant = "default", compact = false } = props;
 
   return (
     <Tooltip label={projectName}>
-      <span className={cn("block max-w-52 truncate text-12 font-medium", SIZE_MAP[size], VARIANT_MAP[variant])}>
+      <span
+        className={cn(
+          "block truncate text-12 font-medium",
+          compact ? "max-w-24" : "max-w-52",
+          SIZE_MAP[size],
+          VARIANT_MAP[variant]
+        )}
+      >
         {projectName}
       </span>
     </Tooltip>

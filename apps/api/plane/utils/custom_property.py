@@ -56,6 +56,9 @@ def normalize_value(prop, value):
     """
     if value is None or value == "" or value == []:
         return None
+    # Postgres can't store NUL, in text or in JSON
+    if isinstance(value, str) and "\x00" in value:
+        raise ValidationError("Invalid characters.")
 
     kind = prop.property_type
     if kind == CustomPropertyType.TEXT:
@@ -70,7 +73,7 @@ def normalize_value(prop, value):
             raise ValidationError("Expected a number.")
         try:
             number = float(value)
-        except ValueError:
+        except (OverflowError, ValueError):
             raise ValidationError("Expected a number.")
         if not math.isfinite(number):
             raise ValidationError("Expected a finite number.")

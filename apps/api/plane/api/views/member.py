@@ -12,6 +12,7 @@ from drf_spectacular.utils import (
 )
 
 # Module imports
+from plane.utils.time_entry import stop_timers_on_removal
 from .base import BaseAPIView
 from plane.api.serializers import (
     UserLiteSerializer,
@@ -232,6 +233,7 @@ class ProjectMemberDetailAPIEndpoint(ProjectMemberListCreateAPIEndpoint):
         project_member = ProjectMember.objects.get(project_id=project_id, workspace__slug=slug, pk=pk)
         project_member.is_active = False
         project_member.save()
+        stop_timers_on_removal(project_member.member_id, project_id=project_id)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

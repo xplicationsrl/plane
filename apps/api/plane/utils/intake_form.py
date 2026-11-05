@@ -134,7 +134,11 @@ def _text(value, limit):
         return ""
     if not isinstance(value, (str, int, float)):
         raise ValidationError("Expected text.")
-    return str(value).strip()[:limit]
+    text = str(value)
+    # Postgres can't store NUL
+    if "\x00" in text:
+        raise ValidationError("Invalid characters.")
+    return text.strip()[:limit]
 
 
 def validate_submission(form, values):

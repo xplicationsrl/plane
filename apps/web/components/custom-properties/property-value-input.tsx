@@ -4,7 +4,7 @@
  * See the LICENSE file for details.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react";
 // plane imports
 import { NewTabOutline } from "@makeplane/propel/icons";
@@ -46,10 +46,16 @@ function InlineTextInput(props: {
 }) {
   const { type, value, placeholder, disabled, onCommit } = props;
   const [draft, setDraft] = useState(value);
+  // Escape blurs before the reverted draft has rendered, so the blur must not save
+  const skipCommitRef = useRef(false);
 
   useEffect(() => setDraft(value), [value]);
 
   const commit = () => {
+    if (skipCommitRef.current) {
+      skipCommitRef.current = false;
+      return;
+    }
     if (draft.trim() !== value) onCommit(draft.trim());
   };
 
@@ -67,6 +73,7 @@ function InlineTextInput(props: {
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.nativeEvent.isComposing) e.currentTarget.blur();
           if (e.key === "Escape") {
+            skipCommitRef.current = true;
             setDraft(value);
             e.currentTarget.blur();
           }

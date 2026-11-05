@@ -4,7 +4,7 @@
  * See the LICENSE file for details.
  */
 
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { differenceInCalendarDays } from "date-fns/differenceInCalendarDays";
@@ -84,7 +84,8 @@ export const CalendarDayTile = observer(function CalendarDayTile(props: Props) {
   const dayTileRef = useRef<HTMLDivElement | null>(null);
 
   // Reads the latest issues map and drop handler without re-registering the drop target
-  const handleDrop = useEffectEvent((sourceData: { id: string; date: string }, destinationDate: string) => {
+  // Not `useEffectEvent`: on React 19.2.8 it keeps the first render's callback in `observer` components.
+  const handleDrop = (sourceData: { id: string; date: string }, destinationDate: string) => {
     const issueDetails = issues?.[sourceData?.id];
     if (issueDetails?.start_date) {
       const issueStartDate = new Date(issueDetails.start_date);
@@ -102,6 +103,10 @@ export const CalendarDayTile = observer(function CalendarDayTile(props: Props) {
 
     handleDragAndDrop(sourceData?.id, issueDetails?.project_id ?? undefined, sourceData?.date, destinationDate);
     return true;
+  };
+  const handleDropRef = useRef(handleDrop);
+  useLayoutEffect(() => {
+    handleDropRef.current = handleDrop;
   });
 
   useEffect(() => {
@@ -125,7 +130,7 @@ export const CalendarDayTile = observer(function CalendarDayTile(props: Props) {
           const destinationData = self?.data as { date: string } | undefined;
           if (!sourceData || !destinationData) return;
 
-          if (!handleDrop(sourceData, destinationData.date)) return;
+          if (!handleDropRef.current(sourceData, destinationData.date)) return;
           highlightIssueOnDrop(source?.element?.id, false);
         },
       })

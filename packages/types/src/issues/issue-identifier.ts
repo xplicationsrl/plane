@@ -16,6 +16,8 @@ export type TIssueIdentifierBaseProps = {
   variant?: TIdentifierTextVariant;
   displayProperties?: IIssueDisplayProperties | undefined;
   enableClickToCopyIdentifier?: boolean;
+  /** Narrow rows (calendar cells, sub-work items): keeps a long project name from squeezing the title. */
+  compact?: boolean;
 };
 
 export type TIssueIdentifierFromStore = TIssueIdentifierBaseProps & {
@@ -39,6 +41,7 @@ export type TProjectNameTextProps = {
   projectName: string;
   size?: TIssueIdentifierSize;
   variant?: TIdentifierTextVariant;
+  compact?: boolean;
 };
 
 export type TIdentifierTextProps = {

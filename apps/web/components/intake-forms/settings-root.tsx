@@ -39,7 +39,9 @@ type Props = {
   canEdit: boolean;
 };
 
-export const formPublicUrl = (anchor: string) => `${SITES_URL}/forms/${anchor}`;
+// Same origin when the space app has no URL of its own, so copied links stay absolute
+export const formPublicUrl = (anchor: string) =>
+  `${SITES_URL.startsWith("http") || typeof window === "undefined" ? "" : window.location.origin}${SITES_URL}/forms/${anchor}`;
 
 export const ProjectIntakeFormsSettings = observer(function ProjectIntakeFormsSettings(props: Props) {
   const { workspaceSlug, projectId, canEdit } = props;

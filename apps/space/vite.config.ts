@@ -6,6 +6,8 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { joinUrlPath } from "@plane/utils";
 
 dotenv.config({ path: path.resolve(__dirname, ".env") });
+// `react-router build` sets NODE_ENV=production; dotenv never overrides values that are already set
+if (process.env.NODE_ENV === "production") dotenv.config({ path: path.resolve(__dirname, ".env.production") });
 
 // Expose only vars starting with VITE_
 const viteEnv = Object.keys(process.env)

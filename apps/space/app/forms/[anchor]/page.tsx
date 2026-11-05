@@ -180,8 +180,10 @@ function PublicFormPage() {
         success_message?: string;
       };
       if (!response.ok) {
-        setErrors(body.errors ?? {});
-        setFormError(t("intake_forms.public.fix_errors"));
+        // Only a validation failure is something the visitor can fix
+        const isValidationError = response.status === 400 && !!body.errors;
+        setErrors(isValidationError ? (body.errors ?? {}) : {});
+        setFormError(t(isValidationError ? "intake_forms.public.fix_errors" : "intake_forms.public.error"));
         return;
       }
       setSuccessMessage(body.success_message || "");

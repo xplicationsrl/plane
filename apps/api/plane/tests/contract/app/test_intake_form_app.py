@@ -215,3 +215,13 @@ class TestPublicForm:
         with mock.patch.object(FormSubmitThrottle, "rate", "2/hour"):
             codes = [_submit(form.anchor, values).status_code for _ in range(3)]
         assert codes == [201, 201, 429]
+
+
+@pytest.mark.contract
+class TestPublicFormBadInput:
+    def test_nul_in_text_is_a_field_error_not_a_500(self, form, project):
+        response = _submit(form.anchor, {"name": "a\x00b", "description": "x", "submitter_email": "a@example.com"})
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "name" in response.data["errors"]
+        assert not Issue.objects.filter(project=project).exists()

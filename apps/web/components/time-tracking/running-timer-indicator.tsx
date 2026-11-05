@@ -32,6 +32,14 @@ export const RunningTimerIndicator = observer(function RunningTimerIndicator(pro
     if (workspaceSlug) void fetchRunning(workspaceSlug).catch(() => undefined);
   }, [workspaceSlug, fetchRunning]);
 
+  // Pick up timers started or stopped elsewhere (another tab, device, or removal from a project)
+  useEffect(() => {
+    if (!workspaceSlug) return;
+    const handleFocus = () => void fetchRunning(workspaceSlug).catch(() => undefined);
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [workspaceSlug, fetchRunning]);
+
   // A timer started from a work item doesn't carry its details yet
   useEffect(() => {
     if (workspaceSlug && running && !running.issue_detail) void fetchRunning(workspaceSlug).catch(() => undefined);

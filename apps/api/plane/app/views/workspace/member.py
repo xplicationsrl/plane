@@ -24,6 +24,7 @@ from plane.app.serializers import (
 from plane.app.views.base import BaseAPIView
 from plane.db.models import Project, ProjectMember, WorkspaceMember, DraftIssue
 from plane.utils.cache import invalidate_cache
+from plane.utils.time_entry import stop_timers_on_removal
 
 from .. import BaseViewSet
 
@@ -173,6 +174,7 @@ class WorkSpaceMemberViewSet(BaseViewSet):
 
         workspace_member.is_active = False
         workspace_member.save()
+        stop_timers_on_removal(workspace_member.member_id, workspace__slug=slug)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @invalidate_cache(
@@ -215,6 +217,7 @@ class WorkSpaceMemberViewSet(BaseViewSet):
         # # Deactivate the user
         workspace_member.is_active = False
         workspace_member.save()
+        stop_timers_on_removal(workspace_member.member_id, workspace__slug=slug)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

@@ -13,6 +13,7 @@ from rest_framework.test import APIClient
 
 from plane.db.models import (
     CustomProperty,
+    Intake,
     Issue,
     IssueAssignee,
     IssueCustomPropertyValue,
@@ -26,7 +27,11 @@ from plane.db.models import (
     WorkItemTemplate,
     WorkspaceMember,
 )
-from plane.utils.templates import apply_work_item_template_extras
+from plane.utils.templates import (
+    apply_project_template,
+    apply_work_item_template_extras,
+    sanitize_work_item_template,
+)
 
 
 def templates_url(slug, project_id, pk=None, apply=False):
@@ -353,3 +358,36 @@ class TestProjectTemplates:
         assert list(CustomProperty.objects.filter(project=project, name__iexact="severity")) == [existing]
         starter = Issue.objects.get(project=project, name="Starter")
         assert IssueCustomPropertyValue.objects.get(issue=starter).property_id == existing.id
+
+
+@pytest.mark.contract
+class TestTemplateIntakeAndSanitizing:
+    def test_applying_a_template_with_intake_on_creates_the_default_intake(self, db, workspace, create_user):
+        target = _project(workspace, create_user, name="Intake target")
+
+        apply_project_template(target, {"settings": {"intake_view": True}}, create_user.id)
+        apply_project_template(target, {"settings": {"intake_view": True}}, create_user.id)
+
+        target.refresh_from_db()
+        assert target.intake_view is True
+        assert Intake.objects.filter(project=target, is_default=True).count() == 1
+
+    def test_template_without_intake_creates_none(self, db, workspace, create_user):
+        target = _project(workspace, create_user, name="No intake")
+
+        apply_project_template(target, {"settings": {"intake_view": False}}, create_user.id)
+
+        assert not Intake.objects.filter(project=target).exists()
+
+    def test_sub_item_html_is_sanitized(self, db, project):
+        dirty = '<p>ok</p><img src="x" onerror="alert(1)"><script>alert(2)</script>'
+
+        cleaned = sanitize_work_item_template(
+            project.id,
+            {"name": "Parent", "description_html": dirty, "sub_issues": [{"name": "Child", "description_html": dirty}]},
+        )
+
+        for html in (cleaned["description_html"], cleaned["sub_issues"][0]["description_html"]):
+            assert "onerror" not in html
+            assert "<script" not in html
+            assert "<p>ok</p>" in html

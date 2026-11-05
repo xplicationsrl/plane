@@ -15,6 +15,7 @@ from django.db import transaction
 from plane.db.models import (
     CustomProperty,
     EstimatePoint,
+    Intake,
     Issue,
     IssueAssignee,
     IssueCustomPropertyValue,
@@ -27,6 +28,7 @@ from plane.db.models import (
     StateGroup,
     WorkItemTemplate,
 )
+from plane.utils.content_validator import validate_html_content
 from plane.utils.custom_property import normalize_options, normalize_value, valid_uuids
 from plane.utils.issue_copy import add_issue_relations, record_created_activity
 
@@ -69,6 +71,14 @@ def snapshot_work_item(issue):
     return data
 
 
+def _clean_html(value):
+    """Work item HTML from a template goes through the same sanitizer as every other writer."""
+    is_valid, error, clean_html = validate_html_content(str(value or "<p></p>"))
+    if not is_valid:
+        raise ValidationError(error)
+    return clean_html or "<p></p>"
+
+
 def _ids_in(values, queryset, field="id"):
     wanted = valid_uuids(values if isinstance(values, list) else [])
     found = {str(i) for i in queryset.filter(**{f"{field}__in": wanted}).values_list(field, flat=True)}
@@ -89,7 +99,7 @@ def sanitize_work_item_template(project_id, data):
         priority = item.get("priority", "none")
         return {
             "name": name,
-            "description_html": str(item.get("description_html") or "<p></p>"),
+            "description_html": _clean_html(item.get("description_html")),
             "priority": priority if priority in PRIORITIES else "none",
             "assignee_ids": _ids_in(item.get("assignee_ids"), members, "member_id"),
             "label_ids": _ids_in(item.get("label_ids"), labels),
@@ -272,7 +282,7 @@ def _named_template_to_ids(template, states, labels, properties):
     state = states.get(template.get("state") or "")
     return {
         "name": str(template.get("name", ""))[:255],
-        "description_html": str(template.get("description_html") or "<p></p>"),
+        "description_html": _clean_html(template.get("description_html")),
         "priority": template.get("priority") if template.get("priority") in PRIORITIES else "none",
         "state_id": str(state.id) if state else None,
         "assignee_ids": [],
@@ -283,7 +293,7 @@ def _named_template_to_ids(template, states, labels, properties):
         "sub_issues": [
             {
                 "name": str(child.get("name", ""))[:255],
-                "description_html": str(child.get("description_html") or "<p></p>"),
+                "description_html": _clean_html(child.get("description_html")),
                 "priority": child.get("priority") if child.get("priority") in PRIORITIES else "none",
                 "assignee_ids": [],
                 "label_ids": [str(labels[name].id) for name in child.get("labels", []) if name in labels],
@@ -310,6 +320,9 @@ def apply_project_template(project, data, actor_id):
             if feature in PROJECT_FEATURES:
                 setattr(project, feature, bool(enabled))
         project.save(update_fields=[*PROJECT_FEATURES, "updated_at"])
+        # Intake needs its default row, which the project settings PATCH would otherwise create
+        if project.intake_view and not Intake.objects.filter(project=project, is_default=True).exists():
+            Intake(name=f"{project.name} Intake", project=project, is_default=True).save(created_by_id=actor_id)
 
         # States
         states = {s.name: s for s in State.objects.filter(project=project)}

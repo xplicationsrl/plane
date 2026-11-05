@@ -140,7 +140,10 @@ export const ExtendedSidebarItem = observer(function ExtendedSidebarItem(props: 
     item.key === "your_work"
       ? `/${workspaceSlug.toString()}${item.href}${data?.id}`
       : `/${workspaceSlug.toString()}${item.href}`;
-  const isActive = itemHref === pathname;
+  // your work opens on the assigned tab, but stays highlighted across all of its tabs
+  const isYourWork = item.key === "your_work";
+  const linkHref = isYourWork ? `${itemHref}/assigned` : itemHref;
+  const isActive = isYourWork ? pathname.includes(itemHref) : itemHref === pathname;
 
   const pinNavigationItem = (key: string) => {
     toggleWorkspaceItem(key, true);
@@ -189,7 +192,7 @@ export const ExtendedSidebarItem = observer(function ExtendedSidebarItem(props: 
           </Tooltip>
         )}
         <SidebarNavItem isActive={isActive}>
-          <Link href={itemHref} onClick={() => handleLinkClick()} className="group flex-grow">
+          <Link href={linkHref} onClick={() => handleLinkClick()} className="group flex-grow">
             <div className="flex items-center gap-1.5 py-[1px]">
               {icon}
               <p className="text-13 leading-5 font-medium">{t(item.labelTranslationKey)}</p>

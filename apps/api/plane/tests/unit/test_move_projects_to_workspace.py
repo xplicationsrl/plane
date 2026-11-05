@@ -2,15 +2,19 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # See the LICENSE file for details.
 
+from io import StringIO
+
 import pytest
 from django.core.management import call_command
 from django.core.management.base import CommandError
+from django.utils import timezone
 
 from plane.db.models import (
     CustomProperty,
     Issue,
     IssueCustomPropertyValue,
     IssueLabel,
+    IssueRelation,
     Label,
     Page,
     Project,
@@ -103,9 +107,7 @@ class TestMoveProjectsToWorkspace:
 
     def test_unknown_identifier_fails(self, setup):
         with pytest.raises(CommandError, match="NOPE"):
-            call_command(
-                "move_projects_to_workspace", "--source=test-workspace", "--target=ses-uri", "--projects=NOPE"
-            )
+            call_command("move_projects_to_workspace", "--source=test-workspace", "--target=ses-uri", "--projects=NOPE")
 
     def test_page_shared_with_staying_project_blocks(self, setup):
         ProjectPage.objects.create(project=setup["stays"], page=setup["page"], workspace=setup["source"])
@@ -126,3 +128,49 @@ class TestMoveProjectsToWorkspace:
         Project.objects.create(name="my-project.v2", identifier="OTHER", workspace=setup["target"])
         with pytest.raises(CommandError, match="my-project.v2"):
             _move("--commit")
+
+
+@pytest.mark.django_db
+class TestMoveProjectsSafety:
+    def test_trashed_project_with_the_same_identifier_stays(self, setup):
+        trashed = Project.objects.create(name="Old", identifier="OLD", workspace=setup["source"])
+        Project.all_objects.filter(pk=trashed.pk).update(deleted_at=timezone.now())
+
+        with pytest.raises(CommandError, match="OLD"):
+            call_command(
+                "move_projects_to_workspace",
+                "--source=test-workspace",
+                "--target=ses-uri",
+                "--projects=OLD",
+                "--commit",
+            )
+
+        assert Project.all_objects.get(pk=trashed.pk).workspace_id == setup["source"].id
+
+    def test_relation_to_an_item_left_behind_blocks(self, setup):
+        IssueRelation.objects.create(
+            issue=setup["issue"],
+            related_issue=setup["stays_issue"],
+            project=setup["moved"],
+            workspace=setup["source"],
+            relation_type="relates_to",
+        )
+
+        with pytest.raises(CommandError, match="relations"):
+            _move("--commit")
+
+    def test_keeps_source_role_and_reports_new_admins(self, setup):
+        WorkspaceMember.objects.filter(workspace=setup["source"], member=setup["other_user"]).update(role=20)
+
+        out = StringIO()
+        call_command(
+            "move_projects_to_workspace",
+            "--source=test-workspace",
+            "--target=ses-uri",
+            "--projects=MOVED",
+            "--commit",
+            stdout=out,
+        )
+
+        assert WorkspaceMember.objects.get(workspace=setup["target"], member=setup["other_user"]).role == 20
+        assert setup["other_user"].email in out.getvalue()

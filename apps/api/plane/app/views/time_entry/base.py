@@ -20,9 +20,7 @@ from plane.app.serializers import UserLiteSerializer
 from plane.app.views.base import BaseAPIView
 from plane.app.views.issue.access import get_accessible_issue
 from plane.db.models import IssueTimeEntry, ProjectMember
-
-# A single entry can't exceed a day; longer work is logged across days.
-MAX_ENTRY_SECONDS = 24 * 60 * 60
+from plane.utils.time_entry import MAX_ENTRY_SECONDS, stop_timer
 
 
 class TimeEntrySerializer(serializers.ModelSerializer):
@@ -56,16 +54,6 @@ class TimeEntrySerializer(serializers.ModelSerializer):
         if value > timezone.localdate() + timedelta(days=366):
             raise serializers.ValidationError("Date is too far in the future.")
         return value
-
-
-def stop_timer(entry, now=None):
-    """Finish a running timer, capping it at a day so a forgotten timer stays sane."""
-    now = now or timezone.now()
-    elapsed = int((now - entry.started_at).total_seconds())
-    entry.ended_at = now
-    entry.duration_seconds = max(1, min(elapsed, MAX_ENTRY_SECONDS))
-    entry.save(update_fields=["ended_at", "duration_seconds", "updated_at"])
-    return entry
 
 
 def time_summary(issue):
@@ -189,7 +177,13 @@ class RunningTimeEntryEndpoint(BaseAPIView):
             .select_related("issue", "project")
             .first()
         )
-        if entry is None:
+        # No details of a work item the caller can no longer reach
+        if (
+            entry is None
+            or not ProjectMember.objects.filter(
+                project_id=entry.project_id, member=request.user, is_active=True
+            ).exists()
+        ):
             return Response(None, status=status.HTTP_200_OK)
         data = TimeEntrySerializer(entry).data
         data["issue_detail"] = {

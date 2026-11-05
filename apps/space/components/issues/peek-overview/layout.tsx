@@ -4,7 +4,7 @@
  * See the LICENSE file for details.
  */
 
-import { useCallback, useEffect, useEffectEvent, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import { useRouter, useSearchParams } from "next/navigation";
 // plane imports
@@ -70,7 +70,11 @@ export const IssuePeekOverview = observer(function IssuePeekOverview(props: TIss
 
   // Called from the document listeners below: always sees the latest `handleClose` without
   // re-subscribing those listeners every time the query params or router change.
-  const onDismiss = useEffectEvent(() => handleClose());
+  // Not `useEffectEvent`: on React 19.2.8 it keeps the first render's callback in `observer` components.
+  const handleCloseRef = useRef(handleClose);
+  useLayoutEffect(() => {
+    handleCloseRef.current = handleClose;
+  });
 
   // propel (ruling 36): the peek was a Headless UI `Dialog` + `Transition`. Propel's `DialogContent`
   // ladder cannot express the `w-1/2` side sheet or the `h-[70%] w-3/5` / `size-[95%]` modal/full
@@ -90,7 +94,7 @@ export const IssuePeekOverview = observer(function IssuePeekOverview(props: TIss
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         if (event.defaultPrevented || isInsideNestedPopup(event.target)) return;
-        onDismiss();
+        handleCloseRef.current();
         return;
       }
       if (event.key !== "Tab" || !panelRef.current) return;
@@ -128,7 +132,7 @@ export const IssuePeekOverview = observer(function IssuePeekOverview(props: TIss
       if (panelRef.current?.contains(target)) return;
       if (isInsideNestedPopup(target)) return;
       if (target.closest('a[href*="peekId="]')) return;
-      onDismiss();
+      handleCloseRef.current();
     };
 
     document.addEventListener("keydown", handleKeyDown);
