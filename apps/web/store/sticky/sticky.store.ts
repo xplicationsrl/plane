@@ -212,6 +212,8 @@ export class StickyStore implements IStickyStore {
   deleteSticky = async (workspaceSlug: string, id: string) => {
     const sticky = this.stickies[id];
     if (!sticky) return;
+    const previousStickyIds = this.workspaceStickies[workspaceSlug];
+    const previousRecentStickyId = this.recentStickyId;
     try {
       this.workspaceStickies[workspaceSlug] = this.workspaceStickies[workspaceSlug].filter(
         (stickyId) => stickyId !== id
@@ -221,8 +223,13 @@ export class StickyStore implements IStickyStore {
       this.recentStickyId = this.workspaceStickies[workspaceSlug][0];
       await this.stickyService.deleteSticky(workspaceSlug, id);
     } catch (e) {
-      console.log(e);
-      this.stickies[id] = sticky;
+      console.error("Error in deleting sticky:", e);
+      runInAction(() => {
+        this.stickies[id] = sticky;
+        this.workspaceStickies[workspaceSlug] = previousStickyIds;
+        this.recentStickyId = previousRecentStickyId;
+      });
+      throw e;
     }
   };
 

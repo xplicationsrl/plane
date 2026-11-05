@@ -7,7 +7,10 @@
 import { useCallback, useState } from "react";
 import { debounce } from "lodash-es";
 import { observer } from "mobx-react";
-import { ArrowCollapseOutline } from "@makeplane/propel/icons";
+import { Tooltip } from "@makeplane/propel/components/tooltip";
+import { ArrowCollapseOutline, CloseOutline } from "@makeplane/propel/icons";
+// plane imports
+import { useTranslation } from "@plane/i18n";
 // plane types
 import type { TSticky } from "@plane/types";
 // plane utils
@@ -36,11 +39,14 @@ export const StickyNote = observer(function StickyNote(props: TProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   // store hooks
   const { stickies } = useSticky();
+  const { t } = useTranslation();
   // sticky operations
   const { stickyOperations } = useStickyOperations({ workspaceSlug });
   // derived values
   const stickyData: Partial<TSticky> = stickyId ? stickies[stickyId] : { background_color: getRandomStickyColor() };
   // const isStickiesPage = pathName?.includes("stickies");
+  // the drag preview passes showToolbar={false} and should not show any actions
+  const canDelete = !!stickyId && showToolbar !== false;
   const backgroundColor =
     STICKY_COLORS_LIST.find((c) => c.key === stickyData?.background_color)?.backgroundColor ||
     STICKY_COLORS_LIST[0].backgroundColor;
@@ -86,10 +92,26 @@ export const StickyNote = observer(function StickyNote(props: TProps) {
         }}
       >
         {/* {isStickiesPage && <StickyItemDragHandle isDragging={false} />}{" "} */}
-        {onClose && (
-          <button type="button" className="flex flex-shrink-0 justify-end p-2.5" onClick={onClose}>
-            <ArrowCollapseOutline className="size-4" />
-          </button>
+        {(canDelete || onClose) && (
+          <div className="flex flex-shrink-0 items-center justify-end gap-2 p-2.5">
+            {canDelete && (
+              <Tooltip label={t("stickies.delete")}>
+                <button
+                  type="button"
+                  aria-label={t("stickies.delete")}
+                  className="flex text-primary/70 transition-colors hover:text-primary"
+                  onClick={() => setIsDeleteModalOpen(true)}
+                >
+                  <CloseOutline className="size-4" />
+                </button>
+              </Tooltip>
+            )}
+            {onClose && (
+              <button type="button" className="flex" onClick={onClose}>
+                <ArrowCollapseOutline className="size-4" />
+              </button>
+            )}
+          </div>
         )}
         {/* inputs */}
         <div className="-mt-2">

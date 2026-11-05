@@ -375,9 +375,10 @@ class WorkspaceHomePreference(BaseModel):
     """Preference for the home page of a workspace for a user"""
 
     class HomeWidgetKeys(models.TextChoices):
+        # Declaration order is the default order on a new user's home page.
+        MY_STICKIES = "my_stickies", "My Stickies"
         QUICK_LINKS = "quick_links", "Quick Links"
         RECENTS = "recents", "Recents"
-        MY_STICKIES = "my_stickies", "My Stickies"
         NEW_AT_PLANE = "new_at_plane", "New at Plane"
         QUICK_TUTORIAL = "quick_tutorial", "Quick Tutorial"
 
