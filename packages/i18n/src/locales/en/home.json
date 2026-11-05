@@ -63,6 +63,22 @@
       "reordering_failed": "Error occurred while reordering widget."
     },
     "manage_widgets": "Manage widgets",
+    "suggestions": {
+      "title": "Suggest a feature",
+      "description": "Tell us what you'd like to see. Your name and email are sent with your suggestion.",
+      "placeholder": "What would make this work better for you?",
+      "submit": "Send suggestion",
+      "toasts": {
+        "sent": {
+          "title": "Thanks!",
+          "message": "Your suggestion was sent."
+        },
+        "failed": {
+          "title": "Couldn't send your suggestion",
+          "message": "Please try again in a moment."
+        }
+      }
+    },
     "title": "Home",
     "star_us_on_github": "Star us on GitHub",
     "business_trial_banner": {

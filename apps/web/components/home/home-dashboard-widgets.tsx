@@ -20,6 +20,7 @@ import { useHome } from "@/hooks/store/use-home";
 import { useProject } from "@/hooks/store/use-project";
 // local imports
 import { StickiesWidget } from "../stickies/widget";
+import { SuggestionBox } from "./suggestion-box";
 import { HomeLoader, NoProjectsEmptyState, RecentActivityWidget } from "./widgets";
 import { DashboardQuickLinks } from "./widgets/links";
 import { ManageWidgetsModal } from "./widgets/manage";
@@ -110,6 +111,8 @@ export const DashboardWidgets = observer(function DashboardWidgets() {
           />
         </div>
       )}
+
+      {!isWikiApp && <SuggestionBox workspaceSlug={workspaceSlug.toString()} />}
     </div>
   );
 });
