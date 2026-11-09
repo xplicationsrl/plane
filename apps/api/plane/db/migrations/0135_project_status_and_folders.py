@@ -91,7 +91,7 @@ class Migration(migrations.Migration):
                     ("completed", "Done"),
                     ("cancelled", "Cancelled"),
                 ],
-                default="started",
+                default="backlog",
                 max_length=20,
             ),
         ),

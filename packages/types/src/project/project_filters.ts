@@ -13,8 +13,11 @@ export type TProjectOrderByOptions =
   | "members_length"
   | "-members_length";
 
-/** Which projects the projects page shows, by status. "not_done" covers backlog, todo and in progress. */
-export type TProjectCompletionFilter = "not_done" | "done" | "cancelled" | "all";
+/**
+ * Which projects the projects page shows, by status. "not_done" covers backlog, todo and in progress;
+ * "in_progress" is the in-progress part of it on its own.
+ */
+export type TProjectCompletionFilter = "not_done" | "in_progress" | "done" | "cancelled" | "all";
 
 export type TProjectDisplayFilters = {
   my_projects?: boolean;

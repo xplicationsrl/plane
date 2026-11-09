@@ -128,7 +128,7 @@ class Project(ChangeTrackerMixin, BaseModel):
     )
     # Like a work item's state group. Set by hand; also moved to "completed" when every work item is
     # closed, and back to "started" by a new work item (see plane.utils.project_status).
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="started")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="backlog")
     # Set when a new work item took a done project back to in progress, so the projects page can say why;
     # cleared on dismiss or on the next status change.
     reopened_at = models.DateTimeField(null=True, blank=True)

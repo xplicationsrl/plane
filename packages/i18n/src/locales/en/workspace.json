@@ -203,6 +203,7 @@
     "completion": {
       "label": "Show projects",
       "not_done": "Not done",
+      "in_progress": "In progress",
       "done": "Done",
       "cancelled": "Cancelled",
       "all": "All",
@@ -210,6 +211,10 @@
         "not_done": {
           "title": "Nothing left to do",
           "description": "Every project is done or cancelled. Look under Done, or add a new project."
+        },
+        "in_progress": {
+          "title": "Nothing in progress",
+          "description": "Set a project's status to In progress and it shows up here."
         },
         "done": {
           "title": "No done projects yet",

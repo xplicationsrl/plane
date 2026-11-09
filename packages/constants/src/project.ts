@@ -118,8 +118,8 @@ export const PROJECT_STATUSES: {
   { key: "cancelled", i18n_label: "workspace_projects.status.cancelled" },
 ];
 
-/** New and untouched projects are in progress; the projects page opens on the ones not done yet. */
-export const DEFAULT_PROJECT_STATUS: TProjectStatus = "started";
+/** New and untouched projects sit in the backlog; the projects page opens on the ones not done yet. */
+export const DEFAULT_PROJECT_STATUS: TProjectStatus = "backlog";
 export const DEFAULT_PROJECT_COMPLETION_FILTER: TProjectCompletionFilter = "not_done";
 
 export const PROJECT_COMPLETION_FILTER_OPTIONS: {
@@ -127,6 +127,7 @@ export const PROJECT_COMPLETION_FILTER_OPTIONS: {
   i18n_label: string;
 }[] = [
   { key: "not_done", i18n_label: "workspace_projects.completion.not_done" },
+  { key: "in_progress", i18n_label: "workspace_projects.completion.in_progress" },
   { key: "done", i18n_label: "workspace_projects.completion.done" },
   { key: "cancelled", i18n_label: "workspace_projects.completion.cancelled" },
   { key: "all", i18n_label: "workspace_projects.completion.all" },

@@ -10,12 +10,12 @@ import { useParams } from "next/navigation";
 import { DEFAULT_PROJECT_COMPLETION_FILTER, PROJECT_COMPLETION_FILTER_OPTIONS } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
 import type { TProjectCompletionFilter } from "@plane/types";
-import { cn, getProjectCompletion } from "@plane/utils";
+import { cn, matchesProjectCompletion } from "@plane/utils";
 // hooks
 import { useProject } from "@/hooks/store/use-project";
 import { useProjectFilter } from "@/hooks/store/use-project-filter";
 
-/** Not done / Done / Cancelled / All switch above the projects list, with a count on each. */
+/** Not done / In progress / Done / Cancelled / All switch above the projects list, with a count on each. */
 export const ProjectCompletionTabs = observer(function ProjectCompletionTabs() {
   // router
   const { workspaceSlug } = useParams();
@@ -26,12 +26,20 @@ export const ProjectCompletionTabs = observer(function ProjectCompletionTabs() {
   const { currentWorkspaceDisplayFilters, updateDisplayFilters } = useProjectFilter();
   // derived values
   const active = currentWorkspaceDisplayFilters?.completion ?? DEFAULT_PROJECT_COMPLETION_FILTER;
-  const counts: Record<TProjectCompletionFilter, number> = { not_done: 0, done: 0, cancelled: 0, all: 0 };
+  const counts: Record<TProjectCompletionFilter, number> = {
+    not_done: 0,
+    in_progress: 0,
+    done: 0,
+    cancelled: 0,
+    all: 0,
+  };
   (workspaceProjectIds ?? []).forEach((projectId) => {
     const project = getProjectById(projectId);
     if (!project) return;
-    counts[getProjectCompletion(project)] += 1;
-    counts.all += 1;
+    // "In progress" is part of "Not done", so one project can count under both.
+    PROJECT_COMPLETION_FILTER_OPTIONS.forEach((option) => {
+      if (matchesProjectCompletion(project, option.key)) counts[option.key] += 1;
+    });
   });
 
   return (

@@ -80,8 +80,8 @@ def _move(item, state):
 
 @pytest.mark.contract
 class TestProjectStatusEndpoint:
-    def test_new_projects_start_in_progress(self, project):
-        assert project.status == "started"
+    def test_new_projects_start_in_the_backlog(self, project):
+        assert project.status == "backlog"
         assert project.reopened_at is None
 
     @pytest.mark.parametrize("new_status", ["backlog", "unstarted", "started", "completed", "cancelled"])
@@ -99,7 +99,7 @@ class TestProjectStatusEndpoint:
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         project.refresh_from_db()
-        assert project.status == "started"
+        assert project.status == "backlog"
 
     @pytest.mark.parametrize("role", [20, 15, 5])
     def test_any_workspace_role_may_mark_done(self, workspace, project, role):
@@ -114,7 +114,7 @@ class TestProjectStatusEndpoint:
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
         project.refresh_from_db()
-        assert project.status == "started"
+        assert project.status == "backlog"
 
     def test_project_of_another_workspace_is_not_found(self, session_client, project, other_workspace, create_user):
         WorkspaceMember.objects.create(workspace=other_workspace, member=create_user, role=20)
@@ -125,7 +125,7 @@ class TestProjectStatusEndpoint:
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
         project.refresh_from_db()
-        assert project.status == "started"
+        assert project.status == "backlog"
 
     def test_project_update_cannot_write_status_or_folder(self, session_client, workspace, project):
         folder = ProjectFolder.objects.create(workspace=workspace, name="Clients")
@@ -138,7 +138,7 @@ class TestProjectStatusEndpoint:
 
         assert response.status_code == status.HTTP_200_OK
         project.refresh_from_db()
-        assert (project.status, project.folder_id, project.reopened_at) == ("started", None, None)
+        assert (project.status, project.folder_id, project.reopened_at) == ("backlog", None, None)
 
     def test_projects_list_carries_status_and_folder(self, session_client, workspace, project):
         folder = ProjectFolder.objects.create(workspace=workspace, name="Clients")
@@ -160,7 +160,7 @@ class TestProjectBecomesDoneOnItsOwn:
 
         _move(first, states["done"])
         project.refresh_from_db()
-        assert project.status == "started"
+        assert project.status == "backlog"
 
         _move(second, states["done"])
         project.refresh_from_db()
@@ -187,7 +187,7 @@ class TestProjectBecomesDoneOnItsOwn:
     def test_an_empty_project_is_never_done_on_its_own(self, project, states):
         assert complete_project_if_all_done(project.id) is False
         project.refresh_from_db()
-        assert project.status == "started"
+        assert project.status == "backlog"
 
     def test_a_cancelled_project_stays_cancelled(self, project, states):
         item = _item(project, states["todo"])
@@ -198,9 +198,10 @@ class TestProjectBecomesDoneOnItsOwn:
         project.refresh_from_db()
         assert project.status == "cancelled"
 
-    def test_backlog_and_todo_projects_also_become_done(self, project, states):
+    @pytest.mark.parametrize("open_status", ["backlog", "unstarted", "started"])
+    def test_any_open_status_becomes_done(self, project, states, open_status):
         item = _item(project, states["todo"])
-        Project.objects.filter(pk=project.id).update(status="backlog")
+        Project.objects.filter(pk=project.id).update(status=open_status)
 
         _move(item, states["done"])
 

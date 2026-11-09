@@ -58,14 +58,21 @@ export const projectIdentifierSanitizer = (identifier: string): string =>
   identifier.replace(/[^ÇŞĞIİÖÜA-Za-z0-9]/g, "");
 
 /**
- * @description which tab of the projects page a project belongs to, going by its status
+ * @description whether a project shows under a status tab of the projects page
  * @param {Pick<TProject, "status">} project
- * @returns {"not_done" | "done" | "cancelled"}
+ * @param {TProjectCompletionFilter} completion
+ * @returns {boolean}
  */
-export const getProjectCompletion = (project: Pick<TProject, "status">): Exclude<TProjectCompletionFilter, "all"> => {
-  if (project.status === "completed") return "done";
-  if (project.status === "cancelled") return "cancelled";
-  return "not_done";
+export const matchesProjectCompletion = (
+  project: Pick<TProject, "status">,
+  completion: TProjectCompletionFilter
+): boolean => {
+  if (completion === "all") return true;
+  if (completion === "done") return project.status === "completed";
+  if (completion === "cancelled") return project.status === "cancelled";
+  if (completion === "in_progress") return project.status === "started";
+  // not done: backlog, todo and in progress
+  return project.status !== "completed" && project.status !== "cancelled";
 };
 
 /**
@@ -105,8 +112,7 @@ export const shouldFilterProject = (
   if (
     !displayFilters.archived_projects &&
     displayFilters.completion &&
-    displayFilters.completion !== "all" &&
-    getProjectCompletion(project) !== displayFilters.completion
+    !matchesProjectCompletion(project, displayFilters.completion)
   )
     fallsInFilters = false;
 
