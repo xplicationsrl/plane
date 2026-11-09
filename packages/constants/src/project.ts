@@ -5,7 +5,12 @@
  */
 
 // plane imports
-import type { TProjectAppliedDisplayFilterKeys, TProjectOrderByOptions } from "@plane/types";
+import type {
+  TProjectAppliedDisplayFilterKeys,
+  TProjectCompletionFilter,
+  TProjectOrderByOptions,
+  TProjectStatus,
+} from "@plane/types";
 // local imports
 
 export type TNetworkChoiceIconKey = "Lock" | "Globe2";
@@ -100,6 +105,31 @@ export const PROJECT_DISPLAY_FILTER_OPTIONS: {
     key: "archived_projects",
     i18n_label: "workspace_projects.scope.archived_projects",
   },
+];
+
+export const PROJECT_STATUSES: {
+  key: TProjectStatus;
+  i18n_label: string;
+}[] = [
+  { key: "backlog", i18n_label: "workspace_projects.status.backlog" },
+  { key: "unstarted", i18n_label: "workspace_projects.status.unstarted" },
+  { key: "started", i18n_label: "workspace_projects.status.started" },
+  { key: "completed", i18n_label: "workspace_projects.status.completed" },
+  { key: "cancelled", i18n_label: "workspace_projects.status.cancelled" },
+];
+
+/** New and untouched projects are in progress; the projects page opens on the ones not done yet. */
+export const DEFAULT_PROJECT_STATUS: TProjectStatus = "started";
+export const DEFAULT_PROJECT_COMPLETION_FILTER: TProjectCompletionFilter = "not_done";
+
+export const PROJECT_COMPLETION_FILTER_OPTIONS: {
+  key: TProjectCompletionFilter;
+  i18n_label: string;
+}[] = [
+  { key: "not_done", i18n_label: "workspace_projects.completion.not_done" },
+  { key: "done", i18n_label: "workspace_projects.completion.done" },
+  { key: "cancelled", i18n_label: "workspace_projects.completion.cancelled" },
+  { key: "all", i18n_label: "workspace_projects.completion.all" },
 ];
 
 export const PROJECT_ERROR_MESSAGES = {

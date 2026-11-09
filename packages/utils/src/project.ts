@@ -6,7 +6,13 @@
 
 import { sortBy } from "lodash-es";
 // plane imports
-import type { TProject, TProjectDisplayFilters, TProjectFilters, TProjectOrderByOptions } from "@plane/types";
+import type {
+  TProject,
+  TProjectCompletionFilter,
+  TProjectDisplayFilters,
+  TProjectFilters,
+  TProjectOrderByOptions,
+} from "@plane/types";
 // local imports
 import { getDate } from "./datetime";
 import { satisfiesDateFilter } from "./filter";
@@ -52,6 +58,17 @@ export const projectIdentifierSanitizer = (identifier: string): string =>
   identifier.replace(/[^ÇŞĞIİÖÜA-Za-z0-9]/g, "");
 
 /**
+ * @description which tab of the projects page a project belongs to, going by its status
+ * @param {Pick<TProject, "status">} project
+ * @returns {"not_done" | "done" | "cancelled"}
+ */
+export const getProjectCompletion = (project: Pick<TProject, "status">): Exclude<TProjectCompletionFilter, "all"> => {
+  if (project.status === "completed") return "done";
+  if (project.status === "cancelled") return "cancelled";
+  return "not_done";
+};
+
+/**
  * @description filters projects based on the filter
  * @param {TProject} project
  * @param {TProjectFilters} filters
@@ -84,6 +101,14 @@ export const shouldFilterProject = (
   if (displayFilters.my_projects && !project.member_role) fallsInFilters = false;
   if (displayFilters.archived_projects && !project.archived_at) fallsInFilters = false;
   if (project.archived_at) fallsInFilters = displayFilters.archived_projects ? fallsInFilters : false;
+  // The archive lists every archived project, whatever its status.
+  if (
+    !displayFilters.archived_projects &&
+    displayFilters.completion &&
+    displayFilters.completion !== "all" &&
+    getProjectCompletion(project) !== displayFilters.completion
+  )
+    fallsInFilters = false;
 
   return fallsInFilters;
 };

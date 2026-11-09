@@ -8,13 +8,19 @@ import { sortBy, cloneDeep, update, set } from "lodash-es";
 import { observable, action, computed, makeObservable, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
 // plane imports
-import type { TFetchStatus, TLoader, TProjectAnalyticsCount, TProjectAnalyticsCountParams } from "@plane/types";
+import type {
+  TFetchStatus,
+  TLoader,
+  TProjectAnalyticsCount,
+  TProjectAnalyticsCountParams,
+  TProjectStatus,
+} from "@plane/types";
 // helpers
 import { orderProjects, shouldFilterProject } from "@plane/utils";
 // services
 import type { TProject, TPartialProject } from "@plane/types";
 import { IssueLabelService, IssueService } from "@/services/issue";
-import { ProjectService, ProjectStateService, ProjectArchiveService } from "@/services/project";
+import { ProjectService, ProjectStateService, ProjectArchiveService, ProjectFolderService } from "@/services/project";
 // store
 import type { CoreRootStore } from "../root.store";
 
@@ -74,6 +80,9 @@ export interface IProjectStore {
   // archive actions
   archiveProject: (workspaceSlug: string, projectId: string) => Promise<void>;
   restoreProject: (workspaceSlug: string, projectId: string) => Promise<void>;
+  // status actions
+  updateProjectStatus: (workspaceSlug: string, projectId: string, status: TProjectStatus) => Promise<void>;
+  dismissProjectReopenedNotice: (workspaceSlug: string, projectId: string) => Promise<void>;
 }
 
 export class ProjectStore implements IProjectStore {
@@ -91,6 +100,7 @@ export class ProjectStore implements IProjectStore {
   // service
   projectService;
   projectArchiveService;
+  projectFolderService;
   issueLabelService;
   issueService;
   stateService;
@@ -140,6 +150,7 @@ export class ProjectStore implements IProjectStore {
     // services
     this.projectService = new ProjectService();
     this.projectArchiveService = new ProjectArchiveService();
+    this.projectFolderService = new ProjectFolderService();
     this.issueService = new IssueService();
     this.issueLabelService = new IssueLabelService();
     this.stateService = new ProjectStateService();
@@ -632,5 +643,59 @@ export class ProjectStore implements IProjectStore {
         console.log("Failed to restore project from project store");
         throw error;
       });
+  };
+
+  /**
+   * Sets the project status (backlog, todo, in progress, done, cancelled) by hand.
+   * Optimistic: the card moves tabs at once and comes back if the request fails.
+   * @param workspaceSlug
+   * @param projectId
+   * @param status
+   * @returns Promise<void>
+   */
+  updateProjectStatus = async (workspaceSlug: string, projectId: string, status: TProjectStatus) => {
+    const project = this.projectMap[projectId];
+    if (!project) return;
+    const previous = { status: project.status, reopened_at: project.reopened_at };
+    runInAction(() => {
+      set(this.projectMap, [projectId, "status"], status);
+      set(this.projectMap, [projectId, "reopened_at"], null);
+    });
+    try {
+      const response = await this.projectFolderService.setProjectStatus(workspaceSlug, projectId, status);
+      runInAction(() => {
+        set(this.projectMap, [projectId, "status"], response.status);
+        set(this.projectMap, [projectId, "reopened_at"], response.reopened_at ?? null);
+      });
+    } catch (error) {
+      console.log("Failed to update the project status from project store");
+      runInAction(() => {
+        set(this.projectMap, [projectId, "status"], previous.status);
+        set(this.projectMap, [projectId, "reopened_at"], previous.reopened_at ?? null);
+      });
+      throw error;
+    }
+  };
+
+  /**
+   * Dismisses the "reopened: a new work item was added" notice of a project, for everyone.
+   * @param workspaceSlug
+   * @param projectId
+   * @returns Promise<void>
+   */
+  dismissProjectReopenedNotice = async (workspaceSlug: string, projectId: string) => {
+    const previous = this.projectMap[projectId]?.reopened_at ?? null;
+    runInAction(() => {
+      set(this.projectMap, [projectId, "reopened_at"], null);
+    });
+    try {
+      await this.projectFolderService.dismissReopenedNotice(workspaceSlug, projectId);
+    } catch (error) {
+      console.log("Failed to dismiss the reopened notice from project store");
+      runInAction(() => {
+        set(this.projectMap, [projectId, "reopened_at"], previous);
+      });
+      throw error;
+    }
   };
 }

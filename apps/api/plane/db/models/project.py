@@ -69,6 +69,14 @@ class Project(ChangeTrackerMixin, BaseModel):
     TRACKED_FIELDS = ["timezone"]
 
     NETWORK_CHOICES = ((0, "Secret"), (2, "Public"))
+    STATUS_CHOICES = (
+        ("backlog", "Backlog"),
+        ("unstarted", "Todo"),
+        ("started", "In progress"),
+        ("completed", "Done"),
+        ("cancelled", "Cancelled"),
+    )
+
     name = models.CharField(max_length=255, verbose_name="Project Name")
     description = models.TextField(verbose_name="Project Description", blank=True)
     description_text = models.JSONField(verbose_name="Project Description RT", blank=True, null=True)
@@ -114,6 +122,16 @@ class Project(ChangeTrackerMixin, BaseModel):
     logo_props = models.JSONField(default=dict)
     default_state = models.ForeignKey("db.State", on_delete=models.SET_NULL, null=True, related_name="default_state")
     archived_at = models.DateTimeField(null=True)
+    # Shared folder on the projects page; one level, optional.
+    folder = models.ForeignKey(
+        "db.ProjectFolder", on_delete=models.SET_NULL, related_name="projects", null=True, blank=True
+    )
+    # Like a work item's state group. Set by hand; also moved to "completed" when every work item is
+    # closed, and back to "started" by a new work item (see plane.utils.project_status).
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="started")
+    # Set when a new work item took a done project back to in progress, so the projects page can say why;
+    # cleared on dismiss or on the next status change.
+    reopened_at = models.DateTimeField(null=True, blank=True)
     # timezone
     TIMEZONE_CHOICES = tuple(zip(pytz.common_timezones, pytz.common_timezones))
     timezone = models.CharField(max_length=255, default="UTC", choices=TIMEZONE_CHOICES)
@@ -228,6 +246,23 @@ class Project(ChangeTrackerMixin, BaseModel):
         with transaction.atomic():
             super().save(*args, **kwargs)
             self._retime_intake_snoozes(old_timezone)
+
+
+class ProjectFolder(BaseModel):
+    """A workspace-wide folder that groups projects on the projects page."""
+
+    workspace = models.ForeignKey("db.Workspace", on_delete=models.CASCADE, related_name="project_folders")
+    name = models.CharField(max_length=255)
+    sort_order = models.FloatField(default=65535)
+
+    class Meta:
+        verbose_name = "Project Folder"
+        verbose_name_plural = "Project Folders"
+        db_table = "project_folders"
+        ordering = ("sort_order", "name")
+
+    def __str__(self):
+        return f"{self.name} <{self.workspace_id}>"
 
 
 class ProjectBaseModel(BaseModel):

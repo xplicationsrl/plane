@@ -20,6 +20,8 @@ import { Header } from "@plane/blocks/layout";
 // components
 import { BreadcrumbLink } from "@/components/common/breadcrumb-link";
 import { CountChip } from "@/components/common/count-chip";
+import { ProjectStatusDropdown } from "@/components/project/status/project-status-dropdown";
+import { ProjectReopenedNotice } from "@/components/project/status/reopened-notice";
 import { ProjectSharedWorkItemsButton } from "@/components/shared-work-items";
 // constants
 import { HeaderFilters } from "@/components/issues/filters";
@@ -96,6 +98,16 @@ export const IssuesHeader = observer(function IssuesHeader() {
           ) : null}
           {workspaceSlug && projectId && (
             <ProjectSharedWorkItemsButton workspaceSlug={workspaceSlug.toString()} projectId={projectId.toString()} />
+          )}
+          {workspaceSlug && projectId && (
+            <>
+              <ProjectStatusDropdown workspaceSlug={workspaceSlug.toString()} projectId={projectId.toString()} />
+              <ProjectReopenedNotice
+                workspaceSlug={workspaceSlug.toString()}
+                projectId={projectId.toString()}
+                className="hidden rounded-sm md:flex"
+              />
+            </>
           )}
         </div>
         {currentProjectDetails?.anchor ? (

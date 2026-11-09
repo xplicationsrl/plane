@@ -20,6 +20,7 @@ import { useWorkspace } from "@/hooks/store/use-workspace";
 // local imports
 import { ProjectAppliedFiltersList } from "./applied-filters";
 import { ProjectCardList } from "./card-list";
+import { ProjectCompletionTabs } from "./status/completion-tabs";
 
 export const ProjectRoot = observer(function ProjectRoot() {
   const { currentWorkspace } = useWorkspace();
@@ -94,6 +95,7 @@ export const ProjectRoot = observer(function ProjectRoot() {
             alwaysAllowEditing
           />
         )}
+        {!isArchived && <ProjectCompletionTabs />}
         <ProjectCardList />
       </div>
     </>

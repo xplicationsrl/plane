@@ -11,6 +11,14 @@ from .project.base import (
     ProjectArchiveUnarchiveEndpoint,
 )
 
+from .project.folder import (
+    ProjectFolderEndpoint,
+    ProjectFolderDetailEndpoint,
+    ProjectFolderAssignEndpoint,
+    ProjectStatusEndpoint,
+    ProjectReopenedNoticeEndpoint,
+)
+
 from .project.invite import (
     UserProjectInvitationsViewset,
     ProjectInvitationsViewset,

@@ -19,6 +19,7 @@ from plane.bgtasks.issue_activities_task import issue_activity
 from plane.db.models import IntakeIssue, Issue, Project, State
 from plane.db.models.intake import IntakeIssueStatus
 from plane.utils.exception_logger import log_exception
+from plane.utils.project_status import complete_project_if_all_done
 
 logger = logging.getLogger("plane.worker")
 
@@ -133,6 +134,8 @@ def close_old_issues():
                 # Bulk Update the issues and log the activity
                 if issues_to_update:
                     Issue.objects.bulk_update(issues_to_update, ["state"], batch_size=100)
+                    # bulk_update skips Issue.save(), so the project's done mark is checked here.
+                    complete_project_if_all_done(project_id)
                     [
                         issue_activity.delay(
                             type="issue.activity.updated",

@@ -20,6 +20,12 @@ from plane.utils.html_processor import strip_tags
 from plane.utils.path_validator import sanitize_filename
 from plane.db.mixins import SoftDeletionManager, ChangeTrackerMixin
 from plane.utils.exception_logger import log_exception
+from plane.utils.project_status import (
+    CLOSED_STATE_GROUPS,
+    OPEN_STATE_GROUPS,
+    complete_project_if_all_done,
+    reopen_project_for_new_work_item,
+)
 from .project import ProjectBaseModel
 from plane.utils.uuid import convert_uuid_to_integer
 from .description import Description
@@ -191,6 +197,10 @@ class Issue(ChangeTrackerMixin, ProjectBaseModel):
     def save(self, *args, **kwargs):
         self._ensure_default_state()
         kwargs = self._sync_completed_at(kwargs)
+        # Read before super().save(): the change tracker resets once it returns.
+        was_adding = self._state.adding
+        state_changed = was_adding or self.has_changed("state_id")
+        old_state_id = None if was_adding else self.old_values.get("state_id")
 
         if self._state.adding:
             with transaction.atomic():
@@ -232,9 +242,35 @@ class Issue(ChangeTrackerMixin, ProjectBaseModel):
             )
             super(Issue, self).save(*args, **kwargs)
 
+        if state_changed:
+            self._sync_project_status(was_adding, old_state_id)
+
     def __str__(self):
         """Return name of the issue"""
         return f"{self.name} <{self.project.name}>"
+
+    def _sync_project_status(self, was_adding, old_state_id):
+        """Keep the project's status in step with this work item.
+
+        Closing the last open work item marks the project done; a new open work item in a
+        done project puts it back in progress and leaves a notice. Moving an existing work
+        item between open states changes nothing, so a project marked done by hand stays done.
+        """
+        if self.state is None or self.is_draft or self.deleted_at is not None:
+            return
+
+        group = self.state.group
+        if group in CLOSED_STATE_GROUPS:
+            complete_project_if_all_done(self.project_id)
+        elif group in OPEN_STATE_GROUPS:
+            # New to the project: just created, or accepted out of intake.
+            from .state import State
+
+            is_new = (
+                was_adding or State.all_state_objects.filter(pk=old_state_id, group=StateGroup.TRIAGE.value).exists()
+            )
+            if is_new:
+                reopen_project_for_new_work_item(self.project_id)
 
     def _ensure_default_state(self):
         """Assign a default state when none is set."""

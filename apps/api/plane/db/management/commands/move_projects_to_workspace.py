@@ -116,7 +116,8 @@ def move_projects(source, target, identifiers):
         warnings.append(f"{cross_links.count()} work item links point across the two workspaces after the move")
 
     counts = OrderedDict()
-    counts["Project"] = Project.all_objects.filter(id__in=project_ids).update(workspace=target)
+    # Folders belong to the source workspace, so the projects leave theirs behind.
+    counts["Project"] = Project.all_objects.filter(id__in=project_ids).update(workspace=target, folder=None)
 
     for model in apps.get_models():
         if model is Project or model._meta.proxy or not model._meta.managed:

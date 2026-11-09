@@ -18,6 +18,11 @@ from plane.app.views import (
     UserProjectRolesEndpoint,
     ProjectArchiveUnarchiveEndpoint,
     ProjectMemberPreferenceEndpoint,
+    ProjectFolderEndpoint,
+    ProjectFolderDetailEndpoint,
+    ProjectFolderAssignEndpoint,
+    ProjectStatusEndpoint,
+    ProjectReopenedNoticeEndpoint,
 )
 
 
@@ -118,6 +123,31 @@ urlpatterns = [
         "workspaces/<str:slug>/projects/<uuid:project_id>/project-deploy-boards/<uuid:pk>/",
         DeployBoardViewSet.as_view({"get": "retrieve", "patch": "partial_update", "delete": "destroy"}),
         name="project-deploy-board",
+    ),
+    path(
+        "workspaces/<str:slug>/project-folders/",
+        ProjectFolderEndpoint.as_view(),
+        name="project-folders",
+    ),
+    path(
+        "workspaces/<str:slug>/project-folders/<uuid:pk>/",
+        ProjectFolderDetailEndpoint.as_view(),
+        name="project-folder-detail",
+    ),
+    path(
+        "workspaces/<str:slug>/projects/<uuid:project_id>/folder/",
+        ProjectFolderAssignEndpoint.as_view(),
+        name="project-folder-assign",
+    ),
+    path(
+        "workspaces/<str:slug>/projects/<uuid:project_id>/status/",
+        ProjectStatusEndpoint.as_view(),
+        name="project-status",
+    ),
+    path(
+        "workspaces/<str:slug>/projects/<uuid:project_id>/reopened-notice/",
+        ProjectReopenedNoticeEndpoint.as_view(),
+        name="project-reopened-notice",
     ),
     path(
         "workspaces/<str:slug>/projects/<uuid:project_id>/archive/",

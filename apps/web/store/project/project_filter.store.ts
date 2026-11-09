@@ -7,7 +7,8 @@
 import { set } from "lodash-es";
 import { action, computed, observable, makeObservable, runInAction, reaction } from "mobx";
 import { computedFn } from "mobx-utils";
-// types
+// plane imports
+import { DEFAULT_PROJECT_COMPLETION_FILTER } from "@plane/constants";
 import type { TProjectDisplayFilters, TProjectFilters, TProjectAppliedDisplayFilterKeys } from "@plane/types";
 // store
 import type { CoreRootStore } from "../root.store";
@@ -124,6 +125,8 @@ export class ProjectFilterStore implements IProjectFilterStore {
     runInAction(() => {
       this.displayFilters[workspaceSlug] = {
         order_by: displayFilters?.order_by || "created_at",
+        // Done and cancelled projects stay out of the way until asked for.
+        completion: displayFilters?.completion || DEFAULT_PROJECT_COMPLETION_FILTER,
       };
       this.filters[workspaceSlug] = this.filters[workspaceSlug] ?? {};
     });

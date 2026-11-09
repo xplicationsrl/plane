@@ -189,6 +189,65 @@
       "my_projects": "My projects",
       "archived_projects": "Archived"
     },
+    "status": {
+      "label": "Project status",
+      "backlog": "Backlog",
+      "unstarted": "Todo",
+      "started": "In progress",
+      "completed": "Done",
+      "cancelled": "Cancelled",
+      "mark_done": "Mark as done",
+      "mark_not_done": "Mark as not done",
+      "update_failed": "Couldn't change the project status. Please try again."
+    },
+    "completion": {
+      "label": "Show projects",
+      "not_done": "Not done",
+      "done": "Done",
+      "cancelled": "Cancelled",
+      "all": "All",
+      "empty": {
+        "not_done": {
+          "title": "Nothing left to do",
+          "description": "Every project is done or cancelled. Look under Done, or add a new project."
+        },
+        "done": {
+          "title": "No done projects yet",
+          "description": "A project lands here when you mark it done, or when every work item in it is closed."
+        },
+        "cancelled": {
+          "title": "No cancelled projects",
+          "description": "Projects you mark as cancelled show up here."
+        }
+      }
+    },
+    "reopened": {
+      "notice": "Reopened: a new work item was added",
+      "notice_on": "Reopened on {date}: a new work item was added to this done project",
+      "dismiss": "Dismiss"
+    },
+    "folders": {
+      "label": "Folder",
+      "new": "New folder",
+      "rename": "Rename folder",
+      "delete": "Delete folder",
+      "name": "Folder name",
+      "name_placeholder": "e.g. Clients",
+      "name_required": "Give the folder a name.",
+      "create": "Create folder",
+      "save": "Save",
+      "cancel": "Cancel",
+      "no_folder": "No folder",
+      "move_to": "Move to folder",
+      "empty": "No projects to show in this folder.",
+      "count": "{count, plural, one {# project} other {# projects}}",
+      "actions": "Folder actions",
+      "delete_title": "Delete {name}?",
+      "delete_description": "The folder goes away. Its projects stay and move to \"No folder\".",
+      "save_failed": "Couldn't save the folder. Check that the name isn't already in use.",
+      "delete_failed": "Couldn't delete the folder. Please try again.",
+      "move_failed": "Couldn't move the project. Please try again."
+    },
     "common": {
       "months_count": "{months, plural, one{# month} other{# months}}",
       "days_count": "{days, plural, one{# day} other{# days}}"

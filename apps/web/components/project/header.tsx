@@ -4,14 +4,17 @@
  * See the LICENSE file for details.
  */
 
+import { useState } from "react";
 import { observer } from "mobx-react";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 // i18n
 import { EUserPermissions, EUserPermissionsLevel } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
 // ui
 import { Button } from "@makeplane/propel/components/button";
-import { ProjectsOutline } from "@makeplane/propel/icons";
+import { Icon } from "@makeplane/propel/components/icon";
+import { IconButton } from "@makeplane/propel/components/icon-button";
+import { FolderOutline, ProjectsOutline } from "@makeplane/propel/icons";
 import { Breadcrumbs } from "@plane/blocks/breadcrumb";
 import { Header } from "@plane/blocks/layout";
 // components
@@ -22,6 +25,7 @@ import { useUserPermissions } from "@/hooks/store/user";
 // plane web constants
 // components
 import HeaderFilters from "./filters";
+import { ProjectFolderFormModal } from "./folders/folder-form-modal";
 import { ProjectSearch } from "./search-projects";
 
 export const ProjectsBaseHeader = observer(function ProjectsBaseHeader() {
@@ -32,6 +36,9 @@ export const ProjectsBaseHeader = observer(function ProjectsBaseHeader() {
   const { allowPermissions } = useUserPermissions();
 
   const pathname = usePathname();
+  const { workspaceSlug } = useParams();
+  // states
+  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   // auth
   const isAuthorizedUser = allowPermissions(
     [EUserPermissions.ADMIN, EUserPermissions.MEMBER],
@@ -59,6 +66,34 @@ export const ProjectsBaseHeader = observer(function ProjectsBaseHeader() {
         <div className="hidden md:flex">
           <HeaderFilters />
         </div>
+        {!isArchived && workspaceSlug && (
+          <>
+            <ProjectFolderFormModal
+              workspaceSlug={workspaceSlug.toString()}
+              isOpen={isFolderModalOpen}
+              onClose={() => setIsFolderModalOpen(false)}
+            />
+            <span className="hidden lg:inline-block">
+              <Button
+                variant="secondary"
+                size="md"
+                stretch="auto"
+                icon={<Icon icon={FolderOutline} />}
+                onClick={() => setIsFolderModalOpen(true)}
+                label={t("workspace_projects.folders.new")}
+              />
+            </span>
+            <span className="inline-block lg:hidden">
+              <IconButton
+                variant="secondary"
+                size="md"
+                icon={<Icon icon={FolderOutline} />}
+                aria-label={t("workspace_projects.folders.new")}
+                onClick={() => setIsFolderModalOpen(true)}
+              />
+            </span>
+          </>
+        )}
         {isAuthorizedUser && !isArchived ? (
           <>
             <span className="hidden sm:inline-block">

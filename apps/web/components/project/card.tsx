@@ -10,17 +10,25 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   DeleteOutline,
+  FolderOutline,
   LinkOutline,
   LockOutline,
   NewTabOutline,
   RestoreOutline,
   SettingsOutline,
+  TickCircleOutline,
   TickOutline,
   UserPlusOutline,
 } from "@makeplane/propel/icons";
 // plane imports
-import { EUserPermissions, EUserPermissionsLevel, IS_FAVORITE_MENU_OPEN } from "@plane/constants";
+import {
+  DEFAULT_PROJECT_STATUS,
+  EUserPermissions,
+  EUserPermissionsLevel,
+  IS_FAVORITE_MENU_OPEN,
+} from "@plane/constants";
 import { useLocalStorage } from "@plane/hooks";
+import { useTranslation } from "@plane/i18n";
 import { Avatar } from "@makeplane/propel/components/avatar";
 import { AvatarGroup } from "@makeplane/propel/components/avatar-group";
 import { Button } from "@makeplane/propel/components/button";
@@ -29,7 +37,7 @@ import { IconButton } from "@makeplane/propel/components/icon-button";
 import { Logo } from "@plane/blocks/emoji-icon-picker";
 import { setPromiseToast, setToast } from "@plane/blocks/toast";
 import { Tooltip } from "@makeplane/propel/components/tooltip";
-import type { IProject } from "@plane/types";
+import type { IProject, TProjectFolder, TProjectStatus } from "@plane/types";
 import type { TContextMenuItem } from "@plane/blocks/context-menu";
 import { ContextMenu } from "@plane/blocks/context-menu";
 import { FavoriteStar } from "@plane/blocks/common";
@@ -38,6 +46,7 @@ import { copyUrlToClipboard, cn, getFileURL, renderFormattedDate } from "@plane/
 // hooks
 import { useMember } from "@/hooks/store/use-member";
 import { useProject } from "@/hooks/store/use-project";
+import { useProjectFolder } from "@/hooks/store/use-project-folder";
 import { useUserPermissions } from "@/hooks/store/user";
 import { useAppRouter } from "@/hooks/use-app-router";
 import { usePlatformOS } from "@/hooks/use-platform-os";
@@ -46,6 +55,10 @@ import { CoverImage } from "@/components/common/cover-image";
 import { DeleteProjectModal } from "./delete-project-modal";
 import { JoinProjectModal } from "./join-project-modal";
 import { ArchiveRestoreProjectModal } from "./archive-restore-modal";
+import { ProjectFolderFormModal } from "./folders/folder-form-modal";
+import { MoveProjectToFolderMenu } from "./folders/move-to-folder-menu";
+import { ProjectStatusDropdown } from "./status/project-status-dropdown";
+import { ProjectReopenedNotice } from "./status/reopened-notice";
 
 type Props = {
   project: IProject;
@@ -57,6 +70,7 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
   const [deleteProjectModalOpen, setDeleteProjectModal] = useState(false);
   const [joinProjectModalOpen, setJoinProjectModal] = useState(false);
   const [restoreProject, setRestoreProject] = useState(false);
+  const [createFolderModalOpen, setCreateFolderModal] = useState(false);
   // refs
   const projectCardRef = useRef(null);
   // router
@@ -64,10 +78,12 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
   const { workspaceSlug } = useParams();
   // store hooks
   const { getUserDetails } = useMember();
-  const { addProjectToFavorites, removeProjectFromFavorites } = useProject();
+  const { addProjectToFavorites, removeProjectFromFavorites, updateProjectStatus } = useProject();
+  const { currentWorkspaceFolders, moveProjectToFolder } = useProjectFolder();
   const { allowPermissions } = useUserPermissions();
   // hooks
   const { isMobile } = usePlatformOS();
+  const { t } = useTranslation();
   // derived values
   const projectMembers = (project.members ?? []).flatMap((memberId) => {
     const member = getUserDetails(memberId);
@@ -140,6 +156,29 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
     );
   const handleOpenInNewTab = () => window.open(`/${projectLink}`, "_blank");
 
+  const isDone = (project.status ?? DEFAULT_PROJECT_STATUS) === "completed";
+  const handleStatusChange = (status: TProjectStatus) => {
+    if (!workspaceSlug) return;
+    updateProjectStatus(workspaceSlug.toString(), project.id, status).catch(() =>
+      setToast({
+        type: "error",
+        title: t("common.error.label"),
+        message: t("workspace_projects.status.update_failed"),
+      })
+    );
+  };
+
+  const handleMoveToFolder = (folderId: string | null) => {
+    if (!workspaceSlug) return;
+    moveProjectToFolder(workspaceSlug.toString(), project.id, folderId).catch(() =>
+      setToast({
+        type: "error",
+        title: t("common.error.label"),
+        message: t("workspace_projects.folders.move_failed"),
+      })
+    );
+  };
+
   const MENU_ITEMS: TContextMenuItem[] = [
     {
       key: "settings",
@@ -168,6 +207,42 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
       title: "Copy link",
       icon: LinkOutline,
       shouldRender: !isArchived,
+    },
+    {
+      key: "toggle-done",
+      // Taking the done mark off puts the project back in progress.
+      action: () => handleStatusChange(isDone ? "started" : "completed"),
+      title: isDone ? t("workspace_projects.status.mark_not_done") : t("workspace_projects.status.mark_done"),
+      icon: TickCircleOutline,
+      shouldRender: !isArchived,
+    },
+    {
+      key: "move-to-folder",
+      action: () => {},
+      title: t("workspace_projects.folders.move_to"),
+      icon: FolderOutline,
+      shouldRender: !isArchived,
+      nestedMenuItems: [
+        ...currentWorkspaceFolders.map(
+          (folder: TProjectFolder): TContextMenuItem => ({
+            key: folder.id,
+            action: () => handleMoveToFolder(folder.id),
+            title: folder.name,
+            disabled: folder.id === project.folder,
+          })
+        ),
+        {
+          key: "no-folder",
+          action: () => handleMoveToFolder(null),
+          title: t("workspace_projects.folders.no_folder"),
+          disabled: !project.folder,
+        },
+        {
+          key: "new-folder",
+          action: () => setCreateFolderModal(true),
+          title: t("workspace_projects.folders.new"),
+        },
+      ],
     },
     {
       key: "restore",
@@ -212,6 +287,15 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
           archive={false}
         />
       )}
+      {/* New folder modal: creating one from this card moves the project into it */}
+      {workspaceSlug && (
+        <ProjectFolderFormModal
+          workspaceSlug={workspaceSlug.toString()}
+          isOpen={createFolderModalOpen}
+          onClose={() => setCreateFolderModal(false)}
+          onCreated={(folder) => handleMoveToFolder(folder.id)}
+        />
+      )}
       <Link
         ref={projectCardRef}
         href={`/${workspaceSlug}/projects/${project.id}/issues`}
@@ -230,6 +314,13 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
         <ContextMenu parentRef={projectCardRef} items={MENU_ITEMS} />
         <div className="relative h-[118px] w-full rounded-t">
           <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/60 to-transparent" />
+          {workspaceSlug && (
+            <ProjectReopenedNotice
+              workspaceSlug={workspaceSlug.toString()}
+              projectId={project.id}
+              className="absolute inset-x-0 top-0 z-[2]"
+            />
+          )}
 
           <CoverImage
             src={project.cover_image_url}
@@ -253,6 +344,11 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
 
             {!isArchived && (
               <div data-prevent-progress className="flex h-full flex-shrink-0 items-center gap-2">
+                <MoveProjectToFolderMenu
+                  projectId={project.id}
+                  onMove={handleMoveToFolder}
+                  onCreateFolder={() => setCreateFolderModal(true)}
+                />
                 <button
                   type="button"
                   aria-label="Copy link"
@@ -320,6 +416,9 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
                 )}
               </Tooltip>
               {isArchived && <div className="text-11 font-medium text-placeholder">Archived</div>}
+              {!isArchived && workspaceSlug && (
+                <ProjectStatusDropdown workspaceSlug={workspaceSlug.toString()} projectId={project.id} />
+              )}
             </div>
             {isArchived ? (
               hasAdminRole && (

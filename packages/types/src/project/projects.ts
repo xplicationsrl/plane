@@ -42,7 +42,25 @@ export interface IPartialProject {
   intake_count?: number;
 }
 
+/** Same values and icons as a work item's state group. "completed" is what the UI calls done. */
+export type TProjectStatus = TStateGroups;
+
+/** A workspace-wide folder that groups projects on the projects page. */
+export type TProjectFolder = {
+  id: string;
+  name: string;
+  sort_order: number;
+  workspace: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
 export interface IProject extends IPartialProject {
+  status?: TProjectStatus;
+  /** Set when a new work item took a done project back to in progress; null once dismissed. */
+  reopened_at?: string | null;
+  /** Id of the folder the project sits in on the projects page, if any. */
+  folder?: string | null;
   archive_in?: number;
   close_in?: number;
   // only for uploading the cover image
