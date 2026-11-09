@@ -308,12 +308,15 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
         }}
         data-prevent-progress={!isMemberOfProject || isArchived}
         className={cn(
-          "group/project-card flex w-full flex-col justify-between overflow-hidden rounded-lg border border-subtle bg-layer-2 transition-all duration-300 hover:border-strong hover:shadow-raised-200"
+          "group/project-card flex w-full flex-col justify-between overflow-hidden rounded-lg border border-subtle bg-layer-2 transition-all duration-300 hover:border-strong hover:shadow-raised-200",
+          // Done projects are tinted green so they stand out under "All" and in folders.
+          { "border-success-subtle bg-success-subtle hover:border-success-strong": isDone && !isArchived }
         )}
       >
         <ContextMenu parentRef={projectCardRef} items={MENU_ITEMS} />
         <div className="relative h-[118px] w-full rounded-t">
           <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/60 to-transparent" />
+          {isDone && !isArchived && <div className="absolute inset-0 z-[1] bg-success-primary/20" />}
           {workspaceSlug && (
             <ProjectReopenedNotice
               workspaceSlug={workspaceSlug.toString()}
