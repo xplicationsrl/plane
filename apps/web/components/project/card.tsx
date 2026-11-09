@@ -318,8 +318,18 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
             <ProjectReopenedNotice
               workspaceSlug={workspaceSlug.toString()}
               projectId={project.id}
-              className="absolute inset-x-0 top-0 z-[2]"
+              className="absolute top-3 left-3 z-[2] max-w-[calc(100%-10.5rem)] rounded-sm shadow-raised-200"
             />
+          )}
+          {/* Status: the button in the card's top right corner */}
+          {!isArchived && workspaceSlug && (
+            <div className="absolute top-3 right-3 z-[2]">
+              <ProjectStatusDropdown
+                workspaceSlug={workspaceSlug.toString()}
+                projectId={project.id}
+                className="h-7 gap-2 bg-layer-2 px-2.5 text-13 text-primary shadow-raised-200"
+              />
+            </div>
           )}
 
           <CoverImage
@@ -416,9 +426,6 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
                 )}
               </Tooltip>
               {isArchived && <div className="text-11 font-medium text-placeholder">Archived</div>}
-              {!isArchived && workspaceSlug && (
-                <ProjectStatusDropdown workspaceSlug={workspaceSlug.toString()} projectId={project.id} />
-              )}
             </div>
             {isArchived ? (
               hasAdminRole && (
