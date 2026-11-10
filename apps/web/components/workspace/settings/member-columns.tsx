@@ -68,7 +68,10 @@ export function NameColumn(props: NameProps) {
       {isAdmin && !isSuspended && (
         <AddMemberToProjectsModal
           workspaceSlug={workspaceSlug}
-          member={rowData.member}
+          userId={id}
+          userName={display_name || email || ""}
+          // Workspace and project roles share the same numbers.
+          workspaceRole={rowData.role as EUserPermissions}
           isOpen={isAddToProjectsOpen}
           onClose={() => setIsAddToProjectsOpen(false)}
         />

@@ -25,14 +25,16 @@ import { Select } from "@plane/blocks/select";
 import { setToast } from "@plane/blocks/toast";
 import { EUserPermissions, ROLE } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
-import type { IWorkspaceMember } from "@plane/types";
 // hooks
 import { useMember } from "@/hooks/store/use-member";
 import { useProject } from "@/hooks/store/use-project";
 
 type Props = {
   workspaceSlug: string;
-  member: IWorkspaceMember;
+  userId: string;
+  /** What to call them in the title: display name, or email when there is none. */
+  userName: string;
+  workspaceRole: EUserPermissions;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -55,7 +57,7 @@ const roleOptionsFor = (workspaceRole: EUserPermissions): TRoleOption[] => {
  * shown, pick the role, add.
  */
 export const AddMemberToProjectsModal = observer(function AddMemberToProjectsModal(props: Props) {
-  const { workspaceSlug, member, isOpen, onClose } = props;
+  const { workspaceSlug, userId, userName, workspaceRole, isOpen, onClose } = props;
   // plane hooks
   const { t } = useTranslation();
   // store hooks
@@ -64,8 +66,7 @@ export const AddMemberToProjectsModal = observer(function AddMemberToProjectsMod
     workspace: { addMemberToProjects },
   } = useMember();
   // derived values
-  // Workspace and project roles share the same numbers.
-  const roleOptions = useMemo(() => roleOptionsFor(member.role as EUserPermissions), [member.role]);
+  const roleOptions = useMemo(() => roleOptionsFor(workspaceRole), [workspaceRole]);
   // states
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
@@ -78,7 +79,6 @@ export const AddMemberToProjectsModal = observer(function AddMemberToProjectsMod
     if (!project) return false;
     return `${project.identifier} ${project.name}`.toLowerCase().includes(query);
   });
-  const memberName = member.member.display_name || member.member.email;
 
   const handleClose = () => {
     onClose();
@@ -91,7 +91,7 @@ export const AddMemberToProjectsModal = observer(function AddMemberToProjectsMod
     if (selectedProjectIds.length === 0) return;
     setIsSubmitting(true);
     try {
-      const result = await addMemberToProjects(workspaceSlug, member.member.id, selectedProjectIds, role);
+      const result = await addMemberToProjects(workspaceSlug, userId, selectedProjectIds, role);
       setToast({
         type: "success",
         title: t("workspace_settings.settings.members.add_to_projects.success_title"),
@@ -125,7 +125,7 @@ export const AddMemberToProjectsModal = observer(function AddMemberToProjectsMod
           <DialogHeader>
             <DialogHeading>
               <DialogTitle>
-                {t("workspace_settings.settings.members.add_to_projects.title", { name: memberName })}
+                {t("workspace_settings.settings.members.add_to_projects.title", { name: userName })}
               </DialogTitle>
               <DialogDescription>
                 {t("workspace_settings.settings.members.add_to_projects.description")}
