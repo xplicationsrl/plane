@@ -73,3 +73,4 @@ from .invite import WorkspaceInvitationsViewset
 
 from .sticky import StickyViewSet
 from .suggestion import SuggestionListEndpoint
+from .workspace import WorkspaceListAPIEndpoint
