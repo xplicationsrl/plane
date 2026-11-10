@@ -298,6 +298,7 @@ class WorkspaceMemberBulkProjectsEndpoint(BaseAPIView):
         project_ids = request.data.get("project_ids")
         if not isinstance(project_ids, list) or not project_ids:
             return Response({"error": "project_ids must be a non-empty list"}, status=status.HTTP_400_BAD_REQUEST)
+        project_ids = list(dict.fromkeys(str(project_id) for project_id in project_ids))
 
         role = request.data.get("role")
         if role is None:

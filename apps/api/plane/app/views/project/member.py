@@ -364,7 +364,7 @@ class ProjectMemberUserEndpoint(BaseAPIView):
         ).first()
         if project_member is None:
             # Open door: a workspace member who can see the project becomes a member by opening it.
-            project = Project.objects.get(pk=project_id, workspace__slug=slug)
+            project = Project.objects.get(pk=project_id, workspace__slug=slug, archived_at__isnull=True)
             project_member = ensure_project_membership(request.user, project)
         if project_member is None:
             raise ProjectMember.DoesNotExist

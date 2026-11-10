@@ -138,6 +138,18 @@ class TestAddMemberToManyProjects:
         assert response.data["skipped"] == 3
         assert set(_memberships(simina)) == {sess_projects[0].id}
 
+    def test_duplicate_ids_count_once(self, session_client, workspace, sess_projects):
+        simina = _user(workspace, role=15)
+        project_id = str(sess_projects[0].id)
+
+        response = session_client.post(
+            url(workspace.slug, simina.id), {"project_ids": [project_id, project_id]}, format="json"
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        assert (response.data["added"], response.data["skipped"]) == (1, 0)
+        assert ProjectMember.objects.filter(member=simina).count() == 1
+
     @pytest.mark.parametrize("body", [{}, {"project_ids": []}, {"project_ids": "abc"}])
     def test_needs_a_list_of_projects(self, session_client, workspace, body):
         simina = _user(workspace, role=15)

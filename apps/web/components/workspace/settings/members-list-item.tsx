@@ -7,6 +7,7 @@
 import { isEmpty } from "lodash-es";
 import { observer } from "mobx-react";
 // plane imports
+import type { EUserPermissions } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
 import { setToast } from "@plane/blocks/toast";
 import type { IWorkspaceMember } from "@plane/types";
@@ -14,6 +15,7 @@ import type { IWorkspaceMember } from "@plane/types";
 import { DataTable } from "@/components/common/data-table";
 import { MembersLayoutLoader } from "@/components/ui/loader/layouts/members-layout-loader";
 import { ConfirmWorkspaceMemberRemove } from "@/components/workspace/confirm-workspace-member-remove";
+import { AddMemberToProjectsModal } from "@/components/workspace/settings/add-member-to-projects-modal";
 import type { RowData } from "@/components/workspace/settings/member-columns";
 // hooks
 import { useMember } from "@/hooks/store/use-member";
@@ -29,7 +31,8 @@ type Props = {
 
 export const WorkspaceMembersListItem = observer(function WorkspaceMembersListItem(props: Props) {
   const { memberDetails } = props;
-  const { columns, workspaceSlug, removeMemberModal, setRemoveMemberModal } = useMemberColumns();
+  const { columns, workspaceSlug, removeMemberModal, setRemoveMemberModal, addToProjectsModal, setAddToProjectsModal } =
+    useMemberColumns();
   // router
   const router = useAppRouter();
   // store hooks
@@ -103,6 +106,19 @@ export const WorkspaceMembersListItem = observer(function WorkspaceMembersListIt
             display_name: removeMemberModal.member.display_name || "",
           }}
           onSubmit={() => handleRemove(removeMemberModal.member.id)}
+        />
+      )}
+      {/* One modal for the table; the key gives each member a fresh one. */}
+      {addToProjectsModal && workspaceSlug && (
+        <AddMemberToProjectsModal
+          key={addToProjectsModal.member.id}
+          workspaceSlug={workspaceSlug.toString()}
+          userId={addToProjectsModal.member.id}
+          userName={addToProjectsModal.member.display_name || addToProjectsModal.member.email || ""}
+          // Workspace and project roles share the same numbers.
+          workspaceRole={addToProjectsModal.role as EUserPermissions}
+          isOpen
+          onClose={() => setAddToProjectsModal(null)}
         />
       )}
       <DataTable<RowData>

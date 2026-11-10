@@ -61,7 +61,7 @@ export const AddMemberToProjectsModal = observer(function AddMemberToProjectsMod
   // plane hooks
   const { t } = useTranslation();
   // store hooks
-  const { workspaceProjectIds, getPartialProjectById } = useProject();
+  const { workspaceProjectIds, getPartialProjectById, fetchProjects } = useProject();
   const {
     workspace: { addMemberToProjects },
   } = useMember();
@@ -101,6 +101,8 @@ export const AddMemberToProjectsModal = observer(function AddMemberToProjectsMod
         }),
       });
       handleClose();
+      // Cards and member filters read project.members; refresh them so the new memberships show.
+      void fetchProjects(workspaceSlug).catch(() => undefined);
     } catch (err: unknown) {
       const error = err as { error?: string };
       setToast({

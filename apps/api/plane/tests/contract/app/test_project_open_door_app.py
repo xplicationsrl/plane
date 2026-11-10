@@ -94,6 +94,26 @@ class TestOpeningAPublicProject:
         membership = ProjectMember.objects.get(project=public_project, member=simina)
         assert membership.is_active and membership.role == 15
 
+    def test_a_leftover_property_row_does_not_block_the_door(self, workspace, public_project):
+        simina, client = _user(workspace, 15)
+        # A ProjectUserProperty can outlive its membership (hard-deleted member row, old import).
+        ProjectUserProperty.objects.create(project=public_project, user=simina, workspace=workspace)
+
+        response = client.get(project_url(workspace.slug, public_project.id))
+
+        assert response.status_code == status.HTTP_200_OK
+        assert ProjectMember.objects.filter(project=public_project, member=simina, is_active=True).exists()
+        assert ProjectUserProperty.objects.filter(project=public_project, user=simina).count() == 1
+
+    def test_an_archived_project_is_left_alone_by_the_me_endpoint(self, workspace, public_project):
+        simina, client = _user(workspace, 15)
+        Project.objects.filter(pk=public_project.id).update(archived_at="2026-01-01T00:00:00Z")
+
+        response = client.get(me_url(workspace.slug, public_project.id))
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert not ProjectMember.objects.filter(project=public_project, member=simina).exists()
+
     def test_an_existing_member_keeps_their_role(self, workspace, public_project):
         simina, client = _user(workspace, 15)
         ProjectMember.objects.create(project=public_project, member=simina, workspace=workspace, role=5)

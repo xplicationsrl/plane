@@ -19,6 +19,7 @@ import type { IMemberFilters } from "@/store/member/utils";
 export const useMemberColumns = () => {
   // states
   const [removeMemberModal, setRemoveMemberModal] = useState<RowData | null>(null);
+  const [addToProjectsModal, setAddToProjectsModal] = useState<RowData | null>(null);
 
   const { workspaceSlug } = useParams();
 
@@ -61,6 +62,7 @@ export const useMemberColumns = () => {
           isAdmin={isAdmin}
           currentUser={currentUser}
           setRemoveMemberModal={setRemoveMemberModal}
+          setAddToProjectsModal={setAddToProjectsModal}
         />
       ),
     },
@@ -133,5 +135,5 @@ export const useMemberColumns = () => {
       ),
     },
   ];
-  return { columns, workspaceSlug, removeMemberModal, setRemoveMemberModal };
+  return { columns, workspaceSlug, removeMemberModal, setRemoveMemberModal, addToProjectsModal, setAddToProjectsModal };
 };

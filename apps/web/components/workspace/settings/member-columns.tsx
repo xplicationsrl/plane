@@ -4,7 +4,6 @@
  * See the LICENSE file for details.
  */
 
-import { useState } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
@@ -25,7 +24,6 @@ import { getFileURL } from "@plane/utils";
 // hooks
 import { useMember } from "@/hooks/store/use-member";
 import { useUser, useUserPermissions } from "@/hooks/store/user";
-import { AddMemberToProjectsModal } from "./add-member-to-projects-modal";
 
 export interface RowData {
   member: IWorkspaceMember;
@@ -39,6 +37,7 @@ type NameProps = {
   isAdmin: boolean;
   currentUser: IUser | undefined;
   setRemoveMemberModal: (rowData: RowData) => void;
+  setAddToProjectsModal: (rowData: RowData) => void;
 };
 
 type TRoleOption = { key: EUserPermissions; label: string };
@@ -54,9 +53,7 @@ type AccountTypeProps = {
 };
 
 export function NameColumn(props: NameProps) {
-  const { rowData, workspaceSlug, isAdmin, currentUser, setRemoveMemberModal } = props;
-  // states
-  const [isAddToProjectsOpen, setIsAddToProjectsOpen] = useState(false);
+  const { rowData, workspaceSlug, isAdmin, currentUser, setRemoveMemberModal, setAddToProjectsModal } = props;
   // plane hooks
   const { t } = useTranslation();
   // derived values
@@ -65,17 +62,6 @@ export function NameColumn(props: NameProps) {
 
   return (
     <div className="group relative">
-      {isAdmin && !isSuspended && (
-        <AddMemberToProjectsModal
-          workspaceSlug={workspaceSlug}
-          userId={id}
-          userName={display_name || email || ""}
-          // Workspace and project roles share the same numbers.
-          workspaceRole={rowData.role as EUserPermissions}
-          isOpen={isAddToProjectsOpen}
-          onClose={() => setIsAddToProjectsOpen(false)}
-        />
-      )}
       <div className="flex w-72 items-center justify-between gap-x-4 gap-y-2">
         <div className="flex flex-1 items-center gap-x-2 gap-y-2">
           {isSuspended ? (
@@ -122,7 +108,7 @@ export function NameColumn(props: NameProps) {
                   <MenuItem
                     icon={<Icon icon={ProjectsOutline} />}
                     label={t("workspace_settings.settings.members.add_to_projects.label")}
-                    onClick={() => setIsAddToProjectsOpen(true)}
+                    onClick={() => setAddToProjectsModal(rowData)}
                   />
                 )}
                 <MenuItem

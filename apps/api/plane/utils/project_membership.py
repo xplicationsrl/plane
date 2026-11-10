@@ -9,9 +9,6 @@ project makes them a member on the spot, with the same role the "Join" button us
 (their workspace role). Private projects keep their rule: only workspace admins get in this way.
 """
 
-# Django imports
-from django.db import IntegrityError, transaction
-
 
 def ensure_project_membership(user, project):
     """Return the user's active membership of ``project``, creating it when the user may just walk in.
@@ -42,16 +39,16 @@ def ensure_project_membership(user, project):
         membership.is_active = True
         membership.role = role
         membership.save(update_fields=["is_active", "role", "updated_at"])
-    else:
-        try:
-            with transaction.atomic():
-                membership = ProjectMember.objects.create(
-                    project=project, member=user, role=role, workspace_id=project.workspace_id
-                )
-        except IntegrityError:
-            # Two requests of the same page load raced; the other one made the row.
-            membership = ProjectMember.objects.get(project=project, member=user)
+        return membership
+
+    # bulk_create skips ProjectMember.save(), which would insert a ProjectUserProperty blindly and
+    # fail when one is left over from an earlier membership. ignore_conflicts also covers the two
+    # requests of one page load racing to make the row.
+    ProjectMember.objects.bulk_create(
+        [ProjectMember(project=project, member=user, role=role, workspace_id=project.workspace_id)],
+        ignore_conflicts=True,
+    )
     ProjectUserProperty.objects.get_or_create(
         project=project, user=user, defaults={"workspace_id": project.workspace_id}
     )
-    return membership
+    return ProjectMember.objects.get(project=project, member=user)
