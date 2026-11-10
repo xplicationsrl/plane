@@ -63,6 +63,22 @@
             "required": "We need an email address to invite them.",
             "invalid": "Email is invalid"
           }
+        },
+        "add_to_projects": {
+          "label": "Add to projects",
+          "title": "Add {name} to projects",
+          "description": "Search, tick the projects, and add them all at once. Projects they are already in are left as they are.",
+          "search_placeholder": "Search projects, e.g. SeSS",
+          "select_all_shown": "Select all shown ({count})",
+          "clear_selection": "Clear",
+          "selected": "{count, plural, one {# project selected} other {# projects selected}}",
+          "role": "Role in these projects",
+          "submit": "{count, plural, =0 {Add to projects} one {Add to # project} other {Add to # projects}}",
+          "submitting": "Adding",
+          "success_title": "Added to projects",
+          "success": "{added, plural, one {Added to # project} other {Added to # projects}}; already in {already}.",
+          "error": "Couldn't add them to the projects. Please try again.",
+          "no_projects": "No projects match."
         }
       },
       "billing_and_plans": {

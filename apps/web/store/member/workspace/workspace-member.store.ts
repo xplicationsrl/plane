@@ -9,7 +9,12 @@ import { action, computed, makeObservable, observable, runInAction } from "mobx"
 import { computedFn } from "mobx-utils";
 // types
 import type { EUserPermissions } from "@plane/constants";
-import type { IWorkspaceBulkInviteFormData, IWorkspaceMember, IWorkspaceMemberInvitation } from "@plane/types";
+import type {
+  IWorkspaceBulkInviteFormData,
+  IWorkspaceMember,
+  IWorkspaceMemberInvitation,
+  TBulkAddToProjectsResult,
+} from "@plane/types";
 // services
 import { WorkspaceService } from "@/services/workspace.service";
 // types
@@ -51,6 +56,12 @@ export interface IWorkspaceMemberStore {
   // crud actions
   updateMember: (workspaceSlug: string, userId: string, data: { role: EUserPermissions }) => Promise<void>;
   removeMemberFromWorkspace: (workspaceSlug: string, userId: string) => Promise<void>;
+  addMemberToProjects: (
+    workspaceSlug: string,
+    userId: string,
+    projectIds: string[],
+    role?: EUserPermissions
+  ) => Promise<TBulkAddToProjectsResult>;
   // invite actions
   inviteMembersToWorkspace: (workspaceSlug: string, data: IWorkspaceBulkInviteFormData) => Promise<void>;
   updateMemberInvitation: (
@@ -90,6 +101,7 @@ export class WorkspaceMemberStore implements IWorkspaceMemberStore {
       fetchWorkspaceMembers: action,
       updateMember: action,
       removeMemberFromWorkspace: action,
+      addMemberToProjects: action,
       fetchWorkspaceMemberInvitations: action,
       updateMemberInvitation: action,
       deleteMemberInvitation: action,
@@ -271,6 +283,27 @@ export class WorkspaceMemberStore implements IWorkspaceMemberStore {
       });
       throw error;
     }
+  };
+
+  /**
+   * @description add a member to many projects at once
+   * @param workspaceSlug
+   * @param userId
+   * @param projectIds
+   * @param role project role; left out, the server picks the one the member's workspace role allows
+   */
+  addMemberToProjects = async (
+    workspaceSlug: string,
+    userId: string,
+    projectIds: string[],
+    role?: EUserPermissions
+  ) => {
+    const result = await this.workspaceService.addWorkspaceMemberToProjects(workspaceSlug, userId, {
+      project_ids: projectIds,
+      role,
+    });
+    // The projects' member lists are loaded per project; they will pick the change up when next fetched.
+    return result;
   };
 
   /**

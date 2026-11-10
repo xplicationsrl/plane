@@ -43,6 +43,7 @@ from plane.db.models import (
 from plane.db.models.intake import IntakeIssueStatus
 from plane.utils.host import base_host
 from plane.utils.order_queryset import PROJECT_ORDER_BY_ALLOWLIST, sanitize_order_by
+from plane.utils.project_membership import ensure_project_membership
 
 
 class ProjectViewSet(BaseViewSet):
@@ -233,7 +234,10 @@ class ProjectViewSet(BaseViewSet):
         member_ids = [str(project_member.member_id) for project_member in project.members_list]
 
         if str(request.user.id) not in member_ids:
-            if project.network == ProjectNetwork.SECRET.value:
+            # Open door: a workspace member who can see the project becomes a member by opening it.
+            if ensure_project_membership(request.user, project) is not None:
+                project = self.get_queryset().filter(pk=pk).first()
+            elif project.network == ProjectNetwork.SECRET.value:
                 return Response(
                     {"error": "You do not have permission"},
                     status=status.HTTP_403_FORBIDDEN,

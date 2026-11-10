@@ -4,13 +4,14 @@
  * See the LICENSE file for details.
  */
 
+import { useState } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 // plane imports
 import { ROLE, EUserPermissions, EUserPermissionsLevel } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
-import { DeactivatedUserOutline, DeleteOutline, MoreHorizontalOutline } from "@makeplane/propel/icons";
+import { DeactivatedUserOutline, DeleteOutline, MoreHorizontalOutline, ProjectsOutline } from "@makeplane/propel/icons";
 import { Badge } from "@makeplane/propel/components/badge";
 import { Icon } from "@makeplane/propel/components/icon";
 import { IconButton } from "@makeplane/propel/components/icon-button";
@@ -24,6 +25,7 @@ import { getFileURL } from "@plane/utils";
 // hooks
 import { useMember } from "@/hooks/store/use-member";
 import { useUser, useUserPermissions } from "@/hooks/store/user";
+import { AddMemberToProjectsModal } from "./add-member-to-projects-modal";
 
 export interface RowData {
   member: IWorkspaceMember;
@@ -53,6 +55,8 @@ type AccountTypeProps = {
 
 export function NameColumn(props: NameProps) {
   const { rowData, workspaceSlug, isAdmin, currentUser, setRemoveMemberModal } = props;
+  // states
+  const [isAddToProjectsOpen, setIsAddToProjectsOpen] = useState(false);
   // plane hooks
   const { t } = useTranslation();
   // derived values
@@ -61,6 +65,14 @@ export function NameColumn(props: NameProps) {
 
   return (
     <div className="group relative">
+      {isAdmin && !isSuspended && (
+        <AddMemberToProjectsModal
+          workspaceSlug={workspaceSlug}
+          member={rowData.member}
+          isOpen={isAddToProjectsOpen}
+          onClose={() => setIsAddToProjectsOpen(false)}
+        />
+      )}
       <div className="flex w-72 items-center justify-between gap-x-4 gap-y-2">
         <div className="flex flex-1 items-center gap-x-2 gap-y-2">
           {isSuspended ? (
@@ -103,6 +115,13 @@ export function NameColumn(props: NameProps) {
                 }
               />
               <MenuContent side="bottom" align="end">
+                {isAdmin && (
+                  <MenuItem
+                    icon={<Icon icon={ProjectsOutline} />}
+                    label={t("workspace_settings.settings.members.add_to_projects.label")}
+                    onClick={() => setIsAddToProjectsOpen(true)}
+                  />
+                )}
                 <MenuItem
                   icon={<Icon icon={DeleteOutline} />}
                   label={id === currentUser?.id ? t("leave") : t("remove")}

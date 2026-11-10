@@ -22,7 +22,7 @@ from plane.app.serializers import (
     WorkSpaceMemberSerializer,
 )
 from plane.app.views.base import BaseAPIView
-from plane.db.models import Project, ProjectMember, WorkspaceMember, DraftIssue
+from plane.db.models import Project, ProjectMember, ProjectUserProperty, WorkspaceMember, DraftIssue
 from plane.utils.cache import invalidate_cache
 from plane.utils.time_entry import stop_timers_on_removal
 
@@ -280,3 +280,98 @@ class WorkspaceProjectMemberEndpoint(BaseAPIView):
             project_members_dict[str(project_id)].append(project_member)
 
         return Response(project_members_dict, status=status.HTTP_200_OK)
+
+
+class WorkspaceMemberBulkProjectsEndpoint(BaseAPIView):
+    """Add one workspace member to many projects in one go.
+
+    Built for a workspace with a hundred like-named projects, where adding someone project by
+    project is not workable. The role rules are the ones project member creation uses: a
+    workspace admin is a project admin, a workspace guest stays a guest. No per-project mails
+    are sent; one call could mean a hundred of them.
+    """
+
+    @allow_permission([ROLE.ADMIN], level="WORKSPACE")
+    def post(self, request, slug, member_id):
+        target = WorkspaceMember.objects.get(workspace__slug=slug, member_id=member_id, is_active=True)
+
+        project_ids = request.data.get("project_ids")
+        if not isinstance(project_ids, list) or not project_ids:
+            return Response({"error": "project_ids must be a non-empty list"}, status=status.HTTP_400_BAD_REQUEST)
+
+        role = request.data.get("role")
+        if role is None:
+            role = target.role if target.role in (ROLE.ADMIN.value, ROLE.GUEST.value) else ROLE.MEMBER.value
+        if role not in (ROLE.ADMIN.value, ROLE.MEMBER.value, ROLE.GUEST.value):
+            return Response({"error": "Invalid role"}, status=status.HTTP_400_BAD_REQUEST)
+        if target.role == ROLE.ADMIN.value and role != ROLE.ADMIN.value:
+            return Response(
+                {"error": "You cannot add a user with role lower than the workspace role"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if target.role == ROLE.GUEST.value and role != ROLE.GUEST.value:
+            return Response(
+                {"error": "You cannot add a user with role higher than the workspace role"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Only live projects of this workspace; unknown, foreign and archived ids are skipped, not refused.
+        projects = list(
+            Project.objects.filter(workspace__slug=slug, id__in=project_ids, archived_at__isnull=True).values_list(
+                "id", flat=True
+            )
+        )
+        existing = {
+            membership.project_id: membership
+            for membership in ProjectMember.objects.filter(member_id=member_id, project_id__in=projects)
+        }
+
+        already_member, updated, to_update = [], [], []
+        for membership in existing.values():
+            if membership.is_active and membership.role == role:
+                already_member.append(membership.project_id)
+                continue
+            membership.is_active = True
+            membership.role = role
+            to_update.append(membership)
+            updated.append(membership.project_id)
+        ProjectMember.objects.bulk_update(to_update, ["is_active", "role"], batch_size=100)
+
+        # New memberships sort above the member's existing projects, as a single add does.
+        min_sort_order = (
+            ProjectUserProperty.objects.filter(workspace__slug=slug, user_id=member_id)
+            .order_by("sort_order")
+            .values_list("sort_order", flat=True)
+            .first()
+        )
+        sort_order = (min_sort_order - 10000) if min_sort_order is not None else 65535
+        added = [project_id for project_id in projects if project_id not in existing]
+        ProjectMember.objects.bulk_create(
+            [
+                ProjectMember(member_id=member_id, role=role, project_id=project_id, workspace_id=target.workspace_id)
+                for project_id in added
+            ],
+            batch_size=100,
+            ignore_conflicts=True,
+        )
+        ProjectUserProperty.objects.bulk_create(
+            [
+                ProjectUserProperty(
+                    user_id=member_id, project_id=project_id, workspace_id=target.workspace_id, sort_order=sort_order
+                )
+                for project_id in added
+            ],
+            batch_size=100,
+            ignore_conflicts=True,
+        )
+
+        return Response(
+            {
+                "added": len(added),
+                "updated": len(updated),
+                "already_member": len(already_member),
+                "skipped": len(project_ids) - len(projects),
+                "project_ids": [str(project_id) for project_id in added + updated],
+            },
+            status=status.HTTP_200_OK,
+        )

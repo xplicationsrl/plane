@@ -266,3 +266,12 @@ export enum ECreateOrJoinWorkspaceViews {
   WORKSPACE_CREATE = "WORKSPACE_CREATE",
   WORKSPACE_JOIN = "WORKSPACE_JOIN",
 }
+
+/** What the server reports after adding one member to many projects at once. */
+export type TBulkAddToProjectsResult = {
+  added: number;
+  updated: number;
+  already_member: number;
+  skipped: number;
+  project_ids: string[];
+};

@@ -18,7 +18,6 @@ import {
   SettingsOutline,
   TickCircleOutline,
   TickOutline,
-  UserPlusOutline,
 } from "@makeplane/propel/icons";
 // plane imports
 import {
@@ -53,7 +52,6 @@ import { usePlatformOS } from "@/hooks/use-platform-os";
 // local imports
 import { CoverImage } from "@/components/common/cover-image";
 import { DeleteProjectModal } from "./delete-project-modal";
-import { JoinProjectModal } from "./join-project-modal";
 import { ArchiveRestoreProjectModal } from "./archive-restore-modal";
 import { ProjectFolderFormModal } from "./folders/folder-form-modal";
 import { MoveProjectToFolderMenu } from "./folders/move-to-folder-menu";
@@ -68,7 +66,6 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
   const { project } = props;
   // states
   const [deleteProjectModalOpen, setDeleteProjectModal] = useState(false);
-  const [joinProjectModalOpen, setJoinProjectModal] = useState(false);
   const [restoreProject, setRestoreProject] = useState(false);
   const [createFolderModalOpen, setCreateFolderModal] = useState(false);
   // refs
@@ -188,18 +185,11 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
       shouldRender: !isArchived && (hasAdminRole || hasMemberRole),
     },
     {
-      key: "join",
-      action: () => setJoinProjectModal(true),
-      title: "Join",
-      icon: UserPlusOutline,
-      shouldRender: !isMemberOfProject && !isArchived,
-    },
-    {
       key: "open-new-tab",
       action: handleOpenInNewTab,
       title: "Open in new tab",
       icon: NewTabOutline,
-      shouldRender: !isMemberOfProject && !isArchived,
+      shouldRender: !isArchived,
     },
     {
       key: "copy-link",
@@ -268,15 +258,6 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
         isOpen={deleteProjectModalOpen}
         onClose={() => setDeleteProjectModal(false)}
       />
-      {/* Join Project Modal */}
-      {workspaceSlug && (
-        <JoinProjectModal
-          workspaceSlug={workspaceSlug.toString()}
-          project={project}
-          isOpen={joinProjectModalOpen}
-          handleClose={() => setJoinProjectModal(false)}
-        />
-      )}
       {/* Restore project modal */}
       {workspaceSlug && project && (
         <ArchiveRestoreProjectModal
@@ -300,13 +281,13 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
         ref={projectCardRef}
         href={`/${workspaceSlug}/projects/${project.id}/issues`}
         onClick={(e) => {
-          if (!isMemberOfProject || isArchived) {
+          // Opening a project you can see makes you a member of it; only archived ones stay closed.
+          if (isArchived) {
             e.preventDefault();
             e.stopPropagation();
-            if (!isArchived) setJoinProjectModal(true);
           }
         }}
-        data-prevent-progress={!isMemberOfProject || isArchived}
+        data-prevent-progress={isArchived}
         className={cn(
           "group/project-card flex w-full flex-col justify-between overflow-hidden rounded-lg border border-subtle bg-layer-2 transition-all duration-300 hover:border-strong hover:shadow-raised-200",
           // Done projects are tinted green so they stand out under "All" and in folders.
@@ -477,21 +458,6 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
                       Joined
                     </span>
                   ))}
-                {!isMemberOfProject && (
-                  <div className="flex items-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      stretch="auto"
-                      label="Join"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setJoinProjectModal(true);
-                      }}
-                    />
-                  </div>
-                )}
               </>
             )}
           </div>

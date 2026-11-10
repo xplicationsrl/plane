@@ -5,7 +5,9 @@
  */
 
 import { API_BASE_URL } from "@plane/constants";
+import type { EUserPermissions } from "@plane/constants";
 import type {
+  TBulkAddToProjectsResult,
   IWorkspace,
   IWorkspaceMemberMe,
   IWorkspaceMember,
@@ -147,6 +149,19 @@ export class WorkspaceService extends APIService {
     data: Partial<IWorkspaceMember>
   ): Promise<IWorkspaceMember> {
     return this.patch(`/api/workspaces/${workspaceSlug}/members/${memberId}/`, data)
+      .then((response) => response?.data)
+      .catch((error) => {
+        throw error?.response?.data;
+      });
+  }
+
+  /** Adds one member to many projects at once; the server skips projects it can't use rather than refusing. */
+  async addWorkspaceMemberToProjects(
+    workspaceSlug: string,
+    userId: string,
+    data: { project_ids: string[]; role?: EUserPermissions }
+  ): Promise<TBulkAddToProjectsResult> {
+    return this.post(`/api/workspaces/${workspaceSlug}/members/${userId}/projects/`, data)
       .then((response) => response?.data)
       .catch((error) => {
         throw error?.response?.data;

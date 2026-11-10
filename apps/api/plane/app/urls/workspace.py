@@ -22,6 +22,7 @@ from plane.app.views import (
     WorkspaceUserProfileIssuesEndpoint,
     WorkspaceLabelsEndpoint,
     WorkspaceProjectMemberEndpoint,
+    WorkspaceMemberBulkProjectsEndpoint,
     WorkspaceUserPropertiesEndpoint,
     WorkspaceStatesEndpoint,
     WorkspaceEstimatesEndpoint,
@@ -98,6 +99,11 @@ urlpatterns = [
         "workspaces/<str:slug>/members/<uuid:pk>/",
         WorkSpaceMemberViewSet.as_view({"patch": "partial_update", "delete": "destroy", "get": "retrieve"}),
         name="workspace-member",
+    ),
+    path(
+        "workspaces/<str:slug>/members/<uuid:member_id>/projects/",
+        WorkspaceMemberBulkProjectsEndpoint.as_view(),
+        name="workspace-member-bulk-projects",
     ),
     path(
         "workspaces/<str:slug>/members/leave/",

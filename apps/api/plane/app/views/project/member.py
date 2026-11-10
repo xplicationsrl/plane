@@ -23,6 +23,7 @@ from plane.bgtasks.project_add_user_email_task import project_add_user_email
 from plane.utils.host import base_host
 from plane.utils.time_entry import stop_timers_on_removal
 from plane.app.permissions.base import allow_permission, ROLE
+from plane.utils.project_membership import ensure_project_membership
 
 
 class ProjectMemberViewSet(BaseViewSet):
@@ -355,12 +356,18 @@ class ProjectMemberViewSet(BaseViewSet):
 
 class ProjectMemberUserEndpoint(BaseAPIView):
     def get(self, request, slug, project_id):
-        project_member = ProjectMember.objects.get(
+        project_member = ProjectMember.objects.filter(
             project_id=project_id,
             workspace__slug=slug,
             member=request.user,
             is_active=True,
-        )
+        ).first()
+        if project_member is None:
+            # Open door: a workspace member who can see the project becomes a member by opening it.
+            project = Project.objects.get(pk=project_id, workspace__slug=slug)
+            project_member = ensure_project_membership(request.user, project)
+        if project_member is None:
+            raise ProjectMember.DoesNotExist
         serializer = ProjectMemberSerializer(project_member)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
