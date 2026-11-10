@@ -236,6 +236,10 @@ class ProjectSerializer(BaseSerializer):
             "updated_by",
             "deleted_at",
             "cover_image_url",
+            # Set through the app's status/folder endpoints, never by a plain PATCH.
+            "status",
+            "folder",
+            "reopened_at",
         ]
 
     def validate(self, data):

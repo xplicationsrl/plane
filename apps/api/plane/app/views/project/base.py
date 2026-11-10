@@ -33,7 +33,6 @@ from plane.db.models import (
     Project,
     ProjectIdentifier,
     ProjectMember,
-    ProjectNetwork,
     ProjectUserProperty,
     State,
     DEFAULT_STATES,
@@ -192,6 +191,9 @@ class ProjectViewSet(BaseViewSet):
             "guest_view_all_features",
             "project_lead",
             "network",
+            "status",
+            "folder",
+            "reopened_at",
             "created_at",
             "updated_at",
             "created_by",
@@ -235,18 +237,13 @@ class ProjectViewSet(BaseViewSet):
 
         if str(request.user.id) not in member_ids:
             # Open door: a workspace member who can see the project becomes a member by opening it.
-            if ensure_project_membership(request.user, project) is not None:
-                project = self.get_queryset().filter(pk=pk).first()
-            elif project.network == ProjectNetwork.SECRET.value:
+            # Only a private project a non-admin cannot join is left out.
+            if ensure_project_membership(request.user, project) is None:
                 return Response(
                     {"error": "You do not have permission"},
                     status=status.HTTP_403_FORBIDDEN,
                 )
-            else:
-                return Response(
-                    {"error": "You are not a member of this project"},
-                    status=status.HTTP_409_CONFLICT,
-                )
+            project = self.get_queryset().filter(pk=pk).first()
 
         recent_visited_task.delay(
             slug=slug,

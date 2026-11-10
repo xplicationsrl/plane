@@ -140,6 +140,32 @@ class TestProjectStatusEndpoint:
         project.refresh_from_db()
         assert (project.status, project.folder_id, project.reopened_at) == ("backlog", None, None)
 
+    def test_v1_project_update_cannot_write_status_or_folder(self, api_key_client, workspace, project):
+        folder = ProjectFolder.objects.create(workspace=workspace, name="Clients")
+
+        response = api_key_client.patch(
+            f"/api/v1/workspaces/{workspace.slug}/projects/{project.id}/",
+            {"name": "Office move 2", "status": "completed", "folder": str(folder.id)},
+            format="json",
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        project.refresh_from_db()
+        assert project.name == "Office move 2"
+        assert (project.status, project.folder_id, project.reopened_at) == ("backlog", None, None)
+
+    def test_lite_projects_list_carries_status_and_folder(self, session_client, workspace, project):
+        folder = ProjectFolder.objects.create(workspace=workspace, name="Clients")
+        Project.objects.filter(pk=project.id).update(status="completed", folder=folder)
+
+        response = session_client.get(f"/api/workspaces/{workspace.slug}/projects/")
+
+        assert response.status_code == status.HTTP_200_OK
+        row = next(p for p in response.data if str(p["id"]) == str(project.id))
+        assert row["status"] == "completed"
+        assert str(row["folder"]) == str(folder.id)
+        assert row["reopened_at"] is None
+
     def test_projects_list_carries_status_and_folder(self, session_client, workspace, project):
         folder = ProjectFolder.objects.create(workspace=workspace, name="Clients")
         Project.objects.filter(pk=project.id).update(status="completed", folder=folder)
@@ -163,6 +189,37 @@ class TestProjectBecomesDoneOnItsOwn:
         assert project.status == "backlog"
 
         _move(second, states["done"])
+        project.refresh_from_db()
+        assert project.status == "completed"
+
+    def test_deleting_the_last_open_work_item_marks_the_project_done(self, project, states):
+        _item(project, states["done"])
+        stray = _item(project, states["todo"], "Never happened")
+
+        Issue.objects.get(pk=stray.pk).delete()
+
+        project.refresh_from_db()
+        assert project.status == "completed"
+
+    def test_deleting_the_only_work_item_leaves_an_empty_project_alone(self, project, states):
+        only = _item(project, states["todo"])
+
+        Issue.objects.get(pk=only.pk).delete()
+
+        project.refresh_from_db()
+        assert project.status == "backlog"
+
+    def test_bulk_deleting_the_open_work_items_marks_the_project_done(self, session_client, workspace, project, states):
+        _item(project, states["done"])
+        strays = [_item(project, states["todo"], f"Stray {n}") for n in range(2)]
+
+        response = session_client.delete(
+            f"/api/workspaces/{workspace.slug}/projects/{project.id}/bulk-delete-issues/",
+            {"issue_ids": [str(item.id) for item in strays]},
+            format="json",
+        )
+
+        assert response.status_code == status.HTTP_200_OK
         project.refresh_from_db()
         assert project.status == "completed"
 
@@ -245,6 +302,19 @@ class TestNewWorkItemReopensADoneProject:
         )
 
         assert response.status_code == status.HTTP_201_CREATED
+        done_project.refresh_from_db()
+        assert done_project.status == "started"
+        assert done_project.reopened_at is not None
+
+    def test_restoring_a_deleted_open_work_item_reopens_it(self, done_project, states):
+        stray = _item(done_project, states["todo"], "Deleted by mistake")
+        Issue.objects.get(pk=stray.pk).delete()
+        Project.objects.filter(pk=done_project.id).update(status="completed", reopened_at=None)
+
+        restored = Issue.all_objects.get(pk=stray.pk)
+        restored.deleted_at = None
+        restored.save()
+
         done_project.refresh_from_db()
         assert done_project.status == "started"
         assert done_project.reopened_at is not None

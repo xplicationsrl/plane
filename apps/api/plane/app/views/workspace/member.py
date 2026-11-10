@@ -317,11 +317,13 @@ class WorkspaceMemberBulkProjectsEndpoint(BaseAPIView):
             )
 
         # Only live projects of this workspace; unknown, foreign and archived ids are skipped, not refused.
-        projects = list(
+        live = set(
             Project.objects.filter(workspace__slug=slug, id__in=project_ids, archived_at__isnull=True).values_list(
                 "id", flat=True
             )
         )
+        # Keep the caller's order: it decides the new projects' sort order below.
+        projects = sorted(live, key=lambda project_id: project_ids.index(str(project_id)))
         existing = {
             membership.project_id: membership
             for membership in ProjectMember.objects.filter(member_id=member_id, project_id__in=projects)
@@ -345,8 +347,10 @@ class WorkspaceMemberBulkProjectsEndpoint(BaseAPIView):
             .values_list("sort_order", flat=True)
             .first()
         )
-        sort_order = (min_sort_order - 10000) if min_sort_order is not None else 65535
+        first_sort_order = (min_sort_order - 10000) if min_sort_order is not None else 65535
         added = [project_id for project_id in projects if project_id not in existing]
+        # Distinct values, in the order given, so the new projects keep a stable order.
+        sort_orders = {project_id: first_sort_order - 10000 * index for index, project_id in enumerate(added)}
         ProjectMember.objects.bulk_create(
             [
                 ProjectMember(member_id=member_id, role=role, project_id=project_id, workspace_id=target.workspace_id)
@@ -358,7 +362,10 @@ class WorkspaceMemberBulkProjectsEndpoint(BaseAPIView):
         ProjectUserProperty.objects.bulk_create(
             [
                 ProjectUserProperty(
-                    user_id=member_id, project_id=project_id, workspace_id=target.workspace_id, sort_order=sort_order
+                    user_id=member_id,
+                    project_id=project_id,
+                    workspace_id=target.workspace_id,
+                    sort_order=sort_orders[project_id],
                 )
                 for project_id in added
             ],

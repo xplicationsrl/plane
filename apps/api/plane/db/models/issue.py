@@ -108,7 +108,8 @@ class IssueManager(SoftDeletionManager):
 
 
 class Issue(ChangeTrackerMixin, ProjectBaseModel):
-    TRACKED_FIELDS = ["state_id"]
+    # state_id drives completed_at and the project status; deleted_at drives the project status.
+    TRACKED_FIELDS = ["state_id", "deleted_at"]
 
     PRIORITY_CHOICES = (
         ("urgent", "Urgent"),
@@ -199,6 +200,7 @@ class Issue(ChangeTrackerMixin, ProjectBaseModel):
         kwargs = self._sync_completed_at(kwargs)
         # Read before super().save(): the change tracker resets once it returns.
         was_adding = self._state.adding
+        deleted_changed = not was_adding and self.has_changed("deleted_at")
         state_changed = was_adding or self.has_changed("state_id")
         old_state_id = None if was_adding else self.old_values.get("state_id")
 
@@ -242,7 +244,9 @@ class Issue(ChangeTrackerMixin, ProjectBaseModel):
             )
             super(Issue, self).save(*args, **kwargs)
 
-        if state_changed:
+        if deleted_changed:
+            self._sync_project_status_on_delete()
+        elif state_changed:
             self._sync_project_status(was_adding, old_state_id)
 
     def __str__(self):
@@ -271,6 +275,16 @@ class Issue(ChangeTrackerMixin, ProjectBaseModel):
             )
             if is_new:
                 reopen_project_for_new_work_item(self.project_id)
+
+    def _sync_project_status_on_delete(self):
+        """A soft delete takes the work item out of the count; a restore puts it back as if new."""
+        if self.state is None or self.is_draft:
+            return
+        if self.deleted_at is not None:
+            # The last open item may just have left the project.
+            complete_project_if_all_done(self.project_id)
+        elif self.state.group in OPEN_STATE_GROUPS:
+            reopen_project_for_new_work_item(self.project_id)
 
     def _ensure_default_state(self):
         """Assign a default state when none is set."""

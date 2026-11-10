@@ -150,6 +150,18 @@ class TestAddMemberToManyProjects:
         assert (response.data["added"], response.data["skipped"]) == (1, 0)
         assert ProjectMember.objects.filter(member=simina).count() == 1
 
+    def test_new_projects_get_distinct_sort_orders_in_the_order_given(self, session_client, workspace, sess_projects):
+        simina = _user(workspace, role=15)
+        ids = [str(p.id) for p in sess_projects]
+
+        response = session_client.post(url(workspace.slug, simina.id), {"project_ids": ids}, format="json")
+
+        assert response.status_code == status.HTTP_200_OK
+        by_project = {str(prop.project_id): prop.sort_order for prop in ProjectUserProperty.objects.filter(user=simina)}
+        orders = [by_project[project_id] for project_id in ids]
+        assert len(set(orders)) == len(orders)
+        assert orders == sorted(orders, reverse=True)
+
     @pytest.mark.parametrize("body", [{}, {"project_ids": []}, {"project_ids": "abc"}])
     def test_needs_a_list_of_projects(self, session_client, workspace, body):
         simina = _user(workspace, role=15)
