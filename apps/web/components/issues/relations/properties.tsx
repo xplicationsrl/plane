@@ -80,6 +80,7 @@ export const RelationIssueProperty = observer(function RelationIssueProperty(pro
       />
 
       <MemberSelect
+        allowAddToProject
         value={issue.assignee_ids ?? []}
         projectId={issue.project_id ?? undefined}
         onChange={handleAssigneeChange}

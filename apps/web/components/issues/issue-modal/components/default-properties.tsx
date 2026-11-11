@@ -125,6 +125,7 @@ export const IssueDefaultProperties = observer(function IssueDefaultProperties(p
         name="assignee_ids"
         render={({ field: { value, onChange } }) => (
           <MemberSelect
+            allowAddToProject
             testId="create-work-item-assignee-select"
             projectId={projectId ?? undefined}
             value={value}

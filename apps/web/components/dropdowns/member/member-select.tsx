@@ -8,6 +8,7 @@ import { useCallback, useMemo } from "react";
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
 // plane imports
+import { EUserPermissions, EUserPermissionsLevel } from "@plane/constants";
 import { MemberSelect as MemberSelectBlock } from "@plane/blocks/property-select";
 import type { MemberOption, MemberSelectVariant } from "@plane/blocks/property-select";
 import type { SelectPaginationParams, SelectTooltip, SelectTooltipOverride } from "@plane/blocks/select";
@@ -16,7 +17,7 @@ import type { TPaginatedResponse } from "@plane/types";
 import { getFileURL } from "@plane/utils";
 // hooks
 import { useMember } from "@/hooks/store/use-member";
-import { useUser } from "@/hooks/store/user";
+import { useUser, useUserPermissions } from "@/hooks/store/user";
 
 type MemberSelectWebCommonProps = {
   /** value-agnostic e2e selector — forwarded to the block's trigger as data-testid */
@@ -28,6 +29,11 @@ type MemberSelectWebCommonProps = {
    * client-filtered by the search box.
    */
   memberIds?: string[];
+  /**
+   * Work item assignee pickers only: also offer workspace members outside `projectId` when the
+   * current user can manage the project's members. The work item API adds them to the project.
+   */
+  allowAddToProject?: boolean;
   /** Ids to hide from the options even though they're in scope (e.g. members picked in sibling rows). */
   excludeIds?: string[];
   variant: MemberSelectVariant;
@@ -58,6 +64,10 @@ export type MemberSelectWebProps = MemberSelectWebCommonProps &
  * fetched on first open when the project roster is not loaded yet — and resolves the selected id(s)
  * into `MemberOption`s for the trigger.
  *
+ * Users who can manage the project's members (project admins, or workspace admins in the project) are
+ * also offered workspace members (member role and up) who are not in the project yet; the API adds
+ * them to the project when they are assigned, and the project roster is refetched afterwards.
+ *
  * CE change: EE sources a paginated members "lite" resource with server-side scopes (`scope`,
  * `teamspaceId`, `scopedProjectIds`, `getPage`); CE reads the member store and serves one page,
  * filtering the search client-side. Suspended workspace members are listed as disabled rows with a
@@ -69,6 +79,7 @@ export const MemberSelect = observer(function MemberSelect(props: MemberSelectWe
     projectId,
     memberIds,
     excludeIds,
+    allowAddToProject,
     variant,
     showLabel,
     clearable,
@@ -88,9 +99,19 @@ export const MemberSelect = observer(function MemberSelect(props: MemberSelectWe
   const {
     getUserDetails,
     project: { getProjectMemberIds, fetchProjectMembers },
-    workspace: { workspaceMemberIds, isUserSuspended },
+    workspace: { workspaceMemberIds, isUserSuspended, getWorkspaceMemberDetails },
   } = useMember();
   const { data: currentUser } = useUser();
+  const { allowPermissions, getProjectRoleByWorkspaceSlugAndProjectId } = useUserPermissions();
+  // Mirrors the API's `can_manage_project_members`.
+  const canAddProjectMembers =
+    !!allowAddToProject &&
+    !!projectId &&
+    !!slug &&
+    !memberIds &&
+    (allowPermissions([EUserPermissions.ADMIN], EUserPermissionsLevel.PROJECT, slug, projectId) ||
+      (allowPermissions([EUserPermissions.ADMIN], EUserPermissionsLevel.WORKSPACE, slug) &&
+        getProjectRoleByWorkspaceSlugAndProjectId(slug, projectId) !== undefined));
   // translation
   const { t } = useTranslation();
   const resolvedTooltip = useMemo<SelectTooltipOverride | undefined>(() => {
@@ -128,6 +149,16 @@ export const MemberSelect = observer(function MemberSelect(props: MemberSelectWe
         await fetchProjectMembers(slug, projectId);
         rosterIds = getProjectMemberIds(projectId, false);
       }
+      if (canAddProjectMembers && rosterIds) {
+        // Append workspace members outside the project; guests cannot be assignees.
+        const inProject = new Set(projectId ? (getProjectMemberIds(projectId, true) ?? []) : []);
+        const outsideProject = (workspaceMemberIds ?? []).filter((id) => {
+          if (inProject.has(id)) return false;
+          const role = getWorkspaceMemberDetails(id)?.role;
+          return role !== undefined && Number(role) >= EUserPermissions.MEMBER;
+        });
+        rosterIds = [...rosterIds, ...outsideProject];
+      }
       const query = search?.trim().toLowerCase();
       const results: MemberOption[] = [];
       for (const id of rosterIds ?? []) {
@@ -151,7 +182,27 @@ export const MemberSelect = observer(function MemberSelect(props: MemberSelectWe
       getUserDetails,
       toOption,
       currentUser?.id,
+      canAddProjectMembers,
+      getWorkspaceMemberDetails,
     ]
+  );
+
+  // After picking someone outside the project, refetch the roster once the update has gone through,
+  // so the project member store reflects the member the API just added.
+  const { onChange: onChangeProp } = props;
+  const handleChange = useCallback(
+    (ids: string[] | string) => {
+      const result: unknown = (onChangeProp as (value: string[] | string) => unknown)(ids);
+      if (!canAddProjectMembers || !projectId || !slug) return;
+      const projectIds = new Set(getProjectMemberIds(projectId, true) ?? []);
+      const picked = Array.isArray(ids) ? ids : [ids];
+      if (!picked.some((id) => id && !projectIds.has(id))) return;
+      void Promise.resolve(result)
+        .catch(() => undefined)
+        .then(() => fetchProjectMembers(slug, projectId))
+        .catch(() => undefined);
+    },
+    [onChangeProp, canAddProjectMembers, projectId, slug, getProjectMemberIds, fetchProjectMembers]
   );
 
   const filterOption = useCallback((option: MemberOption) => !excludeSet?.has(option.id), [excludeSet]);
@@ -164,7 +215,7 @@ export const MemberSelect = observer(function MemberSelect(props: MemberSelectWe
         getValues={getValues}
         // Resolved in the observer render so MobX re-renders once the members load.
         value={props.value.map(toOption)}
-        onChange={props.onChange}
+        onChange={handleChange}
         variant={variant}
         showLabel={showLabel}
         disabled={disabled}
@@ -183,7 +234,7 @@ export const MemberSelect = observer(function MemberSelect(props: MemberSelectWe
       testId={testId}
       getValues={getValues}
       value={props.value ? toOption(props.value) : null}
-      onChange={props.onChange}
+      onChange={handleChange}
       variant={variant}
       showLabel={showLabel}
       clearable={clearable}

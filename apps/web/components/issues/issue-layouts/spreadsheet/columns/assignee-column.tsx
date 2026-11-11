@@ -24,6 +24,7 @@ export const SpreadsheetAssigneeColumn = observer(function SpreadsheetAssigneeCo
   return (
     <div className="h-11 border-b-[0.5px] border-subtle">
       <MemberSelect
+        allowAddToProject
         value={issue?.assignee_ids ?? []}
         onChange={(data) => {
           onChange(

@@ -117,6 +117,7 @@ export const IssueDetailsSidebar = observer(function IssueDetailsSidebar(props: 
 
             <SidebarPropertyListItem icon={MembersOutline} label={t("common.assignees")}>
               <MemberSelect
+                allowAddToProject
                 testId="work-item-assignee-select"
                 value={issue?.assignee_ids ?? []}
                 onChange={(val) => issueOperations.update(workspaceSlug, projectId, issueId, { assignee_ids: val })}

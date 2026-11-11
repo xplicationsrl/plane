@@ -320,6 +320,7 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
         {/* oxlint-disable-next-line jsx_a11y/click-events-have-key-events oxlint-disable-next-line jsx_a11y/no-static-element-interactions */}
         <div className="h-5" onFocus={handleEventPropagation} onClick={handleEventPropagation}>
           <MemberSelect
+            allowAddToProject
             projectId={issue?.project_id ?? undefined}
             value={issue?.assignee_ids ?? []}
             onChange={handleAssignee}

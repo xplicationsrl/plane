@@ -42,6 +42,7 @@ from plane.app.serializers import (
 )
 from plane.bgtasks.issue_activities_task import issue_activity
 from plane.bgtasks.issue_description_version_task import issue_description_version_task
+from plane.bgtasks.project_add_user_email_task import project_add_user_email
 from plane.bgtasks.recent_visited_task import recent_visited_task
 from plane.bgtasks.webhook_task import model_activity
 from plane.db.models import (
@@ -73,6 +74,7 @@ from plane.utils.project_status import complete_project_if_all_done
 from plane.utils.serializers import writable_data
 from plane.utils.issue_filters import issue_filters
 from plane.utils.order_queryset import order_issue_queryset
+from plane.utils.project_member import add_assignees_to_project
 from plane.utils.paginator import GroupedOffsetPaginator, SubGroupedOffsetPaginator
 from plane.utils.timezone_converter import user_timezone_converter
 
@@ -404,9 +406,23 @@ class IssueViewSet(BaseViewSet):
                 on_results=lambda issues: issue_on_results(group_by=group_by, issues=issues, sub_group_by=sub_group_by),
             )
 
+    def add_missing_assignees_to_project(self, request, project):
+        """Project admins may assign any workspace member: add the ones not yet in the project."""
+        if "assignee_ids" not in request.data:
+            return
+        added_members = add_assignees_to_project(
+            project=project, assignee_ids=request.data.get("assignee_ids"), actor=request.user
+        )
+        if not added_members:
+            return
+        origin = base_host(request=request, is_app=True)
+        for project_member in added_members:
+            project_add_user_email.delay(origin, project_member.id, request.user.id)
+
     @allow_permission([ROLE.ADMIN, ROLE.MEMBER])
     def create(self, request, slug, project_id):
         project = Project.objects.get(pk=project_id)
+        self.add_missing_assignees_to_project(request, project)
 
         serializer = IssueCreateSerializer(
             data=request.data,
@@ -679,6 +695,8 @@ class IssueViewSet(BaseViewSet):
             return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
 
         current_instance = json.dumps(IssueDetailSerializer(issue).data, cls=DjangoJSONEncoder)
+
+        self.add_missing_assignees_to_project(request, issue.project)
 
         serializer = IssueCreateSerializer(issue, data=request.data, partial=True, context={"project_id": project_id})
         if serializer.is_valid():
