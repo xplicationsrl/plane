@@ -10,6 +10,7 @@ import { observer } from "mobx-react";
 // plane imports
 import type { EditorRefApi } from "@plane/editor";
 import { setToast } from "@plane/blocks/toast";
+import { useTranslation } from "@plane/i18n";
 import type { TIssue, TNameDescriptionLoader } from "@plane/types";
 import { EFileAssetType, EInboxIssueSource, EInboxIssueStatus } from "@plane/types";
 // components
@@ -52,6 +53,7 @@ export const InboxIssueMainContent = observer(function InboxIssueMainContent(pro
   // store hooks
   const { data: currentUser } = useUser();
   const { getUserDetails } = useMember();
+  const { t } = useTranslation();
   const { loader } = useProjectInbox();
   const { removeIssue, archiveIssue } = useIssueDetail();
   // reload confirmation
@@ -71,6 +73,9 @@ export const InboxIssueMainContent = observer(function InboxIssueMainContent(pro
   // derived values
   const issue = inboxIssue.issue;
   const isIntakeAccepted = inboxIssue.status === EInboxIssueStatus.ACCEPTED;
+  // Form submissions are created as the form's owner; this is who actually sent the request.
+  const isFormSubmission = inboxIssue.source === EInboxIssueSource.FORMS;
+  const formSenderName = inboxIssue.submitter_name || inboxIssue.source_email || t("inbox_issue.source.form_user");
 
   const issueOperations: TIssueOperations = useMemo(
     () => ({
@@ -126,6 +131,25 @@ export const InboxIssueMainContent = observer(function InboxIssueMainContent(pro
   return (
     <>
       <div className="space-y-4 pb-4">
+        {isFormSubmission && (
+          <p className="text-13 text-secondary">
+            {inboxIssue.form_name
+              ? t("inbox_issue.source.sent_via_form_by", { form: inboxIssue.form_name })
+              : t("inbox_issue.source.form_user")}{" "}
+            {inboxIssue.submitter_name && <span className="font-medium text-primary">{inboxIssue.submitter_name}</span>}
+            {inboxIssue.source_email && (
+              <>
+                {inboxIssue.submitter_name ? " · " : ""}
+                <a
+                  href={`mailto:${inboxIssue.source_email}`}
+                  className="font-medium text-accent-primary hover:underline"
+                >
+                  {inboxIssue.source_email}
+                </a>
+              </>
+            )}
+          </p>
+        )}
         <IssueTitleInput
           workspaceSlug={workspaceSlug}
           projectId={issue.project_id}
@@ -176,10 +200,9 @@ export const InboxIssueMainContent = observer(function InboxIssueMainContent(pro
               className="flex-shrink-0"
               entityInformation={{
                 createdAt: issue.created_at ? new Date(issue.created_at) : new Date(),
-                createdByDisplayName:
-                  inboxIssue.source === EInboxIssueSource.FORMS
-                    ? "Intake Form user"
-                    : (getUserDetails(issue.created_by ?? "")?.display_name ?? ""),
+                createdByDisplayName: isFormSubmission
+                  ? formSenderName
+                  : (getUserDetails(issue.created_by ?? "")?.display_name ?? ""),
                 id: issue.id,
                 isRestoreDisabled: !isEditable,
               }}

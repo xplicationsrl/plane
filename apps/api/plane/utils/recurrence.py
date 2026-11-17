@@ -10,6 +10,10 @@ from datetime import date, timedelta
 
 FREQUENCIES = ("daily", "weekly", "monthly", "yearly")
 
+# Activity field on a completed occurrence that records which work item continued it:
+# ``old_identifier`` is the rule, ``new_identifier`` the next occurrence.
+CONTINUED_ACTIVITY_FIELD = "recurrence"
+
 
 def add_months(day, months):
     """``day`` moved by ``months``, clamped to the last day of a shorter month (Jan 31 → Feb 28)."""

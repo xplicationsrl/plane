@@ -584,8 +584,24 @@ export abstract class BaseIssuesStore implements IBaseIssuesStore {
       // call API to update the issue
       await this.issueService.patchIssue(workspaceSlug, projectId, issueId, data);
 
+      // Closing the last open work item makes the server mark the project done.
+      if (this.isClosingStateChange(issueBeforeUpdate?.state_id, data.state_id))
+        void this.rootIssueStore.rootStore.projectRoot.project.syncProjectStatusAfterWorkItemClosed(
+          workspaceSlug,
+          projectId
+        );
+
       // call fetch Parent Stats
       this.fetchParentStats(workspaceSlug, projectId);
+
+      // Completing a recurring work item creates its next occurrence on the server
+      const { stateMap } = this.rootIssueStore.rootStore.state;
+      if (
+        data.state_id &&
+        data.state_id !== issueBeforeUpdate?.state_id &&
+        stateMap?.[data.state_id]?.group === "completed"
+      )
+        void this.rootIssueStore.rootStore.recurrence.followUpCompletion(workspaceSlug, projectId, issueId);
     } catch (error) {
       // If errored out update store again to revert the change
       this.rootIssueStore.issues.updateIssue(issueId, issueBeforeUpdate ?? {});
@@ -722,6 +738,19 @@ export abstract class BaseIssuesStore implements IBaseIssuesStore {
   };
 
   /**
+   * True when a work item moves from an open state into a done or cancelled one.
+   */
+  private isClosingStateChange(previousStateId: string | null | undefined, nextStateId: string | null | undefined) {
+    if (!nextStateId || nextStateId === previousStateId) return false;
+    const stateMap = this.rootIssueStore.rootStore.state.stateMap;
+    const isClosed = (stateId: string | null | undefined) => {
+      const group = stateId ? stateMap?.[stateId]?.group : undefined;
+      return group === "completed" || group === "cancelled";
+    };
+    return isClosed(nextStateId) && !isClosed(previousStateId);
+  }
+
+  /**
    * @description bulk update properties of selected issues
    * @param {TBulkOperationsPayload} data
    */
@@ -729,6 +758,11 @@ export abstract class BaseIssuesStore implements IBaseIssuesStore {
     const issueIds = data.issue_ids;
     // make request to update issue properties
     await this.issueService.bulkOperations(workspaceSlug, projectId, data);
+    if (this.isClosingStateChange(undefined, data.properties.state_id))
+      void this.rootIssueStore.rootStore.projectRoot.project.syncProjectStatusAfterWorkItemClosed(
+        workspaceSlug,
+        projectId
+      );
     // update issues in the store
     runInAction(() => {
       issueIds.forEach((issueId) => {

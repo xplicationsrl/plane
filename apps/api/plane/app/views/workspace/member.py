@@ -329,9 +329,11 @@ class WorkspaceMemberBulkProjectsEndpoint(BaseAPIView):
             for membership in ProjectMember.objects.filter(member_id=member_id, project_id__in=projects)
         }
 
+        # Projects they are already in keep their role, so picking "Member" here never demotes a
+        # project admin. Only memberships of people who left are reactivated, with the picked role.
         already_member, updated, to_update = [], [], []
         for membership in existing.values():
-            if membership.is_active and membership.role == role:
+            if membership.is_active:
                 already_member.append(membership.project_id)
                 continue
             membership.is_active = True

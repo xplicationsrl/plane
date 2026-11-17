@@ -4,7 +4,7 @@
  * See the LICENSE file for details.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react";
 // plane imports
 import { Avatar } from "@makeplane/propel/components/avatar";
@@ -26,6 +26,9 @@ import { useUser, useUserPermissions, useUserProfile } from "@/hooks/store/user"
 // local imports
 import { TimerClock } from "./timer-clock";
 
+/** Matches the server's per-entry cap (apps/api/plane/utils/time_entry.py MAX_ENTRY_SECONDS). */
+const MAX_ENTRY_SECONDS = 24 * 60 * 60;
+
 type Props = {
   workspaceSlug: string;
   projectId: string;
@@ -43,11 +46,24 @@ const TimeLogForm = observer(function TimeLogForm(props: Omit<Props, "disabled">
   const [description, setDescription] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const durationInputRef = useRef<HTMLInputElement>(null);
+
+  // The popover is opened to log time, so put the cursor straight in the duration field
+  useEffect(() => {
+    durationInputRef.current?.focus();
+  }, []);
+
+  // What the typed duration will be logged as, shown live so "2" (hours) vs "2m" is never a surprise
+  const parsedSeconds = parseDuration(duration);
 
   const submit = async () => {
-    const seconds = parseDuration(duration);
+    const seconds = parsedSeconds;
     if (!seconds) {
       setError(t("time_log.form.invalid_duration"));
+      return;
+    }
+    if (seconds > MAX_ENTRY_SECONDS) {
+      setError(t("time_log.form.too_long"));
       return;
     }
     setIsSubmitting(true);
@@ -87,6 +103,8 @@ const TimeLogForm = observer(function TimeLogForm(props: Omit<Props, "disabled">
           }}
           placeholder={t("time_log.form.duration_placeholder")}
           aria-label={t("time_log.form.duration")}
+          aria-describedby="time-log-duration-hint"
+          ref={durationInputRef}
           className={inputClass}
         />
         <div className="w-36 flex-shrink-0">
@@ -107,7 +125,17 @@ const TimeLogForm = observer(function TimeLogForm(props: Omit<Props, "disabled">
         maxLength={1000}
         className={inputClass}
       />
-      {error && <p className="text-caption-sm-regular text-danger-primary">{error}</p>}
+      <p id="time-log-duration-hint" aria-live="polite" className="min-h-4 text-caption-sm-regular">
+        {error ? (
+          <span className="text-danger-primary">{error}</span>
+        ) : parsedSeconds ? (
+          <span className={parsedSeconds > MAX_ENTRY_SECONDS ? "text-danger-primary" : "text-tertiary"}>
+            {parsedSeconds > MAX_ENTRY_SECONDS
+              ? t("time_log.form.too_long")
+              : t("time_log.form.preview", { duration: formatDuration(parsedSeconds) })}
+          </span>
+        ) : null}
+      </p>
       <div className="flex justify-end">
         <Button
           type="submit"

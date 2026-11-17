@@ -74,6 +74,8 @@ export type TIssueModalContext = {
   handleCreateUpdatePropertyValues: (props: TCreateUpdatePropertyValuesProps) => Promise<void>;
   handleProjectEntitiesFetch: (props: THandleProjectEntitiesFetchProps) => Promise<void>;
   handleTemplateChange: (props: THandleTemplateChangeProps) => Promise<void>;
+  /** The create-form values the selected template asks for, or null when none is selected. */
+  getWorkItemTemplateFormValues: () => Partial<TIssue> | null;
   handleConvert: (workspaceSlug: string, data: Partial<TIssue>) => Promise<void>;
   handleCreateSubWorkItem: (props: TCreateSubWorkItemProps) => Promise<void>;
 };

@@ -275,3 +275,78 @@ class TestNextOccurrence:
 
         rule.refresh_from_db()
         assert rule.is_active is True
+
+
+@pytest.mark.contract
+class TestContinuation:
+    """A completed occurrence points at the one that followed it and can't start a second rule."""
+
+    def _repeat_and_complete(self, session_client, workspace, project, issue):
+        session_client.put(recurrence_url(workspace.slug, project.id, issue.id), {"frequency": "weekly"}, format="json")
+        rule = IssueRecurrence.objects.get(issue=issue)
+        _complete(issue)
+        return rule, spawn_for_recurrence(rule.id)
+
+    def test_completed_occurrence_reports_where_it_continues(self, session_client, workspace, project, issue):
+        _, new_issue = self._repeat_and_complete(session_client, workspace, project, issue)
+
+        old = session_client.get(recurrence_url(workspace.slug, project.id, issue.id))
+        new = session_client.get(recurrence_url(workspace.slug, project.id, new_issue.id))
+
+        assert old.status_code == status.HTTP_200_OK
+        assert old.data["issue"] == new_issue.id
+        assert old.data["continued_in"]["id"] == str(new_issue.id)
+        assert old.data["continued_in"]["sequence_id"] == new_issue.sequence_id
+        assert old.data["continued_in"]["project_identifier"] == project.identifier
+        assert new.data["continued_in"] is None
+
+    @pytest.mark.parametrize("group", ["completed", "cancelled"])
+    def test_closed_work_item_cannot_get_a_rule(self, session_client, workspace, project, issue, group):
+        state = State.objects.filter(project=project, group=group).first() or State.objects.create(
+            name="Cancelled", group=group, project=project, sequence=3
+        )
+        issue.state = state
+        issue.save()
+
+        response = session_client.put(
+            recurrence_url(workspace.slug, project.id, issue.id), {"frequency": "weekly"}, format="json"
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "Reopen" in response.data["error"]
+        assert not IssueRecurrence.objects.filter(issue=issue).exists()
+
+    def test_editing_a_completed_occurrence_does_not_duplicate(self, session_client, workspace, project, issue):
+        self._repeat_and_complete(session_client, workspace, project, issue)
+
+        response = session_client.put(
+            recurrence_url(workspace.slug, project.id, issue.id), {"frequency": "daily"}, format="json"
+        )
+        spawn_due_recurrences()
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert IssueRecurrence.objects.count() == 1
+        assert Issue.objects.filter(project=project, name=issue.name).count() == 2
+
+    def test_reopened_earlier_occurrence_cannot_start_a_second_rule(self, session_client, workspace, project, issue):
+        _, new_issue = self._repeat_and_complete(session_client, workspace, project, issue)
+        issue.state = State.objects.get(project=project, group="unstarted")
+        issue.save()
+
+        response = session_client.put(
+            recurrence_url(workspace.slug, project.id, issue.id), {"frequency": "daily"}, format="json"
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert f"{project.identifier}-{new_issue.sequence_id}" in response.data["error"]
+        assert IssueRecurrence.objects.count() == 1
+
+    def test_deleting_the_next_occurrence_breaks_the_chain(self, session_client, workspace, project, issue):
+        _, new_issue = self._repeat_and_complete(session_client, workspace, project, issue)
+        new_issue.delete()
+        issue.state = State.objects.get(project=project, group="unstarted")
+        issue.save()
+        url = recurrence_url(workspace.slug, project.id, issue.id)
+
+        assert session_client.get(url).data is None
+        assert session_client.put(url, {"frequency": "daily"}, format="json").status_code == status.HTTP_200_OK

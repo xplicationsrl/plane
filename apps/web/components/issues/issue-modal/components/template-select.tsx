@@ -11,6 +11,7 @@ import { TemplatesOutline } from "@makeplane/propel/icons";
 import { Select } from "@plane/blocks/select";
 import { useTranslation } from "@plane/i18n";
 import type { TWorkItemTemplate } from "@plane/types";
+import type { TWorkItemTemplateFormField } from "@plane/utils";
 // hooks
 import { useIssueModal } from "@/hooks/context/use-issue-modal";
 import { useTemplate } from "@/hooks/store/use-template";
@@ -67,5 +68,49 @@ export const WorkItemTemplateSelect = observer(function WorkItemTemplateSelect(p
         )}
       </Select.Trigger>
     </Select>
+  );
+});
+
+type HintProps = {
+  projectId: string | null | undefined;
+  /** Fields where the user's own entry was kept over the template's. */
+  keptFields: TWorkItemTemplateFormField[];
+};
+
+/** One line under the template picker: what the template adds on create, and what of the user's was kept. */
+export const WorkItemTemplateHint = observer(function WorkItemTemplateHint(props: HintProps) {
+  const { projectId, keptFields } = props;
+  const { t } = useTranslation();
+  const { workItemTemplates } = useTemplate();
+  const { workItemTemplateId } = useIssueModal();
+
+  const template = projectId
+    ? (workItemTemplates[projectId] ?? []).find((item) => item.id === workItemTemplateId)
+    : undefined;
+  if (!template) return null;
+
+  const subItemCount = template.template.sub_issues?.length ?? 0;
+  const propertyCount = Object.keys(template.template.custom_properties ?? {}).length;
+  const subItems = t("templates.manage.work_item.sub_items", { count: subItemCount });
+  const properties = t("templates.manage.work_item.property_values", { count: propertyCount });
+  const adds =
+    subItemCount && propertyCount
+      ? t("templates.manage.work_item.adds_both", { sub_items: subItems, properties })
+      : subItemCount
+        ? t("templates.manage.work_item.adds_sub_items", { sub_items: subItems })
+        : propertyCount
+          ? t("templates.manage.work_item.adds_properties", { properties })
+          : null;
+  const kept = keptFields.length
+    ? t("templates.manage.work_item.kept", {
+        fields: keptFields.map((field) => t(`templates.manage.work_item.kept_fields.${field}`)).join(", "),
+      })
+    : null;
+  if (!adds && !kept) return null;
+
+  return (
+    <p className="text-11 text-tertiary" aria-live="polite">
+      {[adds, kept].filter(Boolean).join(" ")}
+    </p>
   );
 });

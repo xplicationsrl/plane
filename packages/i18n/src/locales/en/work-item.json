@@ -103,7 +103,11 @@
       },
       "remove": {
         "success": "Comment removed successfully",
-        "error": "Comment remove failed. Please try again later."
+        "error": "Comment remove failed. Please try again later.",
+        "confirm": {
+          "title": "Delete this comment and its replies?",
+          "description": "{count, plural, one {The # reply in this thread will be deleted too.} other {All # replies in this thread will be deleted too.}} This can't be undone."
+        }
       },
       "upload": {
         "error": "Asset upload failed. Please try again later."
@@ -468,7 +472,9 @@
       "note": "Note",
       "note_placeholder": "What did you work on? (optional)",
       "submit": "Log time",
-      "invalid_duration": "Enter a duration such as 45m, 1h 30m or 1:30.",
+      "invalid_duration": "Enter a duration such as 2 (hours), 45m, 1h 30m or 1:30.",
+      "too_long": "A single entry can be at most 24h. Log longer work as several entries.",
+      "preview": "Logs {duration}",
       "error": "The time entry couldn't be saved. Please try again."
     },
     "timer": {
@@ -491,6 +497,15 @@
     "stop": "Stop repeating",
     "error": "The repeat settings couldn't be saved. Please try again.",
     "explainer": "When it's completed, the next one is created automatically.",
+    "next_due": "{summary}, next due {date}",
+    "continued_in": "Continued in {identifier}",
+    "continued_hint": "This occurrence is done. The repeat carries on in {identifier}; change it there.",
+    "closed_hint": "Reopen this work item to make it repeat.",
+    "next_created": {
+      "title": "Next occurrence created",
+      "message": "{identifier} {name}",
+      "open": "Open"
+    },
     "frequency": {
       "daily": "{count, plural, one {day} other {days}}",
       "weekly": "{count, plural, one {week} other {weeks}}",

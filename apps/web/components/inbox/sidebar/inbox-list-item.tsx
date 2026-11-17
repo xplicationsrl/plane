@@ -14,6 +14,8 @@ import { Avatar } from "@makeplane/propel/components/avatar";
 import { PriorityIcon } from "@plane/blocks/icons";
 import { Tooltip } from "@makeplane/propel/components/tooltip";
 import { Row } from "@plane/blocks/layout";
+import { useTranslation } from "@plane/i18n";
+import { EInboxIssueSource } from "@plane/types";
 import { cn, renderFormattedDate } from "@plane/utils";
 // components
 import { ButtonAvatars } from "@/components/dropdowns/member/avatar";
@@ -43,6 +45,7 @@ export const InboxIssueListItem = observer(function InboxIssueListItem(props: In
   const { projectLabels } = useLabel();
   const { isMobile } = usePlatformOS();
   const { getUserDetails } = useMember();
+  const { t } = useTranslation();
   const inboxIssue = getIssueInboxByIssueId(inboxIssueId);
   const issue = inboxIssue?.issue;
 
@@ -54,6 +57,15 @@ export const InboxIssueListItem = observer(function InboxIssueListItem(props: In
   if (!issue) return <></>;
 
   const createdByDetails = issue?.created_by ? getUserDetails(issue?.created_by) : undefined;
+  // Form submissions are created as the form's owner; show the person who actually sent it.
+  const isFormSubmission = inboxIssue.source === EInboxIssueSource.FORMS;
+  const formSender = inboxIssue.submitter_name || inboxIssue.source_email || t("inbox_issue.source.form_user");
+  const formSenderTooltip = [
+    inboxIssue.form_name ? t("inbox_issue.source.sent_via_form", { form: inboxIssue.form_name }) : "",
+    inboxIssue.source_email ?? "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <>
@@ -124,7 +136,11 @@ export const InboxIssueListItem = observer(function InboxIssueListItem(props: In
               )}
             </div>
             {/* created by */}
-            {createdByDetails && createdByDetails.email?.includes("intake@plane.so") ? (
+            {isFormSubmission ? (
+              <Tooltip label={formSenderTooltip} disabled={isMobile || !formSenderTooltip}>
+                <span className="max-w-32 truncate text-11 text-secondary">{formSender}</span>
+              </Tooltip>
+            ) : createdByDetails && createdByDetails.email?.includes("intake@plane.so") ? (
               <Avatar alt="Xplication" fallback="X" size="xs" />
             ) : createdByDetails ? (
               <ButtonAvatars showTooltip={false} userIds={createdByDetails?.id} />

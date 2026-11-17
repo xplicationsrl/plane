@@ -26,6 +26,9 @@ import type { CoreRootStore } from "../root.store";
 
 type ProjectOverviewCollapsible = "links" | "attachments" | "milestones";
 
+/** A project the server marked done on its own, with the status it had before, so the change can be undone. */
+export type TAutoCompletedProject = { workspaceSlug: string; projectId: string; previousStatus: TProjectStatus };
+
 export interface IProjectStore {
   // observables
   isUpdatingProject: boolean;
@@ -33,6 +36,7 @@ export interface IProjectStore {
   fetchStatus: TFetchStatus;
   projectMap: Record<string, TProject>; // projectId: project info
   projectAnalyticsCountMap: Record<string, TProjectAnalyticsCount>; // projectId: project analytics count
+  autoCompletedProject: TAutoCompletedProject | undefined;
   // computed
   isInitializingProjects: boolean;
   filteredProjectIds: string[] | undefined;
@@ -83,6 +87,8 @@ export interface IProjectStore {
   // status actions
   updateProjectStatus: (workspaceSlug: string, projectId: string, status: TProjectStatus) => Promise<void>;
   dismissProjectReopenedNotice: (workspaceSlug: string, projectId: string) => Promise<void>;
+  syncProjectStatusAfterWorkItemClosed: (workspaceSlug: string, projectId: string) => Promise<void>;
+  clearAutoCompletedProject: () => void;
 }
 
 export class ProjectStore implements IProjectStore {
@@ -94,6 +100,7 @@ export class ProjectStore implements IProjectStore {
   projectAnalyticsCountMap: Record<string, TProjectAnalyticsCount> = {};
   openCollapsibleSection: ProjectOverviewCollapsible[] = ["milestones"];
   lastCollapsibleAction: ProjectOverviewCollapsible | null = null;
+  autoCompletedProject: TAutoCompletedProject | undefined = undefined;
 
   // root store
   rootStore: CoreRootStore;
@@ -115,6 +122,7 @@ export class ProjectStore implements IProjectStore {
       projectAnalyticsCountMap: observable,
       openCollapsibleSection: observable.ref,
       lastCollapsibleAction: observable.ref,
+      autoCompletedProject: observable.ref,
       // computed
       isInitializingProjects: computed,
       filteredProjectIds: computed,
@@ -144,6 +152,8 @@ export class ProjectStore implements IProjectStore {
       setOpenCollapsibleSection: action,
       setLastCollapsibleAction: action,
       toggleOpenCollapsibleSection: action,
+      // status actions
+      clearAutoCompletedProject: action,
     });
     // root store
     this.rootStore = _rootStore;
@@ -697,5 +707,43 @@ export class ProjectStore implements IProjectStore {
       });
       throw error;
     }
+  };
+
+  /**
+   * Called after a work item in the project was closed (done or cancelled). Closing the last open one
+   * makes the server mark the project done on its own; this picks that up so the card and tabs follow
+   * and `autoCompletedProject` can tell the person, with a way back.
+   * @param workspaceSlug
+   * @param projectId
+   * @returns Promise<void>
+   */
+  syncProjectStatusAfterWorkItemClosed = async (workspaceSlug: string, projectId: string) => {
+    const project = this.projectMap[projectId];
+    const previousStatus = project?.status;
+    // The server only completes projects that are still open, and never archived ones.
+    if (
+      !project ||
+      project.archived_at ||
+      !previousStatus ||
+      previousStatus === "completed" ||
+      previousStatus === "cancelled"
+    )
+      return;
+    try {
+      const response = await this.projectService.getProject(workspaceSlug, projectId);
+      if (response.status !== "completed") return;
+      runInAction(() => {
+        set(this.projectMap, [projectId, "status"], response.status);
+        set(this.projectMap, [projectId, "reopened_at"], response.reopened_at ?? null);
+        this.autoCompletedProject = { workspaceSlug, projectId, previousStatus };
+      });
+    } catch (error) {
+      // Only a notice is lost; the next projects fetch shows the right status.
+      console.log("Failed to refresh the project status after closing a work item", error);
+    }
+  };
+
+  clearAutoCompletedProject = () => {
+    this.autoCompletedProject = undefined;
   };
 }

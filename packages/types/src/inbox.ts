@@ -37,6 +37,10 @@ export type TInboxIssue = {
   snoozed_till: Date | null;
   duplicate_to: string | undefined;
   source: EInboxIssueSource | undefined;
+  /** Public form submissions: who sent it (the work item's creator is the form's owner). */
+  source_email?: string | null;
+  submitter_name?: string | null;
+  form_name?: string | null;
   issue: TIssue;
   created_by: string;
   duplicate_issue_detail: TInboxDuplicateIssueDetails | undefined;

@@ -14,10 +14,10 @@ from django.db import transaction
 from django.utils import timezone
 
 # Module imports
-from plane.db.models import Issue, IssueRecurrence, State, StateGroup
+from plane.db.models import Issue, IssueActivity, IssueRecurrence, State, StateGroup
 from plane.utils.exception_logger import log_exception
 from plane.utils.issue_copy import copy_issue
-from plane.utils.recurrence import next_due_date
+from plane.utils.recurrence import CONTINUED_ACTIVITY_FIELD, next_due_date
 
 logger = logging.getLogger("plane.worker")
 
@@ -84,6 +84,20 @@ def spawn_for_recurrence(recurrence_id):
         recurrence.occurrences += 1
         recurrence.last_spawned_at = timezone.now()
         recurrence.save(update_fields=["issue", "occurrences", "last_spawned_at", "updated_at"])
+        # Lets the completed occurrence point at the one that continues it
+        IssueActivity.objects.create(
+            issue=issue,
+            project_id=issue.project_id,
+            workspace_id=issue.workspace_id,
+            actor_id=actor_id,
+            verb="updated",
+            field=CONTINUED_ACTIVITY_FIELD,
+            comment="created the next occurrence",
+            old_identifier=recurrence.id,
+            new_identifier=new_issue.id,
+            new_value=f"{issue.project.identifier}-{new_issue.sequence_id}",
+            epoch=timezone.now().timestamp(),
+        )
         return new_issue
 
 

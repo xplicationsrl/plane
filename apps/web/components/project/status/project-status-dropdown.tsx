@@ -9,13 +9,14 @@ import { observer } from "mobx-react";
 import { Menu, MenuContent, MenuItem, MenuTrigger } from "@makeplane/propel/components/menu";
 import { Tooltip } from "@makeplane/propel/components/tooltip";
 import { StateGroupIcon } from "@plane/blocks/icons";
-import { setToast } from "@plane/blocks/toast";
 import { DEFAULT_PROJECT_STATUS, PROJECT_STATUSES } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
 import type { TProjectStatus } from "@plane/types";
 import { cn } from "@plane/utils";
 // hooks
 import { useProject } from "@/hooks/store/use-project";
+// local imports
+import { useProjectStatusChange } from "./use-project-status-change";
 
 type Props = {
   workspaceSlug: string;
@@ -35,7 +36,8 @@ export const ProjectStatusDropdown = observer(function ProjectStatusDropdown(pro
   // plane hooks
   const { t } = useTranslation();
   // store hooks
-  const { getProjectById, updateProjectStatus } = useProject();
+  const { getProjectById } = useProject();
+  const { changeStatus } = useProjectStatusChange();
   // derived values
   const project = getProjectById(projectId);
   if (!project) return null;
@@ -45,13 +47,7 @@ export const ProjectStatusDropdown = observer(function ProjectStatusDropdown(pro
 
   const handleChange = (status: TProjectStatus) => {
     if (status === currentStatus) return;
-    updateProjectStatus(workspaceSlug, projectId, status).catch(() =>
-      setToast({
-        type: "error",
-        title: t("common.error.label"),
-        message: t("workspace_projects.status.update_failed"),
-      })
-    );
+    changeStatus(workspaceSlug, projectId, status);
   };
 
   return (

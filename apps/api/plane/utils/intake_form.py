@@ -26,7 +26,7 @@ from plane.db.models import (
     State,
     StateGroup,
 )
-from plane.db.models.intake import IntakeIssueStatus
+from plane.db.models.intake import IntakeIssueStatus, SourceType
 from plane.utils.custom_property import normalize_value, valid_uuids
 from plane.utils.issue_copy import record_created_activity
 
@@ -264,7 +264,7 @@ def submit_form(form, cleaned):
                 issue=issue,
                 project=project,
                 status=IntakeIssueStatus.PENDING,
-                source="FORM",
+                source=SourceType.FORMS,
                 source_email=cleaned.get("submitter_email") or None,
                 extra={
                     "form_id": str(form.id),

@@ -4,4 +4,5 @@
  * See the LICENSE file for details.
  */
 
+export * from "./continuation-toast";
 export * from "./issue-recurrence";

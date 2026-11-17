@@ -41,6 +41,8 @@ class Intake(ProjectBaseModel):
 
 class SourceType(models.TextChoices):
     IN_APP = "IN_APP"
+    # Public request forms; the web app reads this exact value (EInboxIssueSource.FORMS).
+    FORMS = "FORMS"
 
 
 class IntakeIssueStatus(models.IntegerChoices):

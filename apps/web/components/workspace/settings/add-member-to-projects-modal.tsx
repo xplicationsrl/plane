@@ -92,11 +92,13 @@ export const AddMemberToProjectsModal = observer(function AddMemberToProjectsMod
     setIsSubmitting(true);
     try {
       const result = await addMemberToProjects(workspaceSlug, userId, selectedProjectIds, role);
+      // "updated" counts projects they had left and were brought back into, so those count as added.
+      const added = result.added + result.updated;
       setToast({
-        type: "success",
-        title: t("workspace_settings.settings.members.add_to_projects.success_title"),
+        type: added === 0 ? "info" : "success",
+        title: t("workspace_settings.settings.members.add_to_projects.success_title", { added }),
         message: t("workspace_settings.settings.members.add_to_projects.success", {
-          added: result.added + result.updated,
+          added,
           already: result.already_member,
         }),
       });

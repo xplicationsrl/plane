@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
+import Link from "next/link";
 // plane imports
 import { Button } from "@makeplane/propel/components/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@makeplane/propel/components/popover";
@@ -14,8 +15,10 @@ import { Select } from "@plane/blocks/select";
 import { setToast } from "@plane/blocks/toast";
 import { useTranslation } from "@plane/i18n";
 import type { TIssueRecurrence, TIssueRecurrencePayload, TRecurrenceFrequency } from "@plane/types";
-import { cn, getDate, renderFormattedDate, renderFormattedPayloadDate } from "@plane/utils";
+import { cn, generateWorkItemLink, getDate, renderFormattedDate, renderFormattedPayloadDate } from "@plane/utils";
 // hooks
+import { useIssueDetail } from "@/hooks/store/use-issue-detail";
+import { useProjectState } from "@/hooks/store/use-project-state";
 import { useRecurrence } from "@/hooks/store/use-recurrence";
 import { useUserProfile } from "@/hooks/store/user";
 
@@ -82,8 +85,14 @@ const RecurrenceEditor = observer(function RecurrenceEditor(
     try {
       await action();
       onDone();
-    } catch {
-      setToast({ type: "error", title: t("toast.error"), message: t("recurrence.error") });
+    } catch (error) {
+      // The server says why a rule can't be set, e.g. on a completed work item
+      const reason = (error as { error?: unknown } | undefined)?.error;
+      setToast({
+        type: "error",
+        title: t("toast.error"),
+        message: typeof reason === "string" ? reason : t("recurrence.error"),
+      });
     } finally {
       setIsSaving(false);
     }
@@ -208,21 +217,54 @@ export const IssueRecurrence = observer(function IssueRecurrence(props: Props) {
   const { workspaceSlug, projectId, issueId, disabled } = props;
   const { t } = useTranslation();
   const { recurrences, fetchRecurrence } = useRecurrence();
+  const {
+    issue: { getIssueById },
+  } = useIssueDetail();
+  const { getStateById } = useProjectState();
   const summarize = useRecurrenceSummary();
   const [isOpen, setIsOpen] = useState(false);
 
+  const recurrence = recurrences[issueId] ?? null;
+  const stateId = getIssueById(issueId)?.state_id;
+  const stateGroup = getStateById(stateId)?.group;
+
+  // Also refetched when the state changes: completing the work item moves the rule to the next occurrence
   useEffect(() => {
     if (workspaceSlug && projectId && issueId)
       void fetchRecurrence(workspaceSlug, projectId, issueId).catch(() => undefined);
-  }, [workspaceSlug, projectId, issueId, fetchRecurrence]);
+  }, [workspaceSlug, projectId, issueId, stateId, fetchRecurrence]);
 
-  const recurrence = recurrences[issueId] ?? null;
-  const label = recurrence?.is_active ? summarize(recurrence) : t("recurrence.none");
+  const next = recurrence?.continued_in;
+  if (next) {
+    const identifier = `${next.project_identifier}-${next.sequence_id}`;
+    return (
+      <Link
+        href={generateWorkItemLink({
+          workspaceSlug,
+          projectId: next.project_id,
+          issueId: next.id,
+          projectIdentifier: next.project_identifier,
+          sequenceId: next.sequence_id,
+        })}
+        title={t("recurrence.continued_hint", { identifier })}
+        className="flex h-7.5 w-full min-w-0 items-center rounded-sm px-2 text-body-xs-regular text-primary hover:bg-layer-transparent-hover"
+      >
+        <span className="truncate">{t("recurrence.continued_in", { identifier })}</span>
+      </Link>
+    );
+  }
+
+  // A rule set on a closed work item would spawn right away, so the server refuses it
+  const isClosed = stateGroup === "completed" || stateGroup === "cancelled";
+  const isActive = !!recurrence?.is_active;
+  let label = isActive ? summarize(recurrence) : t("recurrence.none");
+  if (isActive && recurrence.next_due_on && !isClosed)
+    label = t("recurrence.next_due", { summary: label, date: renderFormattedDate(recurrence.next_due_on) ?? "" });
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger
-        disabled={disabled}
+        disabled={disabled || isClosed}
         render={
           <button
             type="button"
@@ -230,7 +272,10 @@ export const IssueRecurrence = observer(function IssueRecurrence(props: Props) {
           />
         }
       >
-        <span className={cn("truncate", recurrence?.is_active ? "text-primary" : "text-placeholder")} title={label}>
+        <span
+          className={cn("truncate", isActive ? "text-primary" : "text-placeholder")}
+          title={isClosed && !disabled ? t("recurrence.closed_hint") : label}
+        >
           {label}
         </span>
       </PopoverTrigger>

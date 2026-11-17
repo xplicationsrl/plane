@@ -120,6 +120,7 @@ export const CommentCard = observer(function CommentCard(props: TCommentCard) {
             setEditMode={() => setIsEditing(true)}
             showAccessSpecifier={showAccessSpecifier}
             showCopyLinkOption={showCopyLinkOption}
+            replyCount={replies.length}
           />
         )}
       />

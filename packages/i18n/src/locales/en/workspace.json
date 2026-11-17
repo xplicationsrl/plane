@@ -198,7 +198,11 @@
       "cancelled": "Cancelled",
       "mark_done": "Mark as done",
       "mark_not_done": "Mark as not done",
-      "update_failed": "Couldn't change the project status. Please try again."
+      "update_failed": "Couldn't change the project status. Please try again.",
+      "moved": "{name} moved to {status}",
+      "auto_done": "{name} was marked Done",
+      "auto_done_reason": "All its work items are closed.",
+      "undo": "Undo"
     },
     "completion": {
       "label": "Show projects",
@@ -251,7 +255,9 @@
       "delete_description": "The folder goes away. Its projects stay and move to \"No folder\".",
       "save_failed": "Couldn't save the folder. Check that the name isn't already in use.",
       "delete_failed": "Couldn't delete the folder. Please try again.",
-      "move_failed": "Couldn't move the project. Please try again."
+      "move_failed": "Couldn't move the project. Please try again.",
+      "moved": "{name} moved to {folder}",
+      "undo": "Undo"
     },
     "common": {
       "months_count": "{months, plural, one{# month} other{# months}}",

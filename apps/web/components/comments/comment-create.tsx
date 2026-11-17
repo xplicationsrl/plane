@@ -74,7 +74,13 @@ export const CommentCreate = observer(function CommentCreate(props: TCommentCrea
       const comment = await activityOperations.createComment(
         parentId ? { ...formData, parent_id: parentId } : formData
       );
-      if (comment?.id) onSubmitCallback?.(comment.id);
+      // createComment shows the error toast and returns nothing on failure: keep the typed text so it can be retried.
+      if (!comment?.id) return;
+      reset({
+        comment_html: "<p></p>",
+      });
+      editorRef.current?.clearEditor();
+      onSubmitCallback?.(comment.id);
       if (uploadedAssetIds.length > 0) {
         if (projectId) {
           await fileService.updateBulkProjectAssetsUploadStatus(workspaceSlug, projectId.toString(), entityId, {
@@ -89,11 +95,6 @@ export const CommentCreate = observer(function CommentCreate(props: TCommentCrea
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      reset({
-        comment_html: "<p></p>",
-      });
-      editorRef.current?.clearEditor();
     }
   };
 

@@ -118,6 +118,24 @@ class TestAddMemberToManyProjects:
         assert memberships[sess_projects[1].id].role == 15
         assert ProjectMember.objects.filter(member=simina, project=sess_projects[0]).count() == 1
 
+    def test_existing_roles_are_never_changed(self, session_client, workspace, sess_projects):
+        simina = _user(workspace, role=15)
+        ProjectMember.objects.create(workspace=workspace, project=sess_projects[0], member=simina, role=20)
+        ProjectMember.objects.create(workspace=workspace, project=sess_projects[1], member=simina, role=5)
+
+        response = session_client.post(
+            url(workspace.slug, simina.id),
+            {"project_ids": [str(p.id) for p in sess_projects[:2]], "role": 15},
+            format="json",
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        assert (response.data["added"], response.data["updated"], response.data["already_member"]) == (0, 0, 2)
+        assert response.data["project_ids"] == []
+        memberships = _memberships(simina)
+        assert memberships[sess_projects[0].id].role == 20
+        assert memberships[sess_projects[1].id].role == 5
+
     def test_unknown_foreign_and_archived_projects_are_skipped(
         self, session_client, workspace, sess_projects, create_user
     ):

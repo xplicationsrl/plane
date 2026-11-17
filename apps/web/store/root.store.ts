@@ -155,7 +155,7 @@ export class CoreRootStore {
     this.timelineStore = new TimeLineStore(this);
     this.customProperty = new CustomPropertyStore();
     this.timeEntry = new TimeEntryStore();
-    this.recurrence = new RecurrenceStore();
+    this.recurrence = new RecurrenceStore(this);
     this.template = new TemplateStore();
     this.intakeForm = new IntakeFormStore();
     this.sharedWorkItem = new SharedWorkItemStore();
@@ -195,7 +195,7 @@ export class CoreRootStore {
     this.timelineStore = new TimeLineStore(this);
     this.customProperty = new CustomPropertyStore();
     this.timeEntry = new TimeEntryStore();
-    this.recurrence = new RecurrenceStore();
+    this.recurrence = new RecurrenceStore(this);
     this.template = new TemplateStore();
     this.intakeForm = new IntakeFormStore();
     this.sharedWorkItem = new SharedWorkItemStore();

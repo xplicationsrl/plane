@@ -181,9 +181,39 @@ class TestPublicForm:
 
         intake_issue = IntakeIssue.objects.get(issue__name="Need access")
         assert intake_issue.status == -2
-        assert intake_issue.source == "FORM"
+        assert intake_issue.source == "FORMS"
         assert intake_issue.source_email == "bo@example.com"
         assert intake_issue.issue.state.group == "triage"
+
+    def test_intake_shows_who_sent_the_request(self, session_client, workspace, project):
+        project.intake_view = True
+        project.save()
+        response = session_client.post(
+            forms_url(workspace.slug, project.id),
+            {
+                "name": "Access request",
+                "fields": [
+                    {"key": "description"},
+                    {"key": "submitter_name", "required": True},
+                    {"key": "submitter_email", "required": True},
+                ],
+            },
+            format="json",
+        )
+        assert response.status_code == status.HTTP_201_CREATED, response.data
+        anchor = IntakeForm.objects.get(pk=response.data["id"]).anchor
+
+        _submit(anchor, {"name": "VPN", "submitter_name": "Bo Client", "submitter_email": "bo@example.com"})
+        issue = Issue.objects.get(project=project, name="VPN")
+        intake_url = f"/api/workspaces/{workspace.slug}/projects/{project.id}/intake-issues/"
+        listed = session_client.get(intake_url).json()["results"]
+        detail = session_client.get(f"{intake_url}{issue.id}/").json()
+
+        for row in (next(row for row in listed if row["issue"]["id"] == str(issue.id)), detail):
+            assert row["source"] == "FORMS"
+            assert row["submitter_name"] == "Bo Client"
+            assert row["source_email"] == "bo@example.com"
+            assert row["form_name"] == "Access request"
 
     @pytest.mark.parametrize(
         "values,field",

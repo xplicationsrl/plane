@@ -50,31 +50,44 @@ export const IssueModalProvider = observer(function IssueModalProvider(props: TI
       .flat()
       .find((template) => template.id === id);
 
-  /** Prefills the form with the selected template's own fields. */
-  const handleTemplateChange = async ({ reset, editorRef }: THandleTemplateChangeProps) => {
+  /**
+   * The create-form values the selected template asks for, or null when none is selected.
+   * Where the form was opened from (cycle, module, parent, board column, calendar day, typed title) outranks it.
+   */
+  const getWorkItemTemplateFormValues = (): Partial<TIssue> | null => {
     const template = workItemTemplateId ? findTemplate(workItemTemplateId) : undefined;
-    if (!template) return;
+    if (!template) return null;
     const data = template.template;
-    // Where the form was opened from (cycle, module, parent, board column, calendar day) outranks the template
     const context = dataForPreload ?? {};
     const moduleIds = [...new Set([...(context.module_ids ?? []), ...data.module_ids])];
-    reset({
-      ...DEFAULT_WORK_ITEM_FORM_VALUES,
-      project_id: template.project,
-      name: data.name,
-      description_html: data.description_html,
+    return {
+      name: context.name?.trim() ? context.name : data.name,
+      description_html: context.description_html?.trim() ? context.description_html : data.description_html,
       priority: context.priority && context.priority !== "none" ? context.priority : data.priority,
       state_id: context.state_id || data.state_id || DEFAULT_WORK_ITEM_FORM_VALUES.state_id,
-      parent_id: context.parent_id ?? null,
-      cycle_id: context.cycle_id ?? null,
-      start_date: context.start_date ?? null,
-      target_date: context.target_date ?? null,
       assignee_ids: [...new Set([...(context.assignee_ids ?? []), ...data.assignee_ids])],
       label_ids: [...new Set([...(context.label_ids ?? []), ...data.label_ids])],
       module_ids: moduleIds.length ? moduleIds : null,
       estimate_point: data.estimate_point_id,
+    };
+  };
+
+  /** Resets the whole form to the selected template, e.g. for the next item after "Create more". */
+  const handleTemplateChange = async ({ reset, editorRef }: THandleTemplateChangeProps) => {
+    const template = workItemTemplateId ? findTemplate(workItemTemplateId) : undefined;
+    const values = getWorkItemTemplateFormValues();
+    if (!template || !values) return;
+    const context = dataForPreload ?? {};
+    reset({
+      ...DEFAULT_WORK_ITEM_FORM_VALUES,
+      ...values,
+      project_id: template.project,
+      parent_id: context.parent_id ?? null,
+      cycle_id: context.cycle_id ?? null,
+      start_date: context.start_date ?? null,
+      target_date: context.target_date ?? null,
     });
-    editorRef.current?.setEditorValue(data.description_html || "<p></p>");
+    editorRef.current?.setEditorValue(values.description_html || "<p></p>");
   };
 
   /** After creation: adds the template's sub-work items and custom property values. */
@@ -122,6 +135,7 @@ export const IssueModalProvider = observer(function IssueModalProvider(props: TI
         handleCreateUpdatePropertyValues: () => Promise.resolve(),
         handleProjectEntitiesFetch: () => Promise.resolve(),
         handleTemplateChange,
+        getWorkItemTemplateFormValues,
         handleConvert: () => Promise.resolve(),
         handleCreateSubWorkItem,
       }}

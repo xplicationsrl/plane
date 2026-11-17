@@ -9,7 +9,6 @@ import { useParams } from "next/navigation";
 import useSWR from "swr";
 // plane imports
 import { EUserPermissionsLevel, EUserPermissions } from "@plane/constants";
-import { useLocalStorage } from "@plane/hooks";
 import { useTranslation } from "@plane/i18n";
 import { EmptyStateDetailed } from "@plane/blocks/empty-state";
 import { ContentWrapper } from "@plane/blocks/layout";
@@ -25,9 +24,7 @@ import { useUserPermissions } from "@/hooks/store/user";
 // local imports
 import { ProjectCard } from "./card";
 import { ProjectFolderSection } from "./folders/folder-section";
-
-/** Key of the "No folder" group in the collapsed list; can't clash with a folder id. */
-const NO_FOLDER_KEY = "no-folder";
+import { NO_FOLDER_KEY, useCollapsedProjectFolders } from "./folders/use-collapsed-folders";
 
 type TProjectCardListProps = {
   totalProjectIds?: string[];
@@ -41,10 +38,7 @@ export const ProjectCardList = observer(function ProjectCardList(props: TProject
   // plane hooks
   const { t } = useTranslation();
   // Which folders are folded shut is a personal choice, so it stays in this browser.
-  const { storedValue: collapsedFolderIds, setValue: setCollapsedFolderIds } = useLocalStorage<string[]>(
-    `project_folders_collapsed_${workspaceSlug?.toString() ?? ""}`,
-    []
-  );
+  const { collapsed, toggleFolder } = useCollapsedProjectFolders(workspaceSlug?.toString());
   // store hooks
   const { toggleCreateProjectModal } = useCommandPalette();
   const {
@@ -167,12 +161,6 @@ export const ProjectCardList = observer(function ProjectCardList(props: TProject
     searchQuery.trim() !== "" ||
     !!currentWorkspaceDisplayFilters?.my_projects ||
     calculateTotalFilters(currentWorkspaceFilters ?? {}) !== 0;
-  const collapsed = new Set(collapsedFolderIds ?? []);
-  const toggleFolder = (key: string) => {
-    if (collapsed.has(key)) collapsed.delete(key);
-    else collapsed.add(key);
-    setCollapsedFolderIds([...collapsed]);
-  };
 
   return (
     <ContentWrapper>

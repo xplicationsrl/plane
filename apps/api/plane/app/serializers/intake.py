@@ -25,7 +25,21 @@ class IntakeSerializer(BaseSerializer):
         read_only_fields = ["project", "workspace"]
 
 
-class IntakeIssueSerializer(BaseSerializer):
+class FormSubmitterFieldsMixin(serializers.Serializer):
+    """Who actually sent a public form submission; the work item's creator is the form's owner."""
+
+    source_email = serializers.CharField(read_only=True, allow_null=True)
+    submitter_name = serializers.SerializerMethodField()
+    form_name = serializers.SerializerMethodField()
+
+    def get_submitter_name(self, obj):
+        return (obj.extra or {}).get("submitter_name") or None
+
+    def get_form_name(self, obj):
+        return (obj.extra or {}).get("form_name") or None
+
+
+class IntakeIssueSerializer(FormSubmitterFieldsMixin, BaseSerializer):
     issue = IssueIntakeSerializer(read_only=True)
 
     class Meta:
@@ -36,6 +50,9 @@ class IntakeIssueSerializer(BaseSerializer):
             "duplicate_to",
             "snoozed_till",
             "source",
+            "source_email",
+            "submitter_name",
+            "form_name",
             "issue",
             "created_by",
         ]
@@ -97,7 +114,7 @@ class IntakeIssueSerializer(BaseSerializer):
         return super().to_representation(instance)
 
 
-class IntakeIssueDetailSerializer(BaseSerializer):
+class IntakeIssueDetailSerializer(FormSubmitterFieldsMixin, BaseSerializer):
     issue = IssueDetailSerializer(read_only=True)
     duplicate_issue_detail = IssueIntakeSerializer(read_only=True, source="duplicate_to")
 
@@ -110,6 +127,9 @@ class IntakeIssueDetailSerializer(BaseSerializer):
             "snoozed_till",
             "duplicate_issue_detail",
             "source",
+            "source_email",
+            "submitter_name",
+            "form_name",
             "issue",
         ]
         read_only_fields = ["project", "workspace"]

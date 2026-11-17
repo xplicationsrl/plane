@@ -67,7 +67,7 @@
         "add_to_projects": {
           "label": "Add to projects",
           "title": "Add {name} to projects",
-          "description": "Search, tick the projects, and add them all at once. Projects they are already in are left as they are.",
+          "description": "Search, tick the projects, and add them all at once. In projects they are already in, their role stays as it is.",
           "search_placeholder": "Search projects, e.g. SeSS",
           "select_all_shown": "Select all shown ({count})",
           "clear_selection": "Clear",
@@ -75,8 +75,8 @@
           "role": "Role in these projects",
           "submit": "{count, plural, =0 {Add to projects} one {Add to # project} other {Add to # projects}}",
           "submitting": "Adding",
-          "success_title": "Added to projects",
-          "success": "{added, plural, one {Added to # project} other {Added to # projects}}; already in {already}.",
+          "success_title": "{added, plural, =0 {Nothing to add} other {Added to projects}}",
+          "success": "{added, plural, =0 {They are already in all the selected projects. Nothing was changed.} one {Added to # project{already, plural, =0 {.} other {; already in #.}}} other {Added to # projects{already, plural, =0 {.} other {; already in #.}}}}",
           "error": "Couldn't add them to the projects. Please try again.",
           "no_projects": "No projects match."
         }

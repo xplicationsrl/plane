@@ -8,7 +8,6 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
-import { isEqual } from "lodash-es";
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
@@ -30,11 +29,15 @@ import { setToast } from "@plane/blocks/toast";
 import type { TIssue, TWorkspaceDraftIssue } from "@plane/types";
 // hooks
 import { Switch } from "@makeplane/propel/components/switch";
+import type { TWorkItemTemplateFormField } from "@plane/utils";
 import {
+  WORK_ITEM_TEMPLATE_FORM_FIELDS,
   convertWorkItemDataToSearchResponse,
   getUpdateFormDataForReset,
   getChangedIssuefields,
   getTabIndex,
+  isSameWorkItemFormValue,
+  mergeWorkItemTemplateValues,
 } from "@plane/utils";
 // components
 import {
@@ -44,7 +47,10 @@ import {
   IssueProjectSelect,
   IssueTitleInput,
 } from "@/components/issues/issue-modal/components";
-import { WorkItemTemplateSelect } from "@/components/issues/issue-modal/components/template-select";
+import {
+  WorkItemTemplateHint,
+  WorkItemTemplateSelect,
+} from "@/components/issues/issue-modal/components/template-select";
 // helpers
 // hooks
 import { useIssueModal } from "@/hooks/context/use-issue-modal";
@@ -79,18 +85,6 @@ export interface IssueFormProps {
   showActionButtons?: boolean;
   dataResetProperties?: any[];
 }
-
-/** Form fields a work item template prefills (see IssueModalProvider.handleTemplateChange). */
-const TEMPLATE_FIELDS = [
-  "name",
-  "description_html",
-  "priority",
-  "state_id",
-  "assignee_ids",
-  "label_ids",
-  "module_ids",
-  "estimate_point",
-] as const satisfies readonly (keyof TIssue)[];
 
 export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormProps) {
   const { t } = useTranslation();
@@ -141,6 +135,7 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
     handlePropertyValuesValidation,
     handleCreateUpdatePropertyValues,
     handleTemplateChange,
+    getWorkItemTemplateFormValues,
   } = useIssueModal();
   const { isMobile } = usePlatformOS();
   const { moveIssue } = useWorkspaceDraftIssues();
@@ -176,14 +171,9 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
   //reset few fields on projectId change
   useEffect(() => {
     if (isDirty) {
-      if (workItemTemplateId) {
-        // reset work item template id
-        setWorkItemTemplateId(null);
-        reset({ ...DEFAULT_WORK_ITEM_FORM_VALUES, project_id: projectId });
-        editorRef.current?.clearEditor();
-      } else {
-        reset(getUpdateFormDataForReset(projectId, getValues()));
-      }
+      // Templates belong to a project: clearing it takes its values back out (see below), keeping the user's own
+      if (workItemTemplateId) setWorkItemTemplateId(null);
+      reset(getUpdateFormDataForReset(projectId, getValues()));
     }
     if (projectId && routeProjectId !== projectId) fetchCycles(workspaceSlug?.toString(), projectId);
 
@@ -212,32 +202,28 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, projectId]);
 
-  // Values the applied template put in the form, so "No template" can take them back out
+  // Values the applied template asked for, so switching or removing it only replaces those
   const templateValuesRef = useRef<Partial<TIssue> | null>(null);
+  // Fields where the user's own entry was kept over the template's
+  const [keptTemplateFields, setKeptTemplateFields] = useState<TWorkItemTemplateFormField[]>([]);
   useEffect(() => {
-    if (workItemTemplateId && editorRef.current) {
-      // handleTemplateChange resets the form synchronously before its first await
-      void handleTemplateChange({
-        workspaceSlug: workspaceSlug?.toString(),
-        reset,
-        editorRef,
-      });
-      templateValuesRef.current = Object.fromEntries(
-        TEMPLATE_FIELDS.map((field) => [field, getValues(field)])
-      ) as Partial<TIssue>;
-      return;
-    }
-    // Template cleared: restore defaults only for fields still holding the template's value,
-    // keeping anything the user changed since applying it
-    const templateValues = templateValuesRef.current;
-    templateValuesRef.current = null;
-    if (workItemTemplateId || !templateValues) return;
-    const defaults: Partial<TIssue> = { ...DEFAULT_WORK_ITEM_FORM_VALUES, ...data };
-    TEMPLATE_FIELDS.forEach((field) => {
-      if (!isEqual(getValues(field), templateValues[field])) return;
-      setValue(field, defaults[field] as TIssue[typeof field], { shouldDirty: true });
-      if (field === "description_html") editorRef.current?.setEditorValue(defaults.description_html || "<p></p>");
+    const next = workItemTemplateId ? getWorkItemTemplateFormValues() : null;
+    const previous = templateValuesRef.current;
+    if (!next && !previous) return;
+    const { values, kept } = mergeWorkItemTemplateValues({
+      current: getValues(),
+      defaults: { ...DEFAULT_WORK_ITEM_FORM_VALUES, ...data },
+      previous,
+      next,
     });
+    WORK_ITEM_TEMPLATE_FORM_FIELDS.forEach((field) => {
+      if (isSameWorkItemFormValue(field, getValues(field), values[field])) return;
+      setValue(field, values[field] as TIssue[typeof field], { shouldDirty: true });
+      // The editor doesn't follow the form value once mounted, and this set doesn't count as typing
+      if (field === "description_html") editorRef.current?.setEditorValue(values.description_html || "<p></p>");
+    });
+    templateValuesRef.current = next;
+    setKeptTemplateFields(kept);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workItemTemplateId]);
 
@@ -279,11 +265,13 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
       .then(() => {
         setGptAssistantModal(false);
         if (isCreateMoreToggleEnabled && workItemTemplateId) {
-          handleTemplateChange({
+          void handleTemplateChange({
             workspaceSlug: workspaceSlug?.toString(),
             reset,
             editorRef,
           });
+          templateValuesRef.current = getWorkItemTemplateFormValues();
+          setKeptTemplateFields([]);
         } else {
           reset({
             ...DEFAULT_WORK_ITEM_FORM_VALUES,
@@ -410,6 +398,9 @@ export const IssueFormRoot = observer(function IssueFormRoot(props: IssueFormPro
                   )}
                 </div>
               </div>
+              {!data?.id && !data?.sourceIssueId && (
+                <WorkItemTemplateHint projectId={projectId} keptFields={keptTemplateFields} />
+              )}
               {watch("parent_id") && selectedParentIssue && (
                 <IssueParentTag
                   control={control}

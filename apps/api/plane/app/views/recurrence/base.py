@@ -13,14 +13,15 @@ from rest_framework.response import Response
 from plane.app.permissions import ROLE, allow_permission
 from plane.app.views.base import BaseAPIView
 from plane.app.views.issue.access import get_accessible_issue
-from plane.db.models import IssueRecurrence, RecurrenceFrequency
-from plane.utils.recurrence import next_due_date
+from plane.db.models import Issue, IssueActivity, IssueRecurrence, RecurrenceFrequency, StateGroup
+from plane.utils.recurrence import CONTINUED_ACTIVITY_FIELD, next_due_date
 
 MAX_INTERVAL = 365
 
 
 class IssueRecurrenceSerializer(serializers.ModelSerializer):
     next_due_on = serializers.SerializerMethodField()
+    continued_in = serializers.SerializerMethodField()
 
     class Meta:
         model = IssueRecurrence
@@ -34,6 +35,7 @@ class IssueRecurrenceSerializer(serializers.ModelSerializer):
             "is_active",
             "occurrences",
             "next_due_on",
+            "continued_in",
         ]
         read_only_fields = ["issue", "is_active", "occurrences"]
 
@@ -58,10 +60,65 @@ class IssueRecurrenceSerializer(serializers.ModelSerializer):
         following = next_due_date(recurrence, recurrence.issue, timezone.localdate())
         return following.isoformat() if following else None
 
+    def get_continued_in(self, recurrence):
+        """Set when the rule was read from an earlier occurrence: the work item that followed it."""
+        return self.context.get("continued_in")
+
+
+def find_continuation(issue):
+    """(rule, next occurrence, when) for an occurrence whose rule moved on, or None.
+
+    Only counts while both the rule and the next occurrence still exist, so a broken chain
+    lets the work item repeat again on its own.
+    """
+    activity = (
+        IssueActivity.objects.filter(issue=issue, field=CONTINUED_ACTIVITY_FIELD, new_identifier__isnull=False)
+        .order_by("-created_at")
+        .first()
+    )
+    if activity is None:
+        return None
+    recurrence = IssueRecurrence.objects.filter(pk=activity.old_identifier).select_related("issue").first()
+    following = (
+        Issue.objects.filter(pk=activity.new_identifier, deleted_at__isnull=True)
+        .select_related("project")
+        .only("id", "name", "sequence_id", "project_id", "project__identifier")
+        .first()
+    )
+    if recurrence is None or following is None:
+        return None
+    return recurrence, following, activity.created_at
+
+
+def continuation_data(following, continued_at):
+    return {
+        "id": str(following.id),
+        "name": following.name,
+        "project_id": str(following.project_id),
+        "project_identifier": following.project.identifier,
+        "sequence_id": following.sequence_id,
+        "continued_at": continued_at.isoformat(),
+    }
+
 
 class IssueRecurrenceEndpoint(BaseAPIView):
     def get_recurrence(self, issue):
         return IssueRecurrence.objects.filter(issue=issue).select_related("issue").first()
+
+    def refusal(self, issue):
+        """Why this work item's rule can't be set here, or None."""
+        state_group = issue.state.group if issue.state_id else None
+        if state_group in (StateGroup.COMPLETED.value, StateGroup.CANCELLED.value):
+            # On a completed item a new rule would spawn straight away, next to the copy that already exists
+            return "Reopen this work item to change how it repeats."
+        continuation = None if self.get_recurrence(issue) else find_continuation(issue)
+        if continuation:
+            _, following, _ = continuation
+            return (
+                f"This work item already continues in {following.project.identifier}-{following.sequence_id}. "
+                "Change how it repeats there."
+            )
+        return None
 
     @allow_permission([ROLE.ADMIN, ROLE.MEMBER, ROLE.GUEST])
     def get(self, request, slug, project_id, issue_id):
@@ -69,13 +126,23 @@ class IssueRecurrenceEndpoint(BaseAPIView):
         if issue is None:
             return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
         recurrence = self.get_recurrence(issue)
-        return Response(IssueRecurrenceSerializer(recurrence).data if recurrence else None, status=status.HTTP_200_OK)
+        if recurrence:
+            return Response(IssueRecurrenceSerializer(recurrence).data, status=status.HTTP_200_OK)
+        continuation = find_continuation(issue)
+        if continuation is None:
+            return Response(None, status=status.HTTP_200_OK)
+        recurrence, following, continued_at = continuation
+        context = {"continued_in": continuation_data(following, continued_at)}
+        return Response(IssueRecurrenceSerializer(recurrence, context=context).data, status=status.HTTP_200_OK)
 
     @allow_permission([ROLE.ADMIN, ROLE.MEMBER])
     def put(self, request, slug, project_id, issue_id):
         issue = get_accessible_issue(request, slug, project_id, issue_id)
         if issue is None:
             return Response({"error": "Issue not found"}, status=status.HTTP_404_NOT_FOUND)
+        reason = self.refusal(issue)
+        if reason:
+            return Response({"error": reason}, status=status.HTTP_400_BAD_REQUEST)
         recurrence = self.get_recurrence(issue)
         serializer = IssueRecurrenceSerializer(recurrence, data=request.data, partial=recurrence is not None)
         serializer.is_valid(raise_exception=True)

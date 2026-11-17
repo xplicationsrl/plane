@@ -55,7 +55,9 @@ import { DeleteProjectModal } from "./delete-project-modal";
 import { ArchiveRestoreProjectModal } from "./archive-restore-modal";
 import { ProjectFolderFormModal } from "./folders/folder-form-modal";
 import { MoveProjectToFolderMenu } from "./folders/move-to-folder-menu";
+import { useCollapsedProjectFolders } from "./folders/use-collapsed-folders";
 import { ProjectStatusDropdown } from "./status/project-status-dropdown";
+import { useProjectStatusChange } from "./status/use-project-status-change";
 import { ProjectReopenedNotice } from "./status/reopened-notice";
 
 type Props = {
@@ -75,8 +77,10 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
   const { workspaceSlug } = useParams();
   // store hooks
   const { getUserDetails } = useMember();
-  const { addProjectToFavorites, removeProjectFromFavorites, updateProjectStatus } = useProject();
-  const { currentWorkspaceFolders, moveProjectToFolder } = useProjectFolder();
+  const { addProjectToFavorites, removeProjectFromFavorites } = useProject();
+  const { currentWorkspaceFolders, getFolderById, moveProjectToFolder } = useProjectFolder();
+  const { changeStatus } = useProjectStatusChange();
+  const { expandFolder } = useCollapsedProjectFolders(workspaceSlug?.toString());
   const { allowPermissions } = useUserPermissions();
   // hooks
   const { isMobile } = usePlatformOS();
@@ -156,24 +160,40 @@ export const ProjectCard = observer(function ProjectCard(props: Props) {
   const isDone = (project.status ?? DEFAULT_PROJECT_STATUS) === "completed";
   const handleStatusChange = (status: TProjectStatus) => {
     if (!workspaceSlug) return;
-    updateProjectStatus(workspaceSlug.toString(), project.id, status).catch(() =>
-      setToast({
-        type: "error",
-        title: t("common.error.label"),
-        message: t("workspace_projects.status.update_failed"),
-      })
-    );
+    changeStatus(workspaceSlug.toString(), project.id, status);
   };
 
+  const showMoveError = () =>
+    setToast({
+      type: "error",
+      title: t("common.error.label"),
+      message: t("workspace_projects.folders.move_failed"),
+    });
   const handleMoveToFolder = (folderId: string | null) => {
     if (!workspaceSlug) return;
-    moveProjectToFolder(workspaceSlug.toString(), project.id, folderId).catch(() =>
-      setToast({
-        type: "error",
-        title: t("common.error.label"),
-        message: t("workspace_projects.folders.move_failed"),
-      })
-    );
+    const previousFolderId = project.folder ?? null;
+    if (previousFolderId === folderId) return;
+    // A collapsed folder hides its cards, so open it: the project should stay in view.
+    expandFolder(folderId);
+    const folderName = getFolderById(folderId)?.name ?? t("workspace_projects.folders.no_folder");
+    moveProjectToFolder(workspaceSlug.toString(), project.id, folderId)
+      .then(() =>
+        setToast({
+          type: "success",
+          title: t("workspace_projects.folders.moved", { name: project.name, folder: folderName }),
+          actionItems: [
+            {
+              label: t("workspace_projects.folders.undo"),
+              primary: true,
+              onClick: () => {
+                expandFolder(previousFolderId);
+                moveProjectToFolder(workspaceSlug.toString(), project.id, previousFolderId).catch(showMoveError);
+              },
+            },
+          ],
+        })
+      )
+      .catch(showMoveError);
   };
 
   const MENU_ITEMS: TContextMenuItem[] = [

@@ -24,7 +24,8 @@ const UNIT_SECONDS: Record<string, number> = {
  * Parses what people type for logged time into seconds.
  *
  * Accepts `1h 30m`, `1h30m`, `1.5h`, `90m`, `45 min`, `1:30` (h:mm) and a bare number,
- * which is read as minutes. Returns null for anything unreadable or not positive.
+ * which is read as hours (`2` is two hours, `0.5` half an hour). Returns null for anything
+ * unreadable or not positive.
  */
 export function parseDuration(input: string): number | null {
   const text = input.trim().toLowerCase().replace(",", ".");
@@ -33,7 +34,7 @@ export function parseDuration(input: string): number | null {
   const clock = /^(\d+):([0-5]\d)$/.exec(text);
   if (clock) return positive(Number(clock[1]) * 3600 + Number(clock[2]) * 60);
 
-  if (/^\d+(\.\d+)?$/.test(text)) return positive(Math.round(Number(text) * 60));
+  if (/^\d+(\.\d+)?$/.test(text)) return positive(Math.round(Number(text) * 3600));
 
   const part = /(\d+(?:\.\d+)?)\s*([a-z]+)/g;
   let total = 0;
